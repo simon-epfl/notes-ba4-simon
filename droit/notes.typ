@@ -134,3 +134,27 @@ Elle a deux fonctions :
 - la fonction *insitutionnelle *(le droit suisse a choisi un système basé sur la libre concurrence. le principe c'est que l'Etat n'intervient pas dans l'économie)
 
 Elle est au même niveau que les droits fondamentaux, elle peut être invoquée à l'égard de l'Etat et non entre particuliers.
+
+=== Les titulaires
+
+Les titulaires sont les personnes physiques et les personnes morales de droit privé. Les ressortissants étrangers peuvent s'en prévaloir si ils ont un titre de séjour valable.
+
+=== Le type d'activités protégées
+
+L'activité protégée doit tendre à la production d'un gain et être licite. La liberté économique couvre l'ensemble des secteurs de l'économie privée dont les jeux d'argent, la prostitution, etc.
+
+Elle garantit en particulier :
+- le libre choix de la formation et de la profession
+- le libre accès à une activité économique
+- le libre exercice de cette activité
+- l'usage accru du domaine public
+
+=== Les restrictions
+
+Les *restrictions* sont les mesures étatiques qui limitent le libre accès ou le libre exercice d'une activité lucrative privée tout *en respectant le principe de la libre concurrence*.
+
+Le jeu de la libre concurrence est *faussé* lors de l'accord de *dérogations* (par exemple via des subventions) pour favoriser certaines branches.
+
+#example[
+    L'Etat chinois subventionne les panneaux solaires donc le prix est cassé et les panneaux solaires chinois sont moins chers que les panneaux solaires suisses. C'est une dérogation à la libre concurrence.
+]
