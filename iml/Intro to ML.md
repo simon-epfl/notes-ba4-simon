@@ -10,7 +10,7 @@ $L_2$ Euclidean distance : $sqrt(sum (x_d - x quote.single_d))^2$
 On prend le voisin le plus proche et on le choisit comme résultat.
 
 **Voronoi cells** : on créé des cellules autour de chaque point de telle sorte à ce qu'on puisse voir visuellement.
-![[Pasted image 20250218172657.png|596x466]]
+![[norms.png|596x466]]
 
 #### K-nearest neighbors
 
@@ -22,7 +22,7 @@ On définit toujours un ensemble de test pour juger les performances du modèle,
 
 On veut toujours choisir le bon degré de "conformisation aux données d'entraînement". On ne veut pas que le modèle ne puisse que reconnaisse que les données d'entraînement mais qu'il se rapproche de la courbe réelle.
 
-![[image-1.png]]
+![[overfitting.png]]
 #### Améliorer son dataset
 
 ##### Data reduction

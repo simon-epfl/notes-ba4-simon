@@ -4,7 +4,7 @@ Programme stocké dans le disque, puis quand lancé est chargé dans la mémoire
 - heap (stocke les données persistantes du programme)
 - stack (stocke les variables locales et les pointeurs de retour, les arguments de fonctions...)
 
-![[image-2.png|272x349]]
+![[structure-memory.png|272x349]]
 
 On les construit comme ça pour qu'ils aient une taille dynamique. Quand on veut remplir le stack on fait `addi sp, sp, -4` (on part des adresses hautes vers les adresses basses).
 
