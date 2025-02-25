@@ -47,9 +47,9 @@ Address **common_neighbors(Node *nodeA, Node *nodeB)
 {
     Address **commonNeighbors = calloc(128, sizeof(Address *));
     int currentNumberOfNeighbors = 0;
-    for (int i = nodeA->neighborsCount; i < nodeA->neighborsCount; i++)
+    for (int i = 0; i < nodeA->neighborsCount; i++)
     {
-        for (int j = nodeB->neighborsCount; j < nodeB->neighborsCount; j++)
+        for (int j = 0; j < nodeB->neighborsCount; j++)
         {
             bool isSame = true;
             for (int k = 0; k < 4; k++) {
