@@ -54,6 +54,7 @@ Address **common_neighbors(Node *nodeA, Node *nodeB)
             bool isSame = true;
             for (int k = 0; k < 4; k++) {
                 if (nodeA->neighbors[i][k] != nodeB->neighbors[j][k]) isSame = false;
+                break;
             }
             if (isSame) {
                 commonNeighbors[currentNumberOfNeighbors] = calloc(4, sizeof(Address));
@@ -104,10 +105,8 @@ int main()
     node_print(nodeAPtr);
     node_print(nodeBPtr);
 
-    Address **neighbors = common_neighbors(nodeAPtr, nodeBPtr);
-
-    Address **common = common_neighbors(nodeAPtr, nodeBPtr);
-    printf("Common neighbors between A and B: ");
+    Address **common = common_neighbors(nodeBPtr, nodeCPtr);
+    printf("Common neighbors between B and C: ");
     for (int i = 0; common[i] != NULL; i++)
     {
         printf("%d.%d.%d.%d ", common[i][0], common[i][1], common[i][2], common[i][3]);
