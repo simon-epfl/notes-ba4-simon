@@ -160,3 +160,48 @@ Les restrictions sont limitées aux conditions de l'article 36 (base légale, in
 Expropriation/indemnité 
 - exp. formelle : la collectivité publique s'approprie un bien, selon une procédure particulière.
 - exp. matérielle : p. ex. on achète un terrain en zone constructible puis il devient en zone agricole (même si l'Etat ne devient pas proprio, c'est terrible). le propriétaire a droit à une indemnité.
+
+### Les structures d'entreprise
+
+#### L'entreprise individuelle
+
+Parmis les sociétés de personnes, l'entreprise individuelle est la plus importante. Elle est extrêmement simple : dès qu'une personne physique exerce une activité indépendante dans un but lucratif.
+
+Aucune formalité administrative sauf s'inscrire à une caisse de retraite.
+
+> [!tldr] Exemple
+> Un architecte faisait 2M de bénéfices par année et avait environ 1M de charge, etc. on considère que ce n'est plus une activité individuelle.
+
+À partir de 100,000 francs de chiffres d'affaire, on doit s'inscrire au registre du commerce. L'objectif c'est de récolter des informations sur l'entreprise.
+
+L'adresse, le nom doivent apparaître, mais on peut ajouter un nom de fantaisie. Seulement **un** titulaire.
+#### La société simple
+
+C'est un **contrat** entre deux ou plusieurs associés qui s'unissent en vue d'atteindre un but commun. P. ex. un bureau d'architecte.
+
+La société simple ne peut pas être inscrite au registre du commerce (c'est un contrat) mais les associés peuvent être inscrits au registre du commerce en tant qu'entreprise individuelle.
+Les bénéfices et pertes se répartissent de manière égale entre associés sauf convention contraire. Les décisions se prennent à l'unanimité des associés.
+
+
+> [!tldr] Exemple
+> François et Jérôme, tous deux ingénieurs, sont associés par un contrat de
+> société simple pour la pratique de leur activité professionnelle.
+> François et Jérôme, locataires, ont conclu un contrat de bail avec Jules,
+> bailleur. François et Jérôme ont convenu entre eux qu’ils payeraient chacun la
+> moitié du loyer.
+> 
+> En outre, François a engagé un collaborateur personnel, Jean.
+> Mi-mars, François quitte du jour au lendemain la Suisse pour aller s’installer
+> aux Bahamas avec sa nouvelle compagne.
+> Jérôme s’acquitte auprès de Jules (bailleur) de la moitié du loyer du mois d’avril.
+> 
+> --> Jérome est solidairement responsable du paiement (à charge pour Jérome d'aller réclamer à François sa part), Jérome doit payer le bailleur.
+> 
+> 
+> Quant à Jean (employé), il ne perçoit pas son salaire du mois de mars. Jules peut-il réclamer à Jérôme l’entier du loyer du mois d’avril ?
+> 
+> Non, car Jules a été embauché par François.
+
+
+
+

@@ -75,3 +75,4 @@ $$"on veut minimiser : " sum_(k = 1)^K sum_(j = 1)^(n_k) (x_(i_j)^k - mu_k)^2$$
 	- on met à jour chaque $mu_k$ en fonction de la moyenne des points associés
 
 --> ça ne marche pas toujours! on doit essayer avec plusieurs seeds (plusieurs positions aléatoires au début) et prendre celle qui à le meilleur résultat en termes de distance au carré
+
