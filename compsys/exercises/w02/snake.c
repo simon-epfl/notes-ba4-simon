@@ -23,7 +23,37 @@
  * Here come the data definitions 
  *  (to be done by the students)
  ***************************************************************/
-TODO
+typedef struct {
+    size_t dx;
+    size_t dy;
+} direction_t;
+
+typedef struct test_ {
+    size_t x;
+    size_t y;
+    size_t length;
+    direction_t direction;
+    struct test_* previous_segment;
+} segment_t;
+
+typedef struct {
+    segment_t* tail;
+    segment_t* head;
+} snake_t;
+
+typedef enum {
+    EMPTY,
+    WALL,
+    FOOD,
+    SNAKE
+} map_cell_t;
+
+typedef struct {
+    snake_t snake;
+    size_t width;
+    size_t height;
+    map_cell_t* map;
+} game_t;
 
 /****************************************************************
  * This is the given game map. 
@@ -163,7 +193,117 @@ static map_cell_t const header_data[] = {
  * Here come the function definitions 
  * (to be done by the students)
  ****************************************************************/
-TODO
+void snake_info(const snake_t* snake) {
+    for (segment_t* seg = snake->tail; seg != NULL; seg = seg->previous_segment) {
+        printf("%d", seg->x);
+    }
+}
+
+void snake_erase_tail(snake_t* snake) {
+    segment_t* newtail = snake->tail->previous_segment;
+    free(snake->tail);
+    snake->tail = newtail;
+}
+
+void snake_destroy(snake_t* snake) {
+    while(snake->tail != NULL) {
+        snake_erase_tail(snake);
+    }
+}
+
+int snake_add_segment(snake_t* snake, direction_t direction) {
+    segment_t* segment = malloc(sizeof(segment_t));
+    segment->direction = direction;
+    segment->previous_segment = NULL;
+    if (snake->tail == NULL) {
+        segment->length = 1;
+        snake->tail = segment;
+    } else {
+        segment->length = 0;
+        segment->x = direction.dx + snake->head->x;
+        segment->y = direction.dy + snake->head->y;
+        snake->head->previous_segment = snake->head;
+    }
+    snake->head = segment;
+
+    return 0;
+}
+
+int snake_move(snake_t* snake, direction_t direction)
+{
+    if (snake->head->direction.dx == direction.dx &&
+        snake->head->direction.dy == direction.dy) {
+        snake->head->x += direction.dx;
+        snake->head->y += direction.dy;
+    } else {
+        if (snake_add_segment(snake, direction) != 0) {
+            return -1;
+        }
+    }
+
+    if (snake->head == snake->tail) {
+        return 0;
+    }
+
+    ++snake->head->length;
+    --snake->tail->length;
+
+    if (snake->tail->length == 0) {
+      snake_erase_tail(snake);
+    }
+
+    return 0;
+}
+
+map_cell_t* cell(const game_t* game, unsigned int x, unsigned int y) {
+    return &(game->map[y*  game->width + x]);
+}
+
+int game_update(game_t* game, direction_t direction) {
+    snake_t* const snake = &game->snake;
+
+    unsigned int const tail_x = snake->tail->x - (snake->tail->length-1) * snake->tail->direction.dx;
+    unsigned int const tail_y = snake->tail->y - (snake->tail->length-1) * snake->tail->direction.dy;
+
+    if (snake_move(snake, direction) != 0) {
+        return -1;
+    }
+
+    switch (*cell(game, snake->head->x, snake->head->y)) {
+    case WALL:
+    case SNAKE:
+      return -1;
+      
+    case FOOD:
+      ++snake->tail->length;
+      break;
+
+    default:
+      *cell(game, tail_x, tail_y) = EMPTY;
+      break;
+    }
+
+    *cell(game, snake->head->x, snake->head->y) = SNAKE;
+
+    return 0;
+}
+
+int game_init_snake(game_t* game, unsigned int orig_x, unsigned int orig_y) {
+    direction_t dir = {0,0};
+    game->snake.head = NULL;
+    game->snake.tail = NULL;
+
+    if (snake_add_segment(&game->snake, dir) != 0) {
+        return -1;
+    }
+
+    game->snake.head->x = orig_x;
+    game->snake.head->y = orig_y;
+
+    *cell(game, game->snake.head->x, game->snake.head->y) = SNAKE;
+
+    return 0;
+}
 
 /****************************************************************/
 int game_init_map(game_t* game, const map_cell_t* map, unsigned int width, unsigned int height)
