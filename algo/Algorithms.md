@@ -30,7 +30,7 @@ $a$ est le nombre de sous-problèmes créés à chaque récurrence, et $n/b$ est
 $$ T(n) = Theta(n^(log_b a)) $$
 ![[image.png|462x223]]
 
-- On est dans le cas **top-heavy** quand a()le coût du divide et combine est plus grand que $n^(log_b a + epsilon)$. Formellement, quand : $D(n) + C(n) = Omega(n^(log_b a))$. C'est-à-dire que diviser et combiner coûte très cher, donc tout le coût du calcul sera fait à la racine (quand on devra séparer la grosse liste de taille $n$, la racine). Et donc :
+- On est dans le cas **top-heavy** quand le coût du divide et combine est plus grand que $n^(log_b a + epsilon)$. Formellement, quand : $D(n) + C(n) = Omega(n^(log_b a))$. C'est-à-dire que diviser et combiner coûte très cher, donc tout le coût du calcul sera fait à la racine (quand on devra séparer la grosse liste de taille $n$, la racine). Et donc :
 $$T(n) = Theta(f(n))$$
 - Quand les deux sont équilibrés, $C(n) + D(n) = Theta(n^(log_b a))$, on a :
 $$ T(n) = Theta(n^(log_b a) dot log_b (n)) $$

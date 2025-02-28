@@ -1,8 +1,13 @@
+## Lundi 17 février
+
 Programme stocké dans le disque, puis quand lancé est chargé dans la mémoire principale. (memory image). Il y a plusieurs segments :
 - text (le code)
 - data (stocke les variables globales et static)
 - heap (stocke les données persistantes du programme)
 - stack (stocke les variables locales et les pointeurs de retour, les arguments de fonctions...)
+
+> [!info] variables locales dans le stack ?
+> On alloue à toutes les variables locales potentiellement créées par la fonction une place dans le stack -- en les laissant vides, non initialisées -- comme ça on sait que si on a plus de place dans les registres on pourra les stocker/récupérer dans le stack.
 
 ![[structure-memory.png|272x349]]
 
@@ -17,14 +22,17 @@ Le CPU est **virtualisé** : chaque thread pense qu'il est le seul à s'exécute
 
 - exemple d'un process qui a deux threads ? --> ils doivent être indépendants
 
-## Lundi 24 février
+> [!info] Que partagent les threads d'un même process ?
+> Chaque thread a son propre stack, son propre CPU context (c'est-à-dire, ses propres registres, son propre stack) mais ils partagent le même text segment, data segment, heap..
+
+## Lundi 24 févextrier
 
 #### Privilege modes, limited direct execution, kernel/loader
 
 Le CPU stocke le **privilege level** (low/high). Certaines instructions ne peuvent être exécutées qu'en high (aussi appelé kernel mode). Les threads sont lancés en low (user mode).
 Le CPU est **interrompu** pour donner une chance à tous les threads de s'exécuter (géré par le OS scheduler).
 
-**Limited direct execution**: limited (en temps et privilèges) mais direct (pas d'unternédiaire entre les instructions et leur exécution).
+**Limited direct execution**: limited (en temps et privilèges) mais direct (pas d'intermédiaire entre les instructions et leur exécution).
 
 Qui fait tourner l'OS ? Le même CPU qui fait tourner les threads! d'où l'intérêt du privilege level.
 
@@ -34,27 +42,27 @@ Quand on veut lancer un programme, le **kernel** du système se lance :
 - il change le privilege mode du CPU en **low**
 - il lance le **loader**
 
-Le **loader** (finit de préparer l'image mémoire du programme, il est en low privilege)
+Le **loader** finit de préparer l'image mémoire du programme, il est en low privilege :
 - il charge les arguments du programme dans le stack (pourquoi pas dans **data** ? --> les arguments du programme sont des arguments de la fonction main du progamme, donc considérés comme des variables à mettre sur le stack)
 
 Les **syscall** sont donc utilisés par les threads en low privilege pour exécuter certaines high-privilege instructions. Dans le kernel, il y a un **syscall handler**. 
 
-**Running**: at least one of the process threads is running
-**Ready**: no process thread is running
-**Blocked**: e.g: waiting for a network message to be received.
+**Running**: au moins un des threads du process est running
+**Ready**: aucun thread du process est running
+**Blocked**: il ne peut pas run tant qu'un évènement arrive comme un message réseau reçu
 quand le kernel tourne pour un syscall exécuté pour un thread, on dit que le thread est running
+--> attention, un thread **ne passe pas en blocked dès qu'un syscall est fait** ! si un syscall n'est pas bloquant (accès à du stockage ou au réseau par exemple), alors le thread est toujours running (le kernel tourne pour le thread) ! par contre à partir du moment où le kernel fait un appel bloquant (I/O), alors le thread est blocked.
 
 Limited execution du thread :
 - quand il y a une erreur, une exécution illégale (exception/trap) ou un double-clic par exemple, un interrupt est déclenché et est géré par le **interrupt handler** du **kernel**
 - si rien ne se passe, il y a toujours le **timer interrupt** qui lance l'OS scheduler toutes les quelques ms (share the CPU fairly)
-
 #### Quand est-ce que les process sont créés ?
 
 Généralement, on passe par des **wrappers** :
 
 direct syscall: 
 ```c
-ssize_t bytes_read = read(fd, buffer, sizeof(buffer));
+size_t bytes_read = read(fd, buffer, sizeof(buffer));
 ```
 wrapped syscall:
 ```c
@@ -66,6 +74,7 @@ plus performants.
 - `exec` --> mutation, remplace le code du process par le programme qu'on veut exécuter
 - `fork` --> clone, créé un jumeau du process en cours (avec le même text segment, etc.). on appelle quand même le process qui l'a créé **parent** et le nouveau **enfant** (même s'ils sont à égalité). `fork` renvoie `0` pour l'enfant et le PID de l'enfant pour le parent.
 ```c
+puts("Programme lancé !");
 int fs = fork();
 if (fs == 0) {
 	// code de l'enfant
@@ -74,6 +83,11 @@ if (fs == 0) {
 }
 ```
 - `wait` --> attend que le process enfant soit terminé
+
+> [!danger] Subilités du fork
+> Le fork reçoit une **copie** de la mémoire du parent (c'est-à-dire qu'il reprend exactement les mêmes valeurs dans les variables mais s'il modifie les variables ou que le parent modifie les variables, ça ne sera pas visible entre eux)
+> 
+> Le fork démarre exactement de là où il est appelé chez le parent. Dans l'exemple ci-dessus, seul le parent affichera le print, l'enfant non.
 
 le process **init** est exécuté après le démarrage
 **shell** est le process parent des commandes exécutées dans le terminal

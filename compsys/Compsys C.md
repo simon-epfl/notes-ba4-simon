@@ -62,3 +62,54 @@ typedef struct {
 
 `realloc(ptr_old, nouvelle_taille)` (comme si c'était `re(m)alloc`) permet de réallouer des zones déjà allouées (en **augmentation** ou **diminution**). Le pointeur va être déplacé si nécessaire (si par exemple dans la zone mémoire initiale il n'y a plus la place de rajouter des éléments). Si le `realloc` échoue, la zone mémoire initiale sera inchangée (et `NULL` sera renvoyé).
 attention : bien vérifier avec `realloc` qu'on vérifie qu'il n'y a pas de débordement!
+
+#### Les chaînes de caractères
+
+En C ce sont des tableaux de caractères. Ils se terminent par le caractère nul (`\0` ou `(char) 0`).
+
+```c
+char nom[6] = {'H', 'e', 'l', 'l', 'o', '\0'};
+// en pratique on écrit juste
+char nom[6] = "Hello";
+```
+
+en allocation dynamique : `char *nom;` + `malloc`/`calloc`. il faut allouer `n+1` caractères ! à cause du `\0`.
+
+**l'utilisation du = avec une valeur littérale n'est à faire qu'avec les tableaux**.
+
+on peut **copier** une chaîne avec `strncopy(char* dest, char const* src, size_t n)` copie les `n` premiers caractères de `src` dans `dest`. Retourne `dest`. Attention, ça n'ajoute pas `\0` à la fin si `src` a plus de `n` caractères !
+
+ajoute au plus `n` caractères de `src` à la fin de `dest` ! retourne `dest`
+`char* strncat` .
+
+on peut comparer des chaînes avec `strncmp`! 
+
+#### Pointeurs sur les fonctions
+
+On utilise `(*ptr)` à la place du nom de la fonction. Par exemple :
+```c
+g = &f; // ou g = f;
+z = (*g)(i); // ou g(i);
+```
+
+#### Généricité
+
+- **pointeurs génériques** : `void* ptr`, on ne sait pas sur quoi pointe `ptr`
+- **fonctions génériques** : `int compare_int(const void* a, const void* b);` on est obligés d'utiliser des pointeurs !
+
+#### Casting
+
+On peut changer le type `(type) expression;` p. ex. pour aller des double vers des int.
+Casting de pointeur : ça ne va pas changer la valeur pointée mais son interprétation !
+```c
+double x = 5.4;
+int* i = (int*) &x;
+
+(int) x; // 5. ici c'est la valeur x qui est convertie en double (beaucoup de travail)
+*i; // -1717986918. là on lit directement le double stocké en l'interprétant comme un int!
+```
+
+le casting est utile quand on utilise des pointeurs génériques (il se fait tout seul `int* ptr1;`, `void* ptr2;` , `ptr2 = ptr1;`).
+
+on pourrait réécrire `compare_int` comme `int compare_int(int const* a, int const* b);` et ensuite caster cette fonction en `(int (*)(void const*, void const*))` quand on veut l'utiliser de façon générique !
+
