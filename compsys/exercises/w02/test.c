@@ -1,16 +1,15 @@
 #include <stdio.h>
+#include <stdlib.h>
 
-void f(double* ptr) 
+double* f(double a) 
 { 
-  double a = 1.2; 
-  ptr = &a; 
+  double b = a;
+  return &b;
 }     
    
 int main(void) 
 { 
-  double x = 9.8;
-  double* p = &x; 
-  f(p); 
-  printf("%f\n", *p); 
+  double* ptr = f(9.0);
+  printf("%f", *ptr);
   return 0; 
 }

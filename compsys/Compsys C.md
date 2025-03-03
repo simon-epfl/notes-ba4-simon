@@ -1,3 +1,5 @@
+### Intro
+
 Pour les entrées on utilise `scanf("%lf", &variable)`, le `&` permet de donner l'adresse de la variable à `scanf` pour qu'il la modifie.
 
 Pour utiliser `M_PI` (= pi), 
@@ -8,6 +10,7 @@ Pour utiliser `M_PI` (= pi),
 ```
 
 Ne pas oublier le mot-clef `const` le plus souvent que possible.
+### Les pointeurs
 
 Les pointeurs :
 - référence (éviter la duplication, pointeur A vers objet X, pointeur B vers objet X)
@@ -15,7 +18,10 @@ Les pointeurs :
 - généricité (on veut que le pointeur A pointe vers objet X puis vers objet Y)
 	- `typedef double *Fonction(double)` 
 - portée (pour éviter que l'objet ne soit enlevé de la mémoire)
-	- par exemple en retour de fonction : `Complexe* resultat = malloc(sizeof(Complexe))` **et non pas &resultat!**
+
+> [!danger] Cas d'utilisation d'un pointeur (portée)
+> En retour de fonction : `Complexe* resultat = malloc(sizeof(Complexe));` puis `return resultat` **et non pas &resultat!**
+> En effet C considère que comme un `ptr` est renvoyé, la variable `resultat` n'est plus utilisée et donc détruite (et le pointeur ne pointe plus vers la bonne valeur)!
 
 allouer un pointeur : créer une valeur puis en garder l'adresse dans le pointeur
 libérer un pointeur : supprimer la valeur de la mémoire (mais l'adresse dans le pointeur est toujours la même). une bonne pratique est d'effacer aussi l'adresse du pointeur.
@@ -25,6 +31,11 @@ libérer un pointeur : supprimer la valeur de la mémoire (mais l'adresse dans l
 déclaration d'un pointeur : `int* ptr = NULL;` ou `int* ptr = &i;`
 pour lire la valeur d'un pointeur `printf("%d", *ptr);`
 pour les structures `p->x` est équivalent à `(*p).x` si `p` est un pointeur sur une structure
+### Pointeur constant, et pointeur vers un objet constant
+
+> [!tldr] TLDR
+> `const type * ptr` objet constant
+> `type * const  ptr` pointeur constant
 
 JCC écrit plutôt `type const* ptr` (identique à `const type* ptr`) $arrow$ déclare un pointeur sur un objet constant de type `type` (on ne pourra pas modifier la valeur de l'objet au travers de `ptr` mais on pourra faire pointer `ptr` vers un autre objet)
 ```c
@@ -37,6 +48,7 @@ et `type* const ptr` $arrow$ déclare un pointeur constant sur un objet (on ne p
 *ptr = 9; // possible !
 ptr = &j; // impossible
 ```
+### Allocation dynamique (malloc, calloc, realloc)
 
 allouer de la mémoire en C :
 - allocation statique, à la compilation : sur le stack, variables locales
@@ -63,6 +75,9 @@ typedef struct {
 `realloc(ptr_old, nouvelle_taille)` (comme si c'était `re(m)alloc`) permet de réallouer des zones déjà allouées (en **augmentation** ou **diminution**). Le pointeur va être déplacé si nécessaire (si par exemple dans la zone mémoire initiale il n'y a plus la place de rajouter des éléments). Si le `realloc` échoue, la zone mémoire initiale sera inchangée (et `NULL` sera renvoyé).
 attention : bien vérifier avec `realloc` qu'on vérifie qu'il n'y a pas de débordement!
 
+> [!danger] Valeur de retour de calloc, realloc
+> Les valeurs de retour `ptr` de `calloc`  et `realloc` sont la valeur du **premier** élément de la zone mémoire créée ! Pour accéder au deuxième élément, on fait `ptr[1]`, au troisième `ptr[2]`, etc.
+> (et donc `*ptr` $equiv$ `ptr[0]`).
 #### Les chaînes de caractères
 
 En C ce sont des tableaux de caractères. Ils se terminent par le caractère nul (`\0` ou `(char) 0`).
@@ -113,3 +128,232 @@ le casting est utile quand on utilise des pointeurs génériques (il se fait tou
 
 on pourrait réécrire `compare_int` comme `int compare_int(int const* a, int const* b);` et ensuite caster cette fonction en `(int (*)(void const*, void const*))` quand on veut l'utiliser de façon générique !
 
+### Les tableaux multi-dimensionnels
+
+> [!faq] Quelle différence entre `int tab[][N]` et `int** tab`?
+> 
+> `int** tab` :
+>- n'est pas continu en mémoire 
+>- n'est pas alloué au départ
+>- les lignes n'ont pas forcément le même nombre d'éléments
+
+> [!info] à noter :  `ptr[0]` $equiv$  `*(ptr)`, on a aussi `ptr[0][0]` $equiv$ `*(ptr[0])`, etc.
+#### `int p1[N][M]` 
+
+C'est un **tableau de N tableaux de int de taille M.**
+#### `int* p2 [N]`
+
+C'est un **tableau de `N` pointeurs**, où chaque pointeur pointe vers un **int**. Ainsi, `p2[0]` est un pointeur vers un premier entier, `p2[1]` vers un autre entier, etc. jusqu'à `p2[N-1]`.
+
+Cependant rien n'empêche `p2[0]` d'être un tableau de taille arbitraire ! par exemple `p2[0][0]` (qui pour rappel $equiv$ `*(p2[0])`) est un `int` certes, mais `p2[0][1]` peut aussi être un `int`! de même que `p2[0][2]`, ... jusqu'à `p2[0][M]`! 
+
+On obtient donc un **tableau de `N` tableaux de int de tailles arbitraires!**
+#### `int** p3` 
+
+C'est un **pointeur vers un pointeur de int** (donc `*(ptr)` ou `ptr[0]` est un pointeur vers un `int`). Cependant comme avant, rien n'empêche `p3[1]` de pointer aussi vers un pointeur de `int`!
+
+et on se retrouve avec un **tableau de taille arbitraire de tableaux de int de tailles arbitraires!**
+
+![[image-5.png|533x344]]
+
+Note : `p2` est un tableau, stocké dans le stack ! mais comme on remplit chaque élément de p2 avec un `calloc` (dans le heap), on a des différences d'adresses importantes.
+
+### Arithmétique des pointeurs
+
+- `+1` à un pointeur fait avancer le pointeur de la taille d'un objet pointé
+- `*p++` $equiv$ `*(p++)` $equiv$ accéder à la valeur de `p` , et augmenter `p` de 1
+- `(*p)++` $equiv$ augmenter la valeur stockée à `p` de 1
+- **attention**! `p2 - p1` n'est **pas** de type `int` mais de type `ptrdiff_t`!
+
+> [!info] `while(lu = *p++) {}` $equiv$ `while((lu = *p++) != '\0') {}`
+
+comme les pointeurs ont un type, quand on fait `+1` , C ajoute automatiquement le bon offset pour arriver au prochain élément en fonction de la taille du type !
+
+en résumé, `(int) p+1` est égal à `(int) p + sizeof(Type)` !
+
+### Sizeof
+
+`sizeof` n'est pas évaluée si on lui donne une expression (et non un type)
+
+> [!danger] les erreurs avec `sizeof`
+> 
+> Le code suivant ne fonctionne pas !
+> ```c
+> void f(int t[N]) { // équivalent à f(int* t) !
+> 	...sizeof(t)/sizeof(int)...
+> 	// évalué comme la taille d'un pointeur sur la taille d'un entier !
+> }
+> ```
+> **Rappel** : un tableau n'a **jamais** connaissance de sa taille !
+> 
+> ```c
+> int tab[1000];
+> const int* const end = tab + sizeof(tab);
+> // erreur ! sizeof(tab) c'est 1000 * sizeof(int) !
+> // on ne veut que 1000!
+> // on peut faire sizeof(tab)/sizeof(int)
+> ```
+
+### (bonus) Flexible array member
+
+l'idée c'est d'avoir une struct 
+```c
+struct vector_double { int size; double a[1]; }
+```
+sans pointeur donc, un tableau a un élément
+
+et on initialise une zone mémoire **continue** de taille `sizeof(struct vector_double) + (size-1) * sizeof(double)` !
+
+intérêt :
+- au lieu d’avoir un `struct` d’un côté et un `double *` qu’il faut allouer séparément, on a une seule allocation et donc un seul `free` à gérer
+- on a une zone mémoire continue
+### Plusieurs fichiers ?
+
+On sépare la partie **déclaration** de notre API et la partie **implémentation** de notre API.
+
+#### Partie **déclaration**
+
+- fichiers headers, `.h`
+- s'importent avec `#include` 
+- ils doivent commencer par `#pragma once;`
+
+pour n'importer qu'une fois le fichier `.h`, on peut utiliser l'inclusion conditionnelle (avec `if not define`) :
+```c
+#ifndef MONFICHIERAMOI_H
+	#define MONFICHIERAMOI_H
+	// le fichier comme d'habitude
+#endif
+```
+
+Pour qu'un module C puisse être utilisé en C++, il faut rajouter quelques lignes :
+
+```c
+#pragma once
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+void function(int* ptr);
+
+#ifdef __cplusplus
+}
+#endif
+```
+
+#### Partie **implémentation**
+- fichiers sources, `.c`
+#### Compilation séparée
+
+Compilation séparée, pour chaque fichier, on créé un fichier `.o` puis on les lie ensemble en une fois !
+
+- à faire `N` fois : `gcc -c monFichierJ.c -o monFichierJ.o`
+- à faire une 1 fois à la fin : `gcc monFichier1.o ... monFichierN.o -o monProgramme`
+
+et `monProgramme` est le fichier exécutable final
+
+### Makefile
+
+C'est long, la solution $arrow$ le **Makefile**
+
+Il se construit de la façon `but: dépendances`, p.ex: `questionnaire: qcm.o demander_nb.o`
+
+On ajoute `LDLIBS = -lm` pour la lib mathématique.
+
+```make
+CFLAGS += -g -std=c17
+LDLIBS = -lm
+
+all: questionnaire
+
+questionnaire: demander_nombre.o qcm.o questionnaire.o
+
+questionnaire.o: questionnaire.c qcm.h
+qcm.o: qcm.c qcm.h demander_nombre.h
+```
+
+> [!info] Les dernières lignes peuvent être générées avec `gcc -MM *.c`
+
+On peut préciser la commande à exécuter pour passer des dépendances au but :
+```make
+questionnaire.o questionnaire.c qcm.h
+	gcc -o questionnaire questionnaire.o qcm.o
+```
+
+Ou on peut utiliser les variables prédéfinies :
+```make
+questionnaire.o questionnaire.c qcm.h
+	gcc -o $@ $<
+```
+
+- `$@` : le but
+- `$?` : les dépendances qui ne sont plus à jour
+- `$<` : dépendances telles que définies par les règles par défaut
+- `$^` : liste des dépendances
+- `$(CC)` : le nom du compilateur
+- `$(CFLAGS)` : options de compilation
+- `$(LDFLAGS)` : options du linker
+- `$(LDLIBS)` : bibliothèques à ajouter
+
+On peut définir nos propres variables.
+### Édition des liens
+
+Un code objet c'est du code partiel et des **tables d'adressage** (pour retrouver les morceaux fournis dans les autres fichiers `.o` ).
+
+- table d'**exportation** des objets globaux (tous les objets qu'un `.o` propose aux autres)
+- table d'**importation** (par exemple quand on importe `sqrt`, on ne sait pas où elle est, on n'a pas l'adresse)
+- table des **tâches** : liste des endroits dans le code où il y a des adresses à résoudre
+
+L'édition de liens ne peut pas tout résoudre ! L'OS va charger le programme (dans le `loader`), et va réécrire les adresses qu'il ne connaît pas pour résoure les dernières ambiguïtés.
+
+par exemple, pour les tables **d'exportation** :
+```
+qcm.o
+affiche        | code | 0
+poser_question | code | 342
+
+questionnaire.o
+main           | code | 0
+```
+
+avec nom, type, et adresse relative (adresse de la première instruction de la fonction par rapport à tout le code du module)
+
+par exemple, pour les tables **d'importation** :
+
+```
+qcm.c -- aucune table
+
+questionnaire.c : affiche, poser_question, sqrt 
+```
+
+par exemplem pour les tables **des tâches** :
+
+```
+qcm.c : tous les sauts de mémoire (jump)
+
+questionnaire.c : tous les sauts de mémoire, plus tous les endroits où un appel à du code importé existe.
+```
+
+Le **chargeur** modifie toutes les adresses des sauts de mémoire (dont appels, code importé, etc.) en fonction de l'adresse de l'entrypoint du programme (on "translate" le code).
+
+### argc/argv
+
+On peut aussi utiliser ce prototype pour main :
+```c
+int main(int argc, char* argv[]) {
+	// argc est le nombre d'arguments
+	// argv est un tableau de chaîne de caractères avec les arguments
+}
+```
+
+`monprogramme -v fichier` 
+
+- `argv[0]` --> le nom du programme `monprogramme`
+- `argv[1]` --> `-v` 
+- `argv[2]` --> `fichier` 
+
+et donc, ici `argc = 3`
+
+Exemple de traitement d'arguments :
+
+![[image-7.png]]

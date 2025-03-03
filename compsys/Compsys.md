@@ -25,7 +25,7 @@ Le CPU est **virtualisé** : chaque thread pense qu'il est le seul à s'exécute
 > [!info] Que partagent les threads d'un même process ?
 > Chaque thread a son propre stack, son propre CPU context (c'est-à-dire, ses propres registres, son propre stack) mais ils partagent le même text segment, data segment, heap..
 
-## Lundi 24 févextrier
+## Lundi 24 février
 
 #### Privilege modes, limited direct execution, kernel/loader
 
@@ -45,7 +45,7 @@ Quand on veut lancer un programme, le **kernel** du système se lance :
 Le **loader** finit de préparer l'image mémoire du programme, il est en low privilege :
 - il charge les arguments du programme dans le stack (pourquoi pas dans **data** ? --> les arguments du programme sont des arguments de la fonction main du progamme, donc considérés comme des variables à mettre sur le stack)
 
-Les **syscall** sont donc utilisés par les threads en low privilege pour exécuter certaines high-privilege instructions. Dans le kernel, il y a un **syscall handler**. 
+Les **syscall** sont donc utilisés par les threads en low privilege pour exécuter certaines high-privilege instructions. Dans le kernel, il y a un **syscall handler**. Il y a donc un context switch en cas de syscall pour que le kernel passe en exécution.
 
 **Running**: au moins un des threads du process est running
 **Ready**: aucun thread du process est running
@@ -94,3 +94,56 @@ le process **init** est exécuté après le démarrage
 **GUI** manager process pour les commandes lancées depuis une interface
 
 syscalls --> to access resources from processes **and** to spawn/delete, etc. processes from processes
+
+## Lundi 3 mars
+
+> [!tldr] **Méthode** : comment représenter l'image mémoire d'un programme ?
+> 
+> On dessine le text segment, le data segment, le heap segment et le stack segment.
+> 
+> On ajoute le code dans le text segment.
+> 
+> On ajoute les variables globales dans le `data` segment (c'est-à-dire toutes les variables au dessus du `int main(){}`).
+> 
+> On ajoute dans le stack :
+> - les `return pointer` quand on appelle une fonction (à la ligne +1 de l'appel de la fonction)
+> - les variables locales (en `uninitialized` si elles sont plus loin dans la fonction / pas encore initialisées, ou avec leur valeur si elles sont déjà initialisées)
+
+### Convention appeleur/appelé
+
+
+- le caller doit sauver dans les **saved registers** les valeurs importantes
+- le callee doit sauver dans le **stack** les **saved registers** s'il prévoit de les modifier (ou de faire un autre appel de fonction), puis les restaurer dans les **saved registers** avant de `ret`
+- le caller doit donner ses arguments via les registres `a0`, `a1`, etc.
+- le callee doit renvoyer la valeur de retour 
+
+$arrow$ le callee ne doit **jamais écrire** dans le stack frame du caller ! c'est ce qu'on appelle le  **stack smashing**
+### Mémoire entre threads/processes
+
+Chaque process dispose de son propre espace d'adresses virtuelles. Si deux processes référencent la même adresse virtuelle, ils tomberont sur deux adresses physiques différentes !
+
+Si deux threads du même process accèdent à la même adresse virtuelle, ils tomberont sur la même adresse physique ! En effet comme ils n'ont pas les mêmes registers (chacun ont leur propre) -- ils communiquent via la mémoire principale.
+
+Ce qui est **sécurisé** et assure que deux process ne peuvent pas accéder à leurs données entre eux et à la fois une **illusion**, car le process pense qu'il a la mémoire principale pour lui. C'est pour ça qu'on parle de **safe illusion**. 
+
+Une première méthode, c'est que l'OS stocke, pour chaque process une adresse **base** et une adresse **bound**. Ainsi, quand le MMU (Memory Management Unit) reçoit une adresse virtuelle, il vérifie les bounds (c'est-à-dire que $"base" + "input" < "bound"$), et va ensuite faire $"physical" = "base" + "input"$.
+L'intérêt avec cette méthode, c'est que l'image mémoire d'un process est **continue** dans la mémoire ! (elle démarre à `start` et finie à `bound`)
+### Segmentation et paging : utiliser des chunks continus
+
+On a vu en comparch le **paging**, où chaque chunk (chaque **frame**, c'est-à-dire une série d'adresses physiques, est associé à une page d'un programme). Ces frames ont une taille fixe.
+
+On appelle **segmentation** un système de chunks à taille variable, mais c'est moins utilisé en pratique. C'est par exemple ce qu'on utilise en base and bound.
+
+> [!info] Où se situe le code de l'OS ?
+> 
+> Le système d'adresses virtuelles nous permettent de toujours mettre le code de l'OS à la même place pour chaque programme (par exemple tout en haut de la range d'adresses virtuelles `0xffff8000`). Ainsi le programme a juste à `jump` jusqu'à `0xffff8000` dans le cas d'un syscall. C'est toujours le même thread qui exécute le code, c'est juste qu'au lieu de lire son code il va lire le code de l'OS.
+
+### Caching
+
+Le cache stocke les valeurs des adresses mémoires accédées recémment ou fréquemment. 
+Le CPU passe toujours par le cache pour accéder à la mémoire.
+
+On a souvent plusieurs niveaux de cache (L1, L2, L3.. du plus rapide/petit au plus lent/gros).
+
+Le cache est séparé entre une partie pour les instructions et une partie pour les données (comme ça on est sûr de garder de la place pour les deux types de cache).
+
