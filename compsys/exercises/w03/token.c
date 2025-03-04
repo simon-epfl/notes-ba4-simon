@@ -36,10 +36,11 @@ int main () {
         line_to_read[rLen] = '\0';
     }
 
-    size_t fromInitial = 0;
-    size_t* from = &fromInitial;
-    size_t lenCst = rLen +1;
-    size_t* len = &lenCst;
+    size_t* from = malloc(sizeof(size_t));
+    *from = 0;
+
+    size_t* len = malloc(sizeof(size_t));
+    *len = rLen + 1;
 
     while (nextToken(line_to_read, from, len) > 0) {
         //printf("new word starting from %lu\n", *from);
@@ -50,7 +51,9 @@ int main () {
         }
         printf("'\n");
         *from = *from + *len;
-        size_t newLenCst = rLen +1;
-        *len = newLenCst;
+        *len = rLen + 1;
     }
+
+    free(from);
+    free(len);
 }
