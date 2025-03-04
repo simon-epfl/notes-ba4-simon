@@ -111,7 +111,6 @@ syscalls --> to access resources from processes **and** to spawn/delete, etc. pr
 
 ### Convention appeleur/appelé
 
-
 - le caller doit sauver dans les **saved registers** les valeurs importantes
 - le callee doit sauver dans le **stack** les **saved registers** s'il prévoit de les modifier (ou de faire un autre appel de fonction), puis les restaurer dans les **saved registers** avant de `ret`
 - le caller doit donner ses arguments via les registres `a0`, `a1`, etc.
@@ -146,4 +145,3 @@ Le CPU passe toujours par le cache pour accéder à la mémoire.
 On a souvent plusieurs niveaux de cache (L1, L2, L3.. du plus rapide/petit au plus lent/gros).
 
 Le cache est séparé entre une partie pour les instructions et une partie pour les données (comme ça on est sûr de garder de la place pour les deux types de cache).
-
