@@ -11,15 +11,15 @@ int nextToken(char const * str, size_t* from, size_t* len) {
     for (size_t i = *from; i < *len; i++) {
         const char currentChar = str[i];
         if (currentChar != ' ' && currentChar != '\0' && !isWordStarted) {
-            printf("starting word, setting from =%lu", i);
+            //printf("starting word, setting from =%lu", i);
             isWordStarted = true;
             *from = i;
         }
         if (currentChar == ' ' || currentChar == '\0') {
-            printf("found space at i=%lu.", i);
+            //printf("found space at i=%lu.", i);
             if (isWordStarted) {
                 *len = i - *from;
-                printf("ending word at length=%lu", *len);
+                //printf("ending word at length=%lu", *len);
                 return 1;
             }
         }
@@ -42,7 +42,7 @@ int main () {
     size_t* len = &lenCst;
 
     while (nextToken(line_to_read, from, len) > 0) {
-        printf("new word starting from %lu\n", *from);
+        //printf("new word starting from %lu\n", *from);
 
         printf("'");
         for (size_t i = *from; i < (*from + *len); i++) {
