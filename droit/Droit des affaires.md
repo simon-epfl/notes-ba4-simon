@@ -163,6 +163,7 @@ Expropriation/indemnité
 
 ### Les structures d'entreprise
 
+Les sociétés de personnes.
 #### L'entreprise individuelle
 
 Parmis les sociétés de personnes, l'entreprise individuelle est la plus importante. Elle est extrêmement simple : dès qu'une personne physique exerce une activité indépendante dans un but lucratif.
@@ -195,13 +196,42 @@ Les bénéfices et pertes se répartissent de manière égale entre associés sa
 > aux Bahamas avec sa nouvelle compagne.
 > Jérôme s’acquitte auprès de Jules (bailleur) de la moitié du loyer du mois d’avril.
 > 
-> --> Jérome est solidairement responsable du paiement (à charge pour Jérome d'aller réclamer à François sa part), Jérome doit payer le bailleur.
-> 
+> $arrow$ Jérome est solidairement responsable du paiement (à charge pour Jérome d'aller réclamer à François sa part), Jérome doit payer le bailleur.
 > 
 > Quant à Jean (employé), il ne perçoit pas son salaire du mois de mars. Jules peut-il réclamer à Jérôme l’entier du loyer du mois d’avril ?
 > 
 > Non, car Jules a été embauché par François.
 
+L'associé répond seul de ses dettes personnelles et des engagements contractés en son propre nom. En revanche, chaque associé répond personnellement et de manière illimitée sur tous ses biens des dettes contractées par les associés. On parle de **responsabilité solidaire**, à charge pour chaque associé de se retourner contre les autres.
 
+#### La société en nom collectif
 
+- pas de **patrimoine propre**
+- doit réunir au moins **deux personnes physiques**
+- elle se distingue des sociétés simples car elle a un nom (une raison sociale), elle peut conclure des contrats, en son nom, avec des tiers
 
+Sauf convention contraire (comme pour la société simple), une répartition à parts égales entre les associés des pertes et bénéfices s'applique.
+
+Chaque associé à une responsabilité illimité sur son propre patrimoine (on ne va pas engager la société si M. Dupont qui en fait partie s'il ne paye pas son loyer). 
+
+Maintenant, si un collaborateur n'est plus payé, il doit d'abord ouvrir une action en justice contre la société en tant que telle. Si on constate que la société n'est pas en mesure de dédommager le collaborateur, celui-ci peut s'attaquer au patrimoine privé de chacun des associés.
+
+#### La société anonyme
+
+Société de capitaux -- sépare complètement les biens de la société de la fortune privée des actionnaires.
+
+Elle a la personnalité juridique. On doit passer par un notaire pour la créer.
+
+Le capital-actions ne peut **pas être inférieur à 100,000 francs.**
+
+20% de la valeur nominale de chaque action doivent être libérés (c'est à dire payé à la société anonyme) mais en tout les cas au moins de 50,000 francs.
+
+Une société anonyme peut compter un seul actionnaire. C'est la seule forme de société qui peut être côtée en bourse.
+
+La société anonyme est constitué de trois organes :
+- l'assemblée générale (c'est à elle de déterminer l'enveloppe générale utilisée pour les salaires)
+- le conseil d'administration
+- l'organe de révision (pour les sociétés < 10 employés à plein temps -- les actionnaires peuvent renoncer à un contrôle externe)
+
+Les actionnaires ne sont pas responsables personnellement des dettes de la société.
+Dans certaines circonstances, les adminisetrateurs, directeurs et réviseurs peuvent voir leur responsabilité personnelle engagée en cas de **gestion fautive**.
