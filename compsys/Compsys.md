@@ -126,17 +126,19 @@ Si deux threads du même process accèdent à la même adresse virtuelle, ils to
 Ce qui est **sécurisé** et assure que deux process ne peuvent pas accéder à leurs données entre eux et à la fois une **illusion**, car le process pense qu'il a la mémoire principale pour lui. C'est pour ça qu'on parle de **safe illusion**. 
 
 Une première méthode, c'est que l'OS stocke, pour chaque process une adresse **base** et une adresse **bound**. Ainsi, quand le MMU (Memory Management Unit) reçoit une adresse virtuelle, il vérifie les bounds (c'est-à-dire que $"base" + "input" < "bound"$), et va ensuite faire $"physical" = "base" + "input"$.
-L'intérêt avec cette méthode, c'est que l'image mémoire d'un process est **continue** dans la mémoire ! (elle démarre à `start` et finie à `bound`)
 ### Segmentation et paging : utiliser des chunks continus
 
-On a vu en comparch le **paging**, où chaque chunk (chaque **frame**, c'est-à-dire une série d'adresses physiques, est associé à une page d'un programme). Ces frames ont une taille fixe.
+On appelle **segmentation** un système de chunks à taille variable, peu utilisé en pratique. C'est par exemple ce qu'on utilise en base and bound. 
+L'intérêt avec cette méthode, c'est que l'image mémoire d'un process est **continue** dans la mémoire ! (elle démarre à `start` et finie à `bound`). Elle nécessite aussi un hardware simple.
+Problèmes : **external fragmentation**, des trous de mémoire inutilisables apparaissent entre les segments. Si un segment doit s'agrandir mais qu'un autre le bloque, il faut le déplacer, ce qui est coûteux.
 
-On appelle **segmentation** un système de chunks à taille variable, mais c'est moins utilisé en pratique. C'est par exemple ce qu'on utilise en base and bound.
+On a vu en comparch le **paging**, où chaque chunk (chaque **frame**, c'est-à-dire une série d'adresses physiques, est associé à une page d'un programme). Ces frames ont une taille fixe. L'intérêt c'est qu'on a pas besoin d'une range d'adresses continue en mémoire. On peut redimensionner facilement la mémoire en allouant et désallouant des pages/frames. (c'est de la **fragmentation interne** -- il y a des petits trous au sein des frames allouées parce que si on veut stocker 6Kib on est obligés de prendre un segment de 8Kib par exemple si c'est la taille des frames).
 
 > [!info] Où se situe le code de l'OS ?
 > 
 > Le système d'adresses virtuelles nous permettent de toujours mettre le code de l'OS à la même place pour chaque programme (par exemple tout en haut de la range d'adresses virtuelles `0xffff8000`). Ainsi le programme a juste à `jump` jusqu'à `0xffff8000` dans le cas d'un syscall. C'est toujours le même thread qui exécute le code, c'est juste qu'au lieu de lire son code il va lire le code de l'OS.
 
+![[image-16.png|236x284]]
 ### Caching
 
 Le cache stocke les valeurs des adresses mémoires accédées recémment ou fréquemment. 
@@ -145,3 +147,44 @@ Le CPU passe toujours par le cache pour accéder à la mémoire.
 On a souvent plusieurs niveaux de cache (L1, L2, L3.. du plus rapide/petit au plus lent/gros).
 
 Le cache est séparé entre une partie pour les instructions et une partie pour les données (comme ça on est sûr de garder de la place pour les deux types de cache).
+
+## Mercredi 5 mars
+
+#### Rappel sur les pages
+
+Une page est l'unité minimale d'un espace d'adresse (elle doit être suffisamment petite pour éviter la fragmentation interne). On créé aussi des **super pages**, qui sont des aggrégations de plusieurs pages/frames ensemble.
+
+L'OS maintient une **page table** pour garder le mapping entre les pages et les frames. Il y a une table par process.
+
+![[image-18.png|450x196]]
+
+Si on a une page de taille $2^8$, on a donc un offset de $8$ bits.
+
+Il y a un registre spécial qui stocke un pointeur vers la page table.
+Lors d'un context switch, le registre qui stocke le pointeur vers la page table est changé aussi.
+
+**PTE (Page table entry)**
+
+Chaque entrée dans la page table contient un numéro de frame mais aussi... :
+- present bit (_indique si la page est en RAM ou swap, si absent → page fault_)
+- protection bit (_définit les permissions : lecture/écriture/exécution_)
+- User / Supervisor bit (_contrôle si l'accès est réservé au kernel ou autorisé à l’utilisateur_)
+- Dirty (_indique si la page a été modifiée et doit être écrite sur disque avant d’être remplacée_)
+- Access/Reference bit (_marque si la page a été récemment utilisée, utile pour l’algorithme de remplacement_)
+
+En comparch on a vu que les page tables étaient **linéaires**. Si une PTE fait 4B, et qu'on a des adresses virtuelles de 32 bits dont 12 bits pour l'offset --> on a 20 bits pour les entries donc $2^20$ PTE donc $2^20 dot 4B$ pour la table.
+
+Si on veut accéder à la PTE de la page 6, on fait $"pageTable"[6 * 4 B]$.
+
+Problème : les **page tables prennent trop de place** ! La solution serait de créer des pages plus grandes ? mais on augmente la fragmentation interne !
+
+Une solution est de créer des **multi-level page table**
+
+![[image-19.png|452x238]]
+
+Comme ça, pas besoin de créer les tables inutiles !
+
+**TLB (translation lookaside buffer)** est un cache des adresses virtuelles récemment converties (le CPU va toujours voir dans le TLB. s'il y a un TLB miss, on doit faire tout le travail d'aller dans chaque niveau de page table avec le MMU)
+Le TLB n'est pas dans la mémoire, c'est du hardware.
+
+Certaines pages non utilisées sont stockées sur le disque.

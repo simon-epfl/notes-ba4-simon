@@ -121,11 +121,45 @@ problème : on a trop de sous-problèmes (8 !)
 > 
 > Maintenant on a un produit de moins nécessaire pour trouver $r$! On a plus d'additions et de soustractions. On peut utiliser le même principe pour les matrices.
 
+En appliquant cette méthode aux matrices, on arrive à 7 produits !
+## Multiplier deux nombres entiers
 
+On a deux entiers de $n$ chiffres $x$ et $y$ en base $b$. On doit trouver $x dot y$.
+Ce qu'on a vu au lycée c'est un algo en $Theta(n^2)$.
 
+Note : multiplier par $b^k$ c'est considéré en $O(1)$, c'est juste un shift.
 
+On peut séparer nos deux nombres en deux parties :
+$$ X = X_H dot 10^(n/2) + X_L " et " Y = Y_H dot 10^(n/2) + Y_L$$
+Par exemple si $X = 1234$, on a $n/2 = 2$ donc $X_H = 12, X_L = 34$.
 
+On veut calculer :$$X dot Y = (X_H dot 10^(n/2) + X_L) dot (Y_H dot 10^(n/2) + Y_L) \ = X_H dot Y_H dot 10^n + (X_H Y_L + X_L Y_H) dot 10^(n/2) + X_L Y_L $$
+On a donc $4$ multiplications de taille $n/2$ ! mais avec l'algo de **Karatsuba**, on peut réutiliser l'astuce des nombres complexes et calculer :
+$$ M = (X_H + X_L) dot (Y_H + Y_L) \ X dot Y = X_H Y_H dot 10^n + (M - X_H Y_H - X_L Y_L) dot 10^(n/2) + X_L Y_L $$
+En fait, on a donc en fait que 3 multiplications de taille $n/2$ à calculer ! $M, X_L Y_L, X_H Y_H$ 
 
+On arrive à :
+$$ T(n) = 3T(n/2) + Theta(n) = Theta(n^(log_2(3))) $$
 
+## Heaps
 
+**(min)-heap property** : on veut que chaque noeud ait une valeur plus grande que chacun de ses enfants directs.
+- on sait que la maximum est toujours en haut de l'arbre
+- la hauteur d'un noeud est le plus long chemin simple (le nombre de segments) entre le noeud et une feuille
 
+On utilise un tableau pour stocker les heaps :
+
+![[image-20.png|486x256]]
+
+Comment maintenir la **(min/max)-heap property** ? Il existe un algorithme qui nous permet de retrouver la heap-property si elle n'est pas respectée qu'à la racine.
+
+- comparer $A[i], A[L(i)], a[R(i)]$
+- si nécessaire, échanger $A[i]$ avec le plus grand des enfants
+- continuer jusqu'à ce que la règle soit correcte
+
+## Heap sort
+
+Heapsort a la même complexité que le **merge sort**, mais est **in-place** (comme insertion sort). Le meilleur des deux mondes ?
+
+- on créé un max-heap à partir du tableau
+- 
