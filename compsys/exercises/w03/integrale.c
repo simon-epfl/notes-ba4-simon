@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <math.h>
+#include <stdlib.h>
 
 double s(double x) {
   return sin(x);
@@ -23,37 +24,11 @@ double f3(double x) {
 
 typedef double (*Function)(double);
 
-Function request_function() {
+int request_function() {
     printf("Please enter a number between 1-5: ");
     int res = 0;
     scanf("%d", &res);
-    Function func = NULL;
-    switch (res) {
-        case 1: {
-            func = f1;
-            break;
-        }
-        case 2: {
-            func = f2;
-            break;
-        }
-        case 3: {
-            func = f3;
-            break;
-        }
-        case 4: {
-            func = s;
-            break;
-        }
-        case 5: {
-            func = e;
-            break;
-        }
-        default: {
-            printf("what are you doing?");
-        }
-    }
-    return func;
+    return res;
 }
 
 double demander_nombre(void)
@@ -77,12 +52,16 @@ double integre(double a, double b, Function f)
   return res;
 }
 
-
 int main(void)
 {
-  double
-    a = demander_nombre(),
-    b = demander_nombre();
-  printf("Integrale de f entre %f et %f : %.12f\n", a, b, integre(a, b, request_function()));
-  return 0;
+
+    Function* arr = calloc(2, sizeof(Function));
+    arr[0] = f1;
+    arr[1] = f2;
+
+    double
+        a = demander_nombre(),
+        b = demander_nombre();
+    printf("Integrale de f entre %f et %f : %.12f\n", a, b, integre(a, b, arr[request_function()]));
+    return 0;
 }

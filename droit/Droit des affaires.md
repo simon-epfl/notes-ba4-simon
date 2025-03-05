@@ -235,3 +235,69 @@ La société anonyme est constitué de trois organes :
 
 Les actionnaires ne sont pas responsables personnellement des dettes de la société.
 Dans certaines circonstances, les adminisetrateurs, directeurs et réviseurs peuvent voir leur responsabilité personnelle engagée en cas de **gestion fautive**.
+(par exemple, quelqu'un investit 80% du patrimoine dans des fonds spéculatifs).
+
+#### La société à responsabilité limitée SARL
+
+La société à responsabilité limitée est également une société de capitaux.
+
+Elle a donc la personnalité juridique.
+
+La société est consititué par un acte passé en la forme authentique. Le capital social ne peut pas être inférieur à 20,000 francs et doit être intégralement libéré.
+
+Une société à responsabilité limité peut compter un seul associé.
+
+La société à responsabilité limitée compte les mêmes organes que la société anonyme. Contrairement aux actionnaires qui n'apparaissent pas dans la société anonyme, ils doivent apparaître dans la SARL.
+
+> [!example] Albert est informaticien et a développé un logiciel de gestion d’entreprises qu’il souhaite commercialiser.
+> 
+> Il obtient une commande importante de la part d’une grande entreprise de la place. Afin de pouvoir honorer cette commande et assurer la formation des futurs utilisateurs, il engage deux collaborateurs.
+> 
+> Après six mois, Albert doit constater qu’il n’a pas d’autres commandes et plus de liquidités au point qu’il n’est plus à même de payer le salaire de ses collaborateurs. Sur un plan personnel, Albert n’a pas d’économies. En revanche, il est propriétaire d’un petit appartement hérité de sa grand-mère. 
+> 
+> Contre qui les deux collaborateurs peuvent-ils agir afin de récupérer le paiement de leur salaire si :
+> 
+> **Albert est un entrepreneur individuel ?**
+> Albert. Donc l'appartement sera pris.
+> 
+> **Albert est administrateur et actionnaire unique d’une société anonyme dont la moitié du capital-actions, soit fr. 50'000.- a été libéré ?**
+> 
+> La société. L'office des faillites va demander les 50,000 restants à Albert. Et s'il ne peut pas payer, Albert devra donner l'appartement à l'administrateur de l'office des faillites qui l'attaque.
+> 
+> **Albert est associé gérant d’une société à responsabilité limitée ?**
+> 
+> La société. Et Albert n'a plus besoin de rien payer. (...sauf faute de gestion)
+> 
+> **Albert s’est associé à Bernard lesquels ont créé une société en nom collectif ?**
+> 
+> La société, si elle n'a plus rien on attaque les associés.
+
+
+### Le contrat
+
+Le contrat est un accord librement consenti qui lie deux ou plusieurs personnes et qui fixe les droits et obligations respectifs de chacun.
+
+Les parties à un contrat peuvent être des personnes physiques ou morales.
+
+>[!example] Mme Bolomey, atteinte de la maladie d’Alzheimer, commande dix caisses de vin de bordeaux.
+> 
+> Quelques jours plus tard, son fils prend connaissance avec stupeur de la facture de fr. 6'000.- et de la livraison du vin.
+> 
+> Mme Bolomey est-elle liée par le contrat conclu avec M. Marchand et tenue de payer la facture ?
+> 
+> Non, car elle est atteinte de la maladie et n'a pas la capacité de discernement.
+
+> [!example] Julie, 15 ans, achète un vélomoteur d’occasion à M. Marchand, paie un montant de fr. 800.- et part avec son engin.
+> 
+> Le lendemain matin, elle est de retour au magasin avec son père qui exige de M. Marchand qu’il rende l’argent à sa fille.
+> 
+> **M. Marchand doit-il s’exécuter ?**
+> 
+> On ne peut s'engager qu'à la majorité civile (18 ans), sinon il faut un tueur légal. Les parents peuvent exprimer leur désaccord et retourner chez le vendeur pour dire que le contrat est nul et récupérer les 800 francs.
+> 
+> Il y a une règle pour les objets de faible valeur, où un enfant mineur mais capable de discernement peut acheter ces objets.
+
+
+
+
+
