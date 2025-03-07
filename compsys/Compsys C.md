@@ -99,6 +99,17 @@ ajoute au plus `n` caractères de `src` à la fin de `dest` ! retourne `dest`
 
 on peut comparer des chaînes avec `strncmp`! 
 
+> [!danger] Pièges : pointeur ou pas pointeurs ?
+> 
+> ```c
+> char* s = "bonjour";
+> ```
+> En C, le code ci-dessus fonctionne mais n'est **pas correct**! En effet `s` va pointer vers un emplacement mémoire en lecture seule. il faut bien écrire `const char* s = "bonjour";` si on veut que ce soit juste.
+> 
+> Sinon, on doit `calloc` puis utiliser `strncopy`!
+> ```c
+> char* s = calloc(TAILLE+1, 1); strncpy(s, "bonjour", TAILLE);
+> ```
 #### Pointeurs sur les fonctions
 
 On utilise `(*ptr)` à la place du nom de la fonction. Par exemple :
@@ -179,12 +190,12 @@ en résumé, `(int) p+1` est égal à `(int) p + sizeof(Type)` !
 > 
 > Le code suivant ne fonctionne pas !
 > ```c
-> void f(int t[N]) { // équivalent à f(int* t) !
+> void f(int t[N]) { // équivalent à f(int* t) à cause du decay !
 > 	...sizeof(t)/sizeof(int)...
 > 	// évalué comme la taille d'un pointeur sur la taille d'un entier !
 > }
 > ```
-> **Rappel** : un tableau n'a **jamais** connaissance de sa taille !
+> **Rappel** : un tableau n'a **jamais** connaissance de sa taille ! Voir https://www.geeksforgeeks.org/array-decay-in-c/.
 > 
 > ```c
 > int tab[1000];

@@ -1,15 +1,16 @@
 #include <stdio.h>
-#include <stdlib.h>
+#include <string.h>
 
-double* f(double a) 
-{ 
-  double b = a;
-  return &b;
-}     
-   
+void f(char* string)
+{
+  const size_t len = strlen(string);
+  if (len >= 2) string[1] = 'e';
+  if (len >= 6) string[5] = '\0';
+  puts(string);
+}
+
 int main(void) 
-{ 
-  double* ptr = f(9.0);
-  printf("%f", *ptr);
-  return 0; 
+{
+  f("Hallo world!");
+  return 0;
 }
