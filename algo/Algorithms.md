@@ -34,6 +34,13 @@ $$ T(n) = Theta(n^(log_b a)) $$
 $$T(n) = Theta(f(n))$$
 - Quand les deux sont équilibrés, $C(n) + D(n) = Theta(n^(log_b a))$, on a :
 $$ T(n) = Theta(n^(log_b a) dot log_b (n)) $$
+#### Dans le cas unbalanced ?
+
+Si on a la récurrence suivante : $T(n) = T(n/5) + 2 T((2n)/5) + Theta(n)$
+On sait qu'on aura une branche à gauche très courte en $log_5(n)$ et une branche à droite très longue en $log_(5/2) (n)$. On peut donc bound notre taille d'arbre :
+$$ log_5(n) <= "hauteur arbre" <= log_(5/2) (n) $$
+Supposons qu'on est dans le cas d'un arbre balanced avec une hauteur de $log_5(n)$. On a donc la relation $T_"low" (n) = 5 T(n/5) + Theta(n)$. Et on peut construire un arbre balanced avec $T_"high" (n) = 5/2 T((2n)/5) + Theta(n)$. Et d'après le master theorem : $$Theta(n log_5 (n)) <= T(n) <= Theta(n log_(5/2) (n)) arrow.double.long T(n) = Theta(n log n)$$Mais pourquoi peut-on dire que $T_"low" (n) <  T(n)$ ? Parce que le problème semble très différent, on sépare maintenant en 5 problèmes (donc plus de divisions et de fusions ?), au lieu de 3, et puis on change la taille de ces problèmes, etc. il n'y a pas que la hauteur qui compte pour définir si un problème est plus coûteux qu'un autre, si ?
+$arrow$ en fait, dans un cas comme dans l'autre, on a **toujours** $Theta(n)$ travail à chaque étage, et c'est ça qui compte. Certes, on aura plus de divisions et plus de listes à fusionner, mais comme combiner et diviser est fait en $Theta(n)$, alors diviser deux listes de taille $(2n)/5$ ou 4 listes de taille $n/5$ est indentique (à un facteur constant $c$ devant près). Donc les deux programmes ont le même coût jusqu'à ce qu'un des deux arrive à la fin de sa hauteur (et la hauteur détermine la complexité parce que c'est le nombre d'étages de $Theta(n)$ qu'on aura, le nombre de $c n$ opérations à faire !).
 ### Résoudre les relations de récurrence
 
 $T(n) = 2 T(n/2) + c dot n$
@@ -143,23 +150,32 @@ $$ T(n) = 3T(n/2) + Theta(n) = Theta(n^(log_2(3))) $$
 
 ## Heaps
 
-**(min)-heap property** : on veut que chaque noeud ait une valeur plus grande que chacun de ses enfants directs.
+**(min/max)-heap property** : on veut que chaque noeud ait une valeur plus grande (ou plus petite pour le min-heap) que chacun de ses enfants directs.
 - on sait que la maximum est toujours en haut de l'arbre
-- la hauteur d'un noeud est le plus long chemin simple (le nombre de segments) entre le noeud et une feuille
+- la hauteur d'un noeud est le plus long chemin simple (le nombre de segments) entre le noeud et une feuille 
 
 On utilise un tableau pour stocker les heaps :
 
 ![[image-20.png|486x256]]
 
-Comment maintenir la **(min/max)-heap property** ? Il existe un algorithme qui nous permet de retrouver la heap-property si elle n'est pas respectée qu'à la racine.
+### Heapify
+
+Comment maintenir la **(min/max)-heap property** ? Il existe un algorithme qui nous permet de retrouver la heap-property si elle n'est pas respectée qu'à la racine en **O(log n)**. 
 
 - comparer $A[i], A[L(i)], a[R(i)]$
 - si nécessaire, échanger $A[i]$ avec le plus grand des enfants
 - continuer jusqu'à ce que la règle soit correcte
 
+### Build Max/Min Heap
+
+Cet algorithme est en **O(n log n)** et permet de construire un heap à partir d'un tableau désordonné. Il appelle **heapify** sur chaque élément du tableau. $n dot "heapify" = n dot log n$.
 ## Heap sort
 
 Heapsort a la même complexité que le **merge sort**, mais est **in-place** (comme insertion sort). Le meilleur des deux mondes ?
 
 - on créé un max-heap à partir du tableau
-- 
+- on fait un **build-max-heap**
+- on prend le premier élément max et on le met au début du tableau (on le discard)
+- on met le dernier élément du tableau à sa place
+- on appelle **heapify**
+- etc. en boucle jusqu'à ce que le tableau soit trié

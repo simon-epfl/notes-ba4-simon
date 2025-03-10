@@ -10,6 +10,16 @@ Pour utiliser `M_PI` (= pi),
 ```
 
 Ne pas oublier le mot-clef `const` le plus souvent que possible.
+
+Initialiser une structure :
+```c
+struct Person p1 = {"Alice", 25};
+
+Person p2;
+p2.age = 30;
+strcpy(p2.name, "Bob");
+```
+
 ### Les pointeurs
 
 Les pointeurs :
@@ -63,6 +73,17 @@ on peut utiliser `memset` pour initialiser la mémoire `memset(ptr, 0, sizeof(*p
 
 avec `free(ptr);` on libère la mémoire allouée
 bonne pratique : ajouter aussi un `ptr = NULL` après.
+
+> [!danger] On ne peut free qu'un pointeur qui a été alloué dynamiquement !
+> 
+> On ne peut appeler `free` que sur un pointeur `ptr = malloc` ou un `calloc`, etc. Le code suivant **ne fonctionnera pas**!
+> ```c
+> int* ptr = calloc(2, sizeof(int));
+> ptr[0] = 1;
+> ptr++;
+> ptr[0] = 1;
+> free(ptr); // ne fonctionne pas ! car ptr[1] a été alloué à partir de ptr[0]
+> ```
 
 ```c
 typedef struct {

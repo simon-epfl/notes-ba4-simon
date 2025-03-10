@@ -187,4 +187,4 @@ Comme ça, pas besoin de créer les tables inutiles !
 **TLB (translation lookaside buffer)** est un cache des adresses virtuelles récemment converties (le CPU va toujours voir dans le TLB. s'il y a un TLB miss, on doit faire tout le travail d'aller dans chaque niveau de page table avec le MMU)
 Le TLB n'est pas dans la mémoire, c'est du hardware.
 
-Certaines pages non utilisées sont stockées sur le disque.
+Certaines pages non utilisées sont stockées sur le disque (temporairement), et quand l'OS les charge il y a une page fault, puis il les fait revenir dans la mémoire principale.
