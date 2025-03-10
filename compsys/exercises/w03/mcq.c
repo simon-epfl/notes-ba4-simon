@@ -11,7 +11,7 @@ typedef struct {
     unsigned int solution;
 } MCQ;
 
-typedef MCQ** Exam;
+typedef MCQ* Exam;
 
 void display(const MCQ* mcq) {
     printf("%s", mcq->question);
@@ -44,12 +44,10 @@ unsigned int ask_question(const MCQ* mcq) {
     return answer;
 }
 
-MCQ** create_examination() {
-    MCQ** back = calloc(3, sizeof(MCQ*));
-    back[0] = malloc(sizeof(MCQ));
-    back[1] = malloc(sizeof(MCQ));
-    back[2] = malloc(sizeof(MCQ));
-    
+void create_examination(Exam* back) {
+
+    *back = calloc(3, sizeof(MCQ));
+
     (*back)[0].question = calloc(MAX_QUESTION_LENGTH, sizeof(char));
     strcpy((*back)[0].question,
     "How many teeth does an adult elephant have");
@@ -93,27 +91,36 @@ MCQ** create_examination() {
     strcpy((*back)[2].reponses[6], "polls");
     (*back)[2].solution = 6;
 
-    return back;
 }
 
 void destroy_examination(Exam* exam){
-    free(exam);
+    for (int i = 0; i < 3; i++) {
+        MCQ mcq = (*exam)[i];
+        for (int j = 0; j < mcq.nb_rep; j++) {
+            free(mcq.reponses[j]);
+        }
+        free(mcq.question);
+    }
+    free(*exam);
 }
 
 int main() {
 
-    MCQ** exam = create_examination();
+    Exam exam = NULL;
+    create_examination(&exam);
     int tot = 0;
     
     for (int i = 0; i < 3; i++) {
-        const MCQ mcq = (*exam)[i];
+        const MCQ mcq = (exam)[i];
         int res = ask_question(&mcq);
         if (res == mcq.solution) {
             tot++;
         }
     }
 
-    printf("%d", tot);
+    printf("%d\n\n", tot);
+
+    destroy_examination(&exam);
 
 }
 
