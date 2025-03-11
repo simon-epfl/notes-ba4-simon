@@ -9,9 +9,7 @@ Pour utiliser `M_PI` (= pi),
 #include <math.h>
 ```
 
-Ne pas oublier le mot-clef `const` le plus souvent que possible.
-
-Initialiser une structure :
+Syntaxe pour initialiser une structure :
 ```c
 struct Person p1 = {"Alice", 25};
 
@@ -20,6 +18,13 @@ p2.age = 30;
 strcpy(p2.name, "Bob");
 ```
 
+> [!danger] à ne pas oublier
+> 
+> tout ce qu'il n'est pas évident de faire car ne va pas casser le code
+> 
+> - ajouter les `const` à tous les endroits possibles
+> - vérifier qu'à chaque `malloc` un `free` est mis dans le code
+> - vérifier que chaque fichier ouvert est bien fermé
 ### Les pointeurs
 
 Les pointeurs :
