@@ -39,7 +39,7 @@ book_t* book_create() {
 
 void book_free(book_t* b) {
     for (int i = 0; i < b->size; i++) {
-        free(b->root);
+        free(b->root[]);
     }
 }
 
