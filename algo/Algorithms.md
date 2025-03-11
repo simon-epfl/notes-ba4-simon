@@ -168,14 +168,71 @@ Comment maintenir la **(min/max)-heap property** ? Il existe un algorithme qui n
 
 ### Build Max/Min Heap
 
-Cet algorithme est en **O(n log n)** et permet de construire un heap à partir d'un tableau désordonné. Il appelle **heapify** sur chaque élément du tableau. $n dot "heapify" = n dot log n$.
+Cet algorithme est en **O(n log n)** et permet de construire un heap à partir d'un tableau désordonné. Il appelle **heapify** sur chaque élément du tableau (sauf sur les tous petits noeuds du bas mais ça importe peu). $n dot "heapify" = n dot log n$.
 ## Heap sort
 
 Heapsort a la même complexité que le **merge sort**, mais est **in-place** (comme insertion sort). Le meilleur des deux mondes ?
 
 - on créé un max-heap à partir du tableau
-- on fait un **build-max-heap**
+- on fait un **build-max-heap** (n log n)
 - on prend le premier élément max et on le met au début du tableau (on le discard)
 - on met le dernier élément du tableau à sa place
 - on appelle **heapify**
-- etc. en boucle jusqu'à ce que le tableau soit trié
+- etc. en boucle jusqu'à ce que le tableau soit trié (donc $n$ heapify, en $n log n$)
+
+## Priority Queues
+
+- we want to maintain a **dynamic set S of elements** using heaps
+- each set element has a **key** and a **value**
+
+**Supported operations**
+
+- `maximum_element(A, n)`: this is $Theta(1)$, we just have to return the first one
+- `extract_maximum_element(A, n)`: $Theta(log n)$, we remove the maximum element, and replace it with the last one and run `heapify`
+- `increase_key_value(A, key, n)`: $Theta(log n)$, on met à jour l'élément puis on regarde tous ses parents. S'il est plus grand, on inverse les deux.
+- `insert_into_heap(A, key, n)`: $Theta(log n)$, on insert l'élément tout au bout avec une valeur de $- infinity$ puis on appelle `increase_key_value` dessus
+
+## Stack implementation (last-in, first-out)
+
+Utiles pour les allocations mémoires. 
+
+![[image-21.png|328x166]]
+
+`Q.top` pointe à la position du dernier élément (celui qui vient d'arriver).
+### Opérations
+
+- `empty`: on check si le top est 0
+- `push` : `S.top <- S.top + 1` puis `S[S.top] <- x`
+- `pop`: `S.top <- S.top - 1` et `return S[S.top + 1]`
+
+elles sont en $Theta(1)$.
+
+## Queue implementation
+
+![[image-22.png]]
+
+- `Q.head` pointe à la position du premier élément
+- `Q.tail` pointe à la position de là où le prochain élément arriverait
+
+### Opérations
+
+- `enqueue(Q, x)`:
+	`Q[Q.tail] = x` et `if (Q.tail == Q.length) Q.tail = 1 else Q.tail += 1`
+
+parce que si on enqueue deux fois, on va faire pointer la tail vers `1`! (parce que `13` n'existe pas)
+et comme la head est `7` (soit après), on sait qu'on aura `8`, `9`, etc. définis
+
+## Linked list
+
+- `L.head` pointe vers la tête de la liste
+- chaque noeud `N` stocke `N.prev`, `N.key`, `N.next`
+
+### Opérations
+
+- `search`: $Theta(n)$
+	`x <- L.head` and `while(x != nil and x.key != k) x = x.next` then `return x`
+- `insert(x)`: $Theta(1)$
+	`new_el = (/, x, L.head)` and `L.head.next = L.head` and `L.head <- new_el`
+- `delete(x)`: $Theta(1)$
+	`x.prev.next = x.next` (on lit celui avant x à celui après x)
+	 (attention à bien gérer tous les cas)

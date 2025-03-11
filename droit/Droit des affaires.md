@@ -297,7 +297,53 @@ Les parties à un contrat peuvent être des personnes physiques ou morales.
 > 
 > Il y a une règle pour les objets de faible valeur, où un enfant mineur mais capable de discernement peut acheter ces objets.
 
+### l'offre et acceptation
 
+L’offre consiste à proposer une chose ou un service et à indiquer les éléments essentiels qui feront partie du contrat.
 
+Le fait d’exposer une marchandise, avec indication du prix, constitue une offre.
 
+L’auteur d’une offre est lié par celle-ci si elle est acceptée.
 
+> [!example] Francine entre dans une bijouterie et demande à la vendeuse le prix d’une
+> bague en or sertie de diamants exposée en vitrine.
+> 
+> La vendeuse lui dit qu’elle vaut fr. 500.-. Francine trouve le prix trop élevé et
+> repart.
+> 
+> Quelques jours plus tard, après avoir gagné à la loterie, Francine retourne à la bijouterie pour acheter la bague. La vendeuse lui dit qu’en réalité le prix de la bague est de fr. 5'000.-.
+> 
+> Francine est furieuse et dit à la vendeuse qu’elle est liée par le montant de fr. 500.- articulé précédemment.
+> 
+> Est-ce exact ?
+> 
+> Non, l'offre faite entre deux personnes présentes n'est valable qu'immédiatemment.
+
+> [!example] Jeanne est vendeuse de voitures d’occasion.
+> 
+> Elle fait une offre par écrit à un client de lui vendre une magnifique BMW au prix de fr. 35'000.-. Sa lettre précise que cette offre est valable dix jours. Le lendemain, un autre client vient au garage et lui offre la somme de fr. 45'000.- pour la même voiture. Jeanne accepte.
+> 
+> Qu’en est-il de sa première offre ?
+> 
+> Jeanne est lié par le contrat (qui a été fait **entre absents**). Elle doit honorer les deux offres. Comme elle ne pourra pas honorer l'offre du premier client, elle devra des dommages et intérêts.
+
+### Droit de révocation
+
+Pour protéger les consommateurs privés à l'égard des professionnels.
+
+Un droit de révocation du contrat n’existe qu’en cas de démarchage (dans des locaux d’habitation, sur le lieu de travail, dans des transports publics, sur la voie publique ou lors d’une manifestation publicitaire liée à une excursion, ou encore par téléphone).
+
+Ce droit de révocation ne vaut que si :
+• le contrat porte sur une chose mobilière ou un service destiné à un usage
+personnel ou familial;
+• le fournisseur de biens ou de services a agi dans le cadre d’une activité
+professionnelle ou commerciale;
+• l’achat dépasse 100 francs.
+
+Le délai de révocation est de 14 jours.
+### Vices du consentement
+
+Il y a vice du consentement lorsque la déclaration d’une partie ne correspond pas à sa volonté.
+
+- **erreur essentielle** : l’auteur par inadvertance ou ignorance exprime incorrectement sa volonté.
+- 

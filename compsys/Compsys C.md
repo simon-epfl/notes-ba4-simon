@@ -51,6 +51,17 @@ pour les structures `p->x` est équivalent à `(*p).x` si `p` est un pointeur su
 > [!tldr] TLDR
 > `const type * ptr` objet constant
 > `type * const  ptr` pointeur constant
+> 
+> | Déclaration                   | Pointeur externe constant ? | Pointeur intermédiaire constant ? | Objet final constant ? |
+|-------------------------------|-----------------------------|------------------------------------|------------------------|
+| `int **ptr`                   | ❌                         | ❌                                | ❌                    |
+| `const int **ptr`            | ❌                         | ❌                                | ✅                    |
+| `int * const *ptr`           | ❌                         | ✅                                | ❌                    |
+| `const int * const *ptr`     | ❌                         | ✅                                | ✅                    |
+| `int ** const ptr`           | ✅                         | ❌                                | ❌                    |
+| `const int ** const ptr`     | ✅                         | ❌                                | ✅                    |
+| `int * const * const ptr`    | ✅                         | ✅                                | ❌                    |
+| `const int * const * const ptr` | ✅                      | ✅                                | ✅                    |
 
 JCC écrit plutôt `type const* ptr` (identique à `const type* ptr`) $arrow$ déclare un pointeur sur un objet constant de type `type` (on ne pourra pas modifier la valeur de l'objet au travers de `ptr` mais on pourra faire pointer `ptr` vers un autre objet)
 ```c
@@ -194,6 +205,18 @@ et on se retrouve avec un **tableau de taille arbitraire de tableaux de int de t
 ![[image-5.png|533x344]]
 
 Note : `p2` est un tableau, stocké dans le stack ! mais comme on remplit chaque élément de p2 avec un `calloc` (dans le heap), on a des différences d'adresses importantes.
+
+> [!question] Quand utiliser `[SIZE]`, `ptr*` ou `ptr**` ?
+> 
+> Par ordre de préférence :
+> 
+> On utilise `type array[SIZE]` quand on veut stocker une liste de taille fixe d'éléments (que ce soient des adresses, des double, des struct, peu importe).
+> 
+> Sinon, ce sont **des tableaux dynamiques** et on utilise `type*` ou `type**`. Maintenant, est-ce qu'on veut un tableau de valeurs ou un tableau d'adresses, de références vers les valeurs ?
+> 
+> On utilise `type* ptr` puis `ptr[0]`, `ptr[1]` ? $arrow$ quand on veut stocker directement les valeurs éléments dans notre tableau, ce qui n'est pas toujours le cas.
+> 
+> On utilise `type**` uniquement dans le cas où on est obligés d'avoir un tableau de références vers des éléments (typiquement si on créé des `Node` qui se référencent entre eux, comme avec un champ `neighbors`), on **doit** avoir un tableau de références et non pas plein de copies des `Node`.
 
 ### Arithmétique des pointeurs
 
