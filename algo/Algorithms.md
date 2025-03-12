@@ -192,7 +192,7 @@ Heapsort a la même complexité que le **merge sort**, mais est **in-place** (co
 - `increase_key_value(A, key, n)`: $Theta(log n)$, on met à jour l'élément puis on regarde tous ses parents. S'il est plus grand, on inverse les deux.
 - `insert_into_heap(A, key, n)`: $Theta(log n)$, on insert l'élément tout au bout avec une valeur de $- infinity$ puis on appelle `increase_key_value` dessus
 
-## Stack implementation (last-in, first-out)
+## 🥇Stack implementation (last-in, first-out)
 
 Utiles pour les allocations mémoires. 
 
@@ -207,7 +207,7 @@ Utiles pour les allocations mémoires.
 
 elles sont en $Theta(1)$.
 
-## Queue implementation
+## 🥈Queue implementation (first-in, first-out)
 
 ![[image-22.png]]
 
@@ -222,11 +222,11 @@ elles sont en $Theta(1)$.
 parce que si on enqueue deux fois, on va faire pointer la tail vers `1`! (parce que `13` n'existe pas)
 et comme la head est `7` (soit après), on sait qu'on aura `8`, `9`, etc. définis
 
+**Stacks** aned et sont bien et très performantes mais... ont un support limité : pas de recherche, par exemple.
 ## Linked list
 
 - `L.head` pointe vers la tête de la liste
 - chaque noeud `N` stocke `N.prev`, `N.key`, `N.next`
-
 ### Opérations
 
 - `search`: $Theta(n)$
@@ -237,3 +237,78 @@ et comme la head est `7` (soit après), on sait qu'on aura `8`, `9`, etc. défin
 	`x.prev.next = x.next` (on lit celui avant x à celui après x)
 	 (attention à bien gérer tous les cas)
 
+> [!tip] Pour simplifier les opérations (gérer les cas de nuls, etc), on peut ajouter des sentinels! 
+> 
+> C'est-à-dire ajouter des éléments fake pour que les éléments réels ne soient jamais les premiers ou derniers.
+> 
+> ![[image-29.png|639x454]]
+
+## Binary search trees
+
+à gauche, on met tous les nombres plus petits que la racine, et à droite tous les nombres plus grands (et on préfère avoir un arbre équilibré). créer un binary search trees c'est comme encoder dans un arbre la stratégie pour trouver le nombre avec un jeu de "tu dis plus grand ou plus petit".
+
+### Comment stocker un binary search tree ?
+
+On peut faire quelque chose comme les linked list. Chaque élément stocke : 
+- la référence du parent `x.p`
+- la référence de l'enfant gauche `x.left`
+- la référence de l'enfant droit `x.right`
+- la valeur de l'élément `x.key`
+
+> [!question] Pourquoi on n'utilise pas le même tableau que pour les heaps ?
+> 
+> Pour les heaps, utilise le fait qu'on a à chaque fois un arbre "nearly-completed" (équilibré). Ici, on ne force pas forcément ça, on veut juste que l'enfant droit soit plus grand que le parent, et que l'enfant gauche soit plus petit. Ces deux exemples sont des binary search trees valides :
+> 
+> ![[image-30.png]]
+> ![[image-31.png]]
+
+### Opérations de recherche
+
+La propriété la plus importante est la taille de l'arbre $h$.
+
+- `tree_search(ptr_to_root, key)` en $Theta(h)$
+	```c
+	if (x == nil or ptr_to_root.key == key) return x
+	else if (k < ptr_to_root.key) return tree_search(ptr_to_root.left, key)
+	else return tree_search(ptr_to_root.right, key)
+	```
+- `tree_minimum(ptr_to_root)` en $Theta(h)$
+	```c
+	while (ptr_to_root.left != nil) ptr_to_root = ptr_to_root.left
+	return ptr_to_root
+	```
+same for `tree_maximum`
+- `successor(ptr_to_root)` (the next bigger node)
+	```c
+	if (ptr_to_root.right != null) return tree_minimum(ptr_to_root.right)
+	else
+		y = ptr_to_root.p
+		while (y != null && x == y.right)
+			x = y
+			y = y.p
+		return y
+	```
+
+> [!question] successor ?
+> 
+> C'est le noeud juste plus grand que le noeud actuel. Ici, le successeur de 5 est 6 :
+> ![[image-32.png|298x133]]
+
+**printing orders :**
+- in order : afficher à gauche, puis le root, puis à droite
+- pre order : afficher le root, puis à gauche, puis à droite
+- post order : afficher à gauche, puis à droite, puis le root
+
+**comment insérer dans un binary search?**
+- on cherche pour la clef
+- quand on trouve nil, on insert
+
+**comment supprimer $z$ ?**
+- si c'est une feuille, on supprime
+- si c'est un noeud avec un enfant, on fait comme pour une linked list (on change juste les références)
+- sinon, on trouve le successeur $y$ et on remplace $z$ par $y$
+## Dynamic programming
+
+Se souvenir de se qu'on a fait pour éviter de le refaire.
+
+**Bottom-up** : remonter en cachant les résultats (fibo)
