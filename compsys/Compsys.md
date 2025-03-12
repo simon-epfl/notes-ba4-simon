@@ -188,3 +188,119 @@ Comme ça, pas besoin de créer les tables inutiles !
 Le TLB n'est pas dans la mémoire, c'est du hardware.
 
 Certaines pages non utilisées sont stockées sur le disque (temporairement), et quand l'OS les charge il y a une page fault, puis il les fait revenir dans la mémoire principale.
+
+## Mercredi 12 février
+
+On a des blocks dans un appareil de stockage (par exemple, un bloc est un stockage de 4Kb de SSD). On veut arriver à gérer ces blocks de façon efficace, c'est-à-dire gérer les modifications et lectures concurrentes par exemple (+ stocker des metadata, un nom de fichier, des permissions, un propriétaire, etc).
+
+| Les différents layers                                                                                                                                                            |
+| -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Application                                                                                                                                                                      |
+| Library (`fopen`, `fread`, `fwrite`, `fseak`, etc. voir `man 3 fread`) qui appellent des commandes Unix/Linux au moyen de **syscalls** (`open`, `write`, etc. voir `man 2 read`) |
+| File System                                                                                                                                                                      |
+| Physical device                                                                                                                                                                  |
+On peut utiliser `strace ./a.out` pour voir tous les calls faits par le programme C `a`!
+
+### Fichiers
+
+![[image-23.png]]
+
+- L'humain/utilisateur voir le fichier comme un **chemin**, une chaîne de caractères. Chaque nom local est unique en local, et chaque chemin complet est unique globalement. L'OS voit le fichier comme un tableau de bytes (untyped files). Il se fiche et n'a aucune connaissance sur le format du fichier (c-a-d que l'extension dans le nom ne compte pas).
+
+- L'OS voit le fichier comme un inode. Un inode ID est assigné à chaque fichier et est unique **au sein du file system**. Il est recyclé après supression du fichier. Le inode contient les permissions, la taille, le nombre d'accès, la position des blocks de données, etc. Chaque fichier a exactement un inode.
+
+> [!info] On peut accéder aux inodes des fichiers/dossiers en utilisant `ls -lih`
+
+#### Comment le file system gère les inodes ?
+
+Il y a une partie du disque réservée au stockage de la inode table (comme une page table linéaire). 
+
+![[image-24.png]]
+#### Comment passer d'un path à un inode ?
+
+Le **inode** ne stocke **pas** le nom du fichier. En fait c'est le dossier (un fichier spécifique) qui stocke ça. Ils sont marqués avec un flag spécial pour les distinguer des fichiers normaux. 
+
+> [!example] Par exemple, si on veut accéder à `/tmp/test.txt` :
+> 
+> ![[image-25.png|284x253]]
+> 
+> On sait que le inode de `/` est à la position `0` dans la `inode_tables`.  On y trouve la référence vers les données de `/` ("location"). Quand on regarde dans les données de `/`, on trouve les références des inodes des dossiers et fichiers stockés dans `/`. On va à la `inodes_table[2]` puis on trouve la référence vers les données de `/tmp` ! et ensuite on charge les données et on trouve `Hello world`!
+
+Les inodes ont toujours la même taille, que ce soit pour un fichier, pour un dossier, etc. 
+#### Bits de permission
+
+Les neufs caractères après `d` ou `.` sont les bits de permission.
+- `rwx` pour propriétaire, groupe, tout le monde
+	- Owner can read and write; group and others can just read
+	- `x` set on a file means that the file is executable
+	- `x` set on a directory: user/group/others are allowed to cd to that directory
+
+#### Références vers des fichiers (links)
+
+Si on fait un **hard-link**, on va lier le nouveau nom au même inode que le fichier original. Si on supprime le nouveau nom, on ne va pas supprimer le fichier (l'ancien pointera toujours vers le inode).
+
+Si on faitun **soft-link** (lien symbolique), on va mapper logiquement le nouveau nom de fichier au fichier cible. Ce nouveau fichier aura un nouvel inode. 
+
+> [!info] Le inode contient une propriété qui est le **nombre de références**.
+> 
+> Si le nombre de références atteint 0, le inode du fichier est supprimé. Dans le cas d'un hard-link, le nombre de référence est augmenté de 1 quand créé (et diminué de 1 quand supprimé), mais pas dans le cas d'un soft-link.
+### Vue du process : file descriptors
+
+On peut tout faire avec les chemins des fichiers + un inode/device IDs (pour savoir où trouver la inode table, puis que chercher dans la table) mais c'est très long! on doit faire tout le chemin à chaque fois.
+
+C'est pour ça qu'on stocke le inode final du fichier dans une sorte de cache par process (**file descriptor table**). C'est une table linéaire qui stocke la liste des fichiers ouverts par process. Elle stocke aussi l'offset de lecture dans chaque fichier ("là où on en est").
+
+![[image-26.png|373x313]]
+
+Les trois premières entrées sont réservées au STDIN, STDOUT et STDERR.
+Si on lit 23 bytes de `out.txt`, l'offset du fichier est augmentée.
+Le 3 est stocké dans le `fd1`.
+
+Si on réouvre le même fichier, un nouveau file descriptor est créé.
+### Mount points
+
+Un système est composé de plusieurs file systems. Par exemple, on peut avoir un disque très rapide pour les tâches du quotidien, un disque plus lent pour les sauvegardes, etc. 
+
+Tous les systèmes de fichiers ont une racine commune, le `/`! Par exemple `/home` peut être un système de fichiers différent.
+
+`mount <device> <directory-to-mount>` 
+
+> [!question] Qu'est-ce qui est stocké `/b/c` est un nouveau file system, `/b` un autre, qu'est-ce qui est stocké dans la inode table de `b`?
+> 
+> Rien. L'OS va voir qu'il n'existe pas de inode pour `b` donc il va chercher s'il y a un autre file system monté à cet endroit-là.
+
+### Comment implémenter un file system?
+
+Un **disque** est divisé en plusieurs partitions. Le secteur 0 du disque stocke le MBR (master boot record), qui contient :
+- le boostrap code (qui est chargé et exécuté par le firmware. le firmware c'est le code qui tourne sur le disque (pour faire tourner la tête de lecture par exemple). C'est une API entre le hardware et l'OS).
+- la table de partitions (les adresses de début et de fin de chaque partition)
+
+Le premier bloc de chaque partition a un bloc de boot, qui est chargé.
+#### Qu'y a-t-il dans une partition ?
+
+64 blocks, chacun de 4 kb. Certains blocks stockent des données, d'autres des metadonnées.
+On peut avoir 5 blocks **i** pour les inodes, un block **d** et **i** pour stocker les blocks libres pour les données et les inodes, et un block **b** pour le boot block et le super block.
+
+> [!info] C'est quoi un superblock ?
+> 
+> - il stocke le nombre de **inodes**
+> - le nombre de **data blocks**
+> - où commence la **inode table**
+> - il est lu en premier quand on monte le filesystem
+
+![[image-27.png]]
+
+#### Comment allouer un fichier ?
+
+todo: continu
+
+- **linked blocks**:
+	- issue: ça mixe les données et les métadonnées
+
+- **file allocation table** (FAT)
+	- on sépare les données et les métadonnées
+	- on a pas de fragmentation externe ==POURQUOI== 
+	- on a besoin que du premier bloc de chaque fichier
+	- **but...** poor random access, limited metadata (parce que comme la metadata est stocké dans une giga table et qu'on ne veut pas perdre du temps pour trouver les bouts de fichiers, on doit charger la metadata table dans la RAM, c'est énorme ! pour un disque de 1TB on a 1GB de données à stocker dans la RAM!)
+
+![[image-28.png]]

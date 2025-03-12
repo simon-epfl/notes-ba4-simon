@@ -236,3 +236,4 @@ et comme la head est `7` (soit après), on sait qu'on aura `8`, `9`, etc. défin
 - `delete(x)`: $Theta(1)$
 	`x.prev.next = x.next` (on lit celui avant x à celui après x)
 	 (attention à bien gérer tous les cas)
+

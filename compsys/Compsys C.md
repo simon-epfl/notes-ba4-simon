@@ -386,7 +386,7 @@ qcm.c -- aucune table
 questionnaire.c : affiche, poser_question, sqrt 
 ```
 
-par exemplem pour les tables **des tâches** :
+par exemple pour les tables **des tâches** :
 
 ```
 qcm.c : tous les sauts de mémoire (jump)
