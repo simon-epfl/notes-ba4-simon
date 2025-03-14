@@ -14,3 +14,4 @@ interface **novice** : doit avoir une faible charge cognitive quitte à ce que c
 **Split attention** : le camembert excel en couleur avec les légendes en bas --> augmente la charge cognitive !
 
 $$ "Charge cognitive" = "quantité d'informations"/("niveau d'expertise" dot "qualité du design") $$
+

@@ -160,7 +160,7 @@ On utilise un tableau pour stocker les heaps :
 
 ### Heapify
 
-Comment maintenir la **(min/max)-heap property** ? Il existe un algorithme qui nous permet de retrouver la heap-property si elle n'est pas respectée qu'à la racine en **O(log n)**. 
+Comment maintenir la **(min/max)-heap property** ? Il existe un algorithme qui nous permet de retrouver la heap-property si elle n'est pas respectée qu'à la racine en **O(log h)**. 
 
 - comparer $A[i], A[L(i)], a[R(i)]$
 - si nécessaire, échanger $A[i]$ avec le plus grand des enfants
@@ -168,7 +168,24 @@ Comment maintenir la **(min/max)-heap property** ? Il existe un algorithme qui n
 
 ### Build Max/Min Heap
 
-Cet algorithme est en **O(n log n)** et permet de construire un heap à partir d'un tableau désordonné. Il appelle **heapify** sur chaque élément du tableau (sauf sur les tous petits noeuds du bas mais ça importe peu). $n dot "heapify" = n dot log n$.
+Cet algorithme est en **$Theta$(n)** et permet de construire un heap à partir d'un tableau désordonné. Il appelle **heapify** sur chaque élément du tableau (sauf sur les tous petits noeuds du bas mais ça importe peu). $n dot "heapify" = n dot log h$...?
+
+Sauf qu'en fait, plus on remonte dans l'arbre pour faire n'est pas $log n$!
+$$ sum_(h = 0)^(log n) ("# noeuds") dot O(h) = O(sum_(h = 0)^(log n) n/2^h dot h) $$
+(le nombre de noeuds à chaque hauteur $h$ est inférieur à $n/(2^h)$ )
+On peut montrer avec de l'analyse que $$ sum_(h = 0)^(log n) h/(2^h) < 2" car " sum_(h = 0)^(infinity) h/(2^h) = (1/2)/(1 - 1/2)^2 = 2$$
+```
+build_max_heap(A, n):
+	for i = floor(n/2) downto 1
+			max_heapify(A, i, n)
+```
+
+> [!tip] Comment montrer que **build_max_heap'** est en $n log n$ 
+> 
+> ![[image-34.png]]
+> 
+> On sait que pour chaque noeud $i$ inséré on a un travail de $log(i)$ pour le faire remonter dans le worst case :
+> $$ sum_(i = 0)^h "floor"(log(i)) <= sum_(i = n/2)^n "floor"(log(i)) <= n/2 log(n/2) " en " O(n log n)$$
 ## Heap sort
 
 Heapsort a la même complexité que le **merge sort**, mais est **in-place** (comme insertion sort). Le meilleur des deux mondes ?
@@ -179,6 +196,14 @@ Heapsort a la même complexité que le **merge sort**, mais est **in-place** (co
 - on met le dernier élément du tableau à sa place
 - on appelle **heapify**
 - etc. en boucle jusqu'à ce que le tableau soit trié (donc $n$ heapify, en $n log n$)
+
+```
+heap_sort(A, n):
+	build_max_heap(A, n)
+	for i = n downto 2
+		exchange A[1] with A[i]
+		max_heapify(A, 1, i - 1)
+```
 
 ## Priority Queues
 
@@ -301,7 +326,7 @@ same for `tree_maximum`
 
 **comment insérer dans un binary search?**
 - on cherche pour la clef
-- quand on trouve nil, on insert
+- quand on trouve nil, on insertQ
 
 **comment supprimer $z$ ?**
 - si c'est une feuille, on supprime
