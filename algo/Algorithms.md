@@ -326,7 +326,7 @@ same for `tree_maximum`
 
 **comment insérer dans un binary search?**
 - on cherche pour la clef
-- quand on trouve nil, on insertQ
+- quand on trouve nil, on insert là
 
 **comment supprimer $z$ ?**
 - si c'est une feuille, on supprime
