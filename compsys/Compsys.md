@@ -9,7 +9,7 @@ Programme stocké dans le disque, puis quand lancé est chargé dans la mémoire
 > [!info] variables locales dans le stack ?
 > On alloue à toutes les variables locales potentiellement créées par la fonction une place dans le stack -- en les laissant vides, non initialisées -- comme ça on sait que si on a plus de place dans les registres on pourra les stocker/récupérer dans le stack.
 
-![[assets/structure-memory.png]]
+![[assets/structure-memory.png|319x409]]
 
 On les construit comme ça pour qu'ils aient une taille dynamique. Quand on veut remplir le stack on fait `addi sp, sp, -4` (on part des adresses hautes vers les adresses basses).
 
@@ -140,7 +140,7 @@ On a vu en comparch le **paging**, où chaque chunk (chaque **frame**, c'est-à-
 > 
 > Le système d'adresses virtuelles nous permettent de toujours mettre le code de l'OS à la même place pour chaque programme (par exemple tout en haut de la range d'adresses virtuelles `0xffff8000`). Ainsi le programme a juste à `jump` jusqu'à `0xffff8000` dans le cas d'un syscall. C'est toujours le même thread qui exécute le code, c'est juste qu'au lieu de lire son code il va lire le code de l'OS.
 
-![[image-16.png|236x284]]
+![[assets/image-16.png|236x284]]
 ### Caching
 
 Le cache stocke les valeurs des adresses mémoires accédées recémment ou fréquemment. 
@@ -158,7 +158,7 @@ Une page est l'unité minimale d'un espace d'adresse (elle doit être suffisamme
 
 L'OS maintient une **page table** pour garder le mapping entre les pages et les frames. Il y a une table par process.
 
-![[image-18.png|450x196]]
+![[assets/image-18.png|450x196]]
 
 Si on a une page de taille $2^8$, on a donc un offset de $8$ bits.
 
@@ -182,7 +182,7 @@ Problème : les **page tables prennent trop de place** ! La solution serait de c
 
 Une solution est de créer des **multi-level page table**
 
-![[image-19.png|452x238]]
+![[assets/image-19.png|452x238]]
 
 Comme ça, pas besoin de créer les tables inutiles !
 
@@ -205,7 +205,7 @@ On peut utiliser `strace ./a.out` pour voir tous les calls faits par le programm
 
 ### Fichiers
 
-![[image-23.png]]
+![[assets/image-23.png]]
 
 - L'humain/utilisateur voir le fichier comme un **chemin**, une chaîne de caractères. Chaque nom local est unique en local, et chaque chemin complet est unique globalement. L'OS voit le fichier comme un tableau de bytes (untyped files). Il se fiche et n'a aucune connaissance sur le format du fichier (c-a-d que l'extension dans le nom ne compte pas).
 
@@ -217,14 +217,14 @@ On peut utiliser `strace ./a.out` pour voir tous les calls faits par le programm
 
 Il y a une partie du disque réservée au stockage de la inode table (comme une page table linéaire). 
 
-![[image-24.png|494x422]]
+![[assets/image-24.png|494x422]]
 #### Comment passer d'un path à un inode ?
 
 Le **inode** ne stocke **pas** le nom du fichier. En fait c'est le dossier (un fichier spécifique) qui stocke ça. Ils sont marqués avec un flag spécial pour les distinguer des fichiers normaux. 
 
 > [!example] Par exemple, si on veut accéder à `/tmp/test.txt` :
 > 
-> ![[image-25.png|284x253]]
+> ![[assets/image-25.png|284x253]]
 > 
 > On sait que le inode de `/` est à la position `0` dans la `inode_tables`.  On y trouve la référence vers les données de `/` ("location"). Quand on regarde dans les données de `/`, on trouve les références des inodes des dossiers et fichiers stockés dans `/`. On va à la `inodes_table[2]` puis on trouve la référence vers les données de `/tmp` ! et ensuite on charge les données et on trouve `Hello world`!
 
@@ -252,7 +252,7 @@ On peut tout faire avec les chemins des fichiers + un inode/device IDs (pour sav
 
 C'est pour ça qu'on stocke le inode final du fichier dans une sorte de cache par process (**file descriptor table**). C'est une table linéaire qui stocke la liste des fichiers ouverts par process. Elle stocke aussi l'offset de lecture dans chaque fichier ("là où on en est").
 
-![[image-26.png|373x313]]
+![[assets/image-26.png|373x313]]
 
 Les trois premières entrées sont réservées au STDIN, STDOUT et STDERR.
 Si on lit 23 bytes de `out.txt`, l'offset du fichier est augmentée.
@@ -297,7 +297,7 @@ On peut avoir 5 blocks **i** pour les inodes, un block **d** et **i** pour stock
 > - où commence la **inode table**
 > - il est lu en premier quand on monte le filesystem
 
-![[image-27.png]]
+![[assets/image-27.png]]
 
 #### Comment allouer un fichier ?
 
@@ -306,7 +306,7 @@ On peut avoir 5 blocks **i** pour les inodes, un block **d** et **i** pour stock
 	- et de la fragmentation externe !
 	- et si on veut accéder au bloc 2, on doit tout traverser !
 
-![[image-36.png]]
+![[assets/image-36.png]]
 
 - **linked blocks**: on stocke à la fin du bloc le pointeur vers le bloc suivant
 	- + pas de fragmentation externe
@@ -320,7 +320,7 @@ On peut avoir 5 blocks **i** pour les inodes, un block **d** et **i** pour stock
 	- - **mais...** comme les linked list, poor random access (c'est-à-dire accès au milieu de fichier)
 	- - et puis de la **RAM perdue!** (parce que comme la metadata est stocké dans une giga table et qu'on ne veut pas perdre du temps pour trouver les bouts de fichiers, on doit charger la metadata table dans la RAM, c'est énorme ! pour un disque de 1TB on a 1GB de données à stocker dans la RAM!)
 
-![[image-28.png]]
+![[assets/image-28.png]]
 
 > [!question] Question de série
 > 
@@ -340,7 +340,7 @@ On peut avoir 5 blocks **i** pour les inodes, un block **d** et **i** pour stock
 
 Ainsi notre Inode va avoir 12 blocs de direct block, 1 bloc de indirect block, 1 bloc de double indirect block, etc. 
 
-![[image-37.png]]
+![[assets/image-37.png]]
 
 Ici nos tables intermédiaires stockent 1000 pointeurs vers des data blocks, donc on a 1,000 * 4Kb = 4Mb!
 
@@ -373,7 +373,7 @@ Ici nos tables intermédiaires stockent 1000 pointeurs vers des data blocks, don
 >   
 > - pour chaque `read()` appelé on lit l'iinode et on lit le bon data block (en fonction de l'offset) puis on modifie le Last Access Time
 
-![[image-38.png|654x387]]
+![[assets/image-38.png|654x387]]
 Les `write` sont là pour le Last Access Time.
 
 ### Écrire dans un fichier
@@ -384,7 +384,7 @@ Les `write` sont là pour le Last Access Time.
 >   
 >  - si on doit créer le fichier, on doit aussi modifier l'inode du dossier ! et si le dossier est plein, on doit aussi allouer plus de data blocks pour lui...
 
-![[image-39.png|628x372]]
+![[assets/image-39.png|628x372]]
 
 - le file system se rend compte avec le read du `cs202/data` que le fichier n'existe pas !
 - il va chercher dans le inode bitmap **qui stocke les inode libres**
@@ -415,7 +415,7 @@ Où write-through caches --> écrire de façon synchrone, mais il y a des coûts
 
 ### Crash consistency
 
-![[image-40.png]]
+![[assets/image-40.png]]
 
 On veut écrire `D2`.
 
@@ -457,11 +457,11 @@ Propriétés :
 
 Il peut y avoir deux résultats : un **commit** (la transaction est un succès), un **abort** (elle a échouée, complètement)
 
-![[image-41.png]]
+![[assets/image-41.png]]
 
 **TxBeg** indique le début de la transaction, **TxEnd** la fin.
 
-![[image-42.png]]
+![[assets/image-42.png]]
 
 
 > [!question] mais comment on fait pour le swapping ? on peut pas écrire directement dans les blocks ?
@@ -516,7 +516,7 @@ Il y a deux moyens d'envoyer des données au controlleur de l'appareil :
 - le DMA controller transfère chaque byte à l'adresse X augmente l'adresse mémoire, et diminue C jusqu'à ce que C = 0
 - quand C = 0, le DMA **interrupt** le CPU pour dire que le transfert est fini
 
-![[image-57.png|262x322]]
+![[assets/image-57.png|262x322]]
 
 ### Trop d'appareils...
 
@@ -532,7 +532,7 @@ Par exemple si on charge un block de 16Kb, alors que le disque ne supporte que d
 
 ### Storage hierarchy
 
-![[image-58.png]]
+![[assets/image-58.png]]
 
 Volatile : disparaît quand shut down
 
@@ -540,15 +540,15 @@ Volatile : disparaît quand shut down
 - meilleur débit (on peut écrire à plusieurs endroits en même temps)
 - meilleur MTTF (mean time to failure -- temps avant que le système ne fonctionne plus)
 
-![[image-59.png|309x357]]
+![[assets/image-59.png|309x357]]
 
 **RAID 0** : dans l'exemple ci-dessus, pas de redondance, on fait que du data striping pour un meilleur débit.
 
-![[image-60.png]]
+![[assets/image-60.png]]
 
 **RAID 1** : bien quand on perd un disque, mais on a qu'un disque, c'est cher, etc. et ça ne gère pas la corruption  
 
-![[image-62.png|384x246]]
+![[assets/image-62.png|384x246]]
 
 **RAID 5** : utilise la parité 
 $$P_(i -j) = S_i  xor S_(i + 1) xor ... xor s_j $$

@@ -127,7 +127,7 @@ Ici on utilise la fonction de loss d'entropie croisée ! En fait, elle vient de 
 > >   
 > >   $$ D_(K L) (P | | Q) = sum_i ​P(i)log(Q(i)/P(i)) ​>= log (sum_i ​P(i) dot Q(i)/P(i))​ \ = log sum_i P(i)= log 1 = 0 $$
 > >   
- > ![[image-35.png|198x71]]
+ > ![[assets/image-35.png|198x71]]
 >  
 >  > [!info] tout ce à quoi on vient d'arriver tient aussi avec plus de deux classes !
 > 
@@ -144,13 +144,13 @@ Ici on utilise la fonction de loss d'entropie croisée ! En fait, elle vient de 
 
 On décide d'utiliser une ligne droite $C$ et on cherche les constantes $w_x, w_y$ telles que donnés $b, l$ , on puisse trouver de bons $-1$ et $1$ en appliquant $y$. Plus tard, on va utiliser une sigmoid pour prédire une probabilité et non plus seulement $-1$ et $1$.
 
-![[image-8.png]]
+![[assets/image-8.png]]
 
 **Rappel définition d'une ligne en 2D**:
-![[image-10.png|499x255]]
+![[assets/image-10.png|499x255]]
 On peut la normaliser en posant $a^2 + b^2 = 1$. Cela rend le vecteur normal plus simple.
 
-![[image-11.png|511x392]]
+![[assets/image-11.png|511x392]]
 
 ### Perceptron
 
@@ -171,21 +171,21 @@ Parfois, pour un $gamma$ très petit ou quand la classification ne peut pas êtr
 
 Un problème avec le perceptron, c'est qu'on dit que le résultat est $-1$ ou $1$. Donc l'algorithme considère que ces deux résultats sont équivalents, de même que la ligne en diagonale qui serait bien meilleure :
 
-![[image-12.png|267x219]]
+![[assets/image-12.png|267x219]]
 
 Ce qu'il faudrait, c'est avoir une fonction plus smooth :
 
-![[image-13.png|416x225]]
+![[assets/image-13.png|416x225]]
 
 
-![[image-14.png|385x294]]
+![[assets/image-14.png|385x294]]
 
-![[image-15.png|396x263]]
+![[assets/image-15.png|396x263]]
 
 Sensitive to outliers. We have to accept that some points get missclassified.
 On préfère la sélection du bas !
 
-![[image-43.png|409x251]]
+![[assets/image-43.png|409x251]]
 
 On définit la marge comme ceci. On veut maximiser la marge, quitte à ignorer quelques outliers. La regression logistique ne garantie pas du tout ça.
 
@@ -198,13 +198,13 @@ $$w* = "argmax"_w min(t_n dot (w dot x)/(||w||))$$
 Un problème équivalent est : (preuve dans le cours ?)
 $$ w* = "argmin"_w 1/2 ||w||^2 $$
 
-![[image-44.png]]
+![[assets/image-44.png]]
 
-![[image-45.png]]
+![[assets/image-45.png]]
 
 Avec un grand C on pénalise les miss classifications.
 
-![[image-46.png]]
+![[assets/image-46.png]]
 ### Modèle de logistic regression multiclass
 
 On peut soit utiliser $D_(K L)$ soit softmax. 
@@ -213,10 +213,10 @@ On peut soit utiliser $D_(K L)$ soit softmax.
 
 On peut combiner des classifiers linéaires.
 
-![[image-47.png]]
-![[image-49.png]]
-![[image-52.png]]
-![[image-53.png]]
+![[assets/image-47.png]]
+![[assets/image-49.png]]
+![[assets/image-52.png]]
+![[assets/image-53.png]]
 
 
 ## Mesurer les performances d'un modèle

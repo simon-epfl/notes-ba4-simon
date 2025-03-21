@@ -202,7 +202,7 @@ C'est un **pointeur vers un pointeur de int** (donc `*(ptr)` ou `ptr[0]` est un 
 
 et on se retrouve avec un **tableau de taille arbitraire de tableaux de int de tailles arbitraires!**
 
-![[image-5.png|533x344]]
+![[assets/image-5.png|533x344]]
 
 Note : `p2` est un tableau, stocké dans le stack ! mais comme on remplit chaque élément de p2 avec un `calloc` (dans le heap), on a des différences d'adresses importantes.
 
@@ -416,7 +416,7 @@ et donc, ici `argc = 3`
 
 Exemple de traitement d'arguments :
 
-![[image-7.png]]
+![[assets/image-7.png]]
 
 ## GDB
 

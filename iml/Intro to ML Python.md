@@ -26,8 +26,8 @@ Un tableau a :
 #### Indexing/Slicing
 
 Comme en Python, on précise `debut:fin:pas` pour chaque dimension.
-![[image-2.png|535x324]]
-![[image-3.png]]
+![[assets/image-2.png|535x324]]
+![[assets/image-3.png]]
 
 #### Concatenation/Stacking
 
@@ -47,4 +47,4 @@ print(m_cat)
 # [100 200 300]]
 ```
 
-![[image-4.png]]
+![[assets/image-4.png]]

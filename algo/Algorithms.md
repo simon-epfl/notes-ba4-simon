@@ -28,7 +28,7 @@ $a$ est le nombre de sous-problèmes créés à chaque récurrence, et $n/b$ est
 
 - On est dans le cas **bottom-heavy** quand le coût du divide and combine est plus petit que $n^(log_b (a - epsilon))$ pour un $epsilon > 0$, c-a-d que le nombre total de feuilles. Car (avec de l'analyse), on a $n^(log_b a) = a^(log_b n)$, qui est le nombre de feuilles, étant donné qu'on a $a$ enfants par noeud et que la taille de l'arbre est $log_b (n)$. La majorité du calcul est situé dans le nombre de divisions à faire pour calculer toutes les feuilles (diviser un par deux et combiner deux en un ne coûte pas très cher). Formellement, quand $D(n) + C(n) = O(n^(log_b (a - epsilon)))$. Et donc :
 $$ T(n) = Theta(n^(log_b a)) $$
-![[image.png|462x223]]
+![[assets/image.png|462x223]]
 
 - On est dans le cas **top-heavy** quand le coût du divide et combine est plus grand que $n^(log_b a + epsilon)$. Formellement, quand : $D(n) + C(n) = Omega(n^(log_b a))$. C'est-à-dire que diviser et combiner coûte très cher, donc tout le coût du calcul sera fait à la racine (quand on devra séparer la grosse liste de taille $n$, la racine). Et donc :
 $$T(n) = Theta(f(n))$$
@@ -156,7 +156,7 @@ $$ T(n) = 3T(n/2) + Theta(n) = Theta(n^(log_2(3))) $$
 
 On utilise un tableau pour stocker les heaps :
 
-![[image-20.png|486x256]]
+![[assets/image-20.png|486x256]]
 
 ### Heapify
 
@@ -182,7 +182,7 @@ build_max_heap(A, n):
 
 > [!tip] Comment montrer que **build_max_heap'** est en $n log n$ 
 > 
-> ![[image-34.png]]
+> ![[assets/image-34.png]]
 > 
 > On sait que pour chaque noeud $i$ inséré on a un travail de $log(i)$ pour le faire remonter dans le worst case :
 > $$ sum_(i = 0)^h "floor"(log(i)) <= sum_(i = n/2)^n "floor"(log(i)) <= n/2 log(n/2) " en " O(n log n)$$
@@ -221,7 +221,7 @@ heap_sort(A, n):
 
 Utiles pour les allocations mémoires. 
 
-![[image-21.png|328x166]]
+![[assets/image-21.png|328x166]]
 
 `Q.top` pointe à la position du dernier élément (celui qui vient d'arriver).
 ### Opérations
@@ -234,7 +234,7 @@ elles sont en $Theta(1)$.
 
 ## 🥈Queue implementation (first-in, first-out)
 
-![[image-22.png]]
+![[assets/image-22.png]]
 
 - `Q.head` pointe à la position du premier élément
 - `Q.tail` pointe à la position de là où le prochain élément arriverait
@@ -266,7 +266,7 @@ et comme la head est `7` (soit après), on sait qu'on aura `8`, `9`, etc. défin
 > 
 > C'est-à-dire ajouter des éléments fake pour que les éléments réels ne soient jamais les premiers ou derniers.
 > 
-> ![[image-29.png|639x454]]
+> ![[assets/image-29.png|639x454]]
 
 ## Binary search trees
 
@@ -284,8 +284,8 @@ On peut faire quelque chose comme les linked list. Chaque élément stocke :
 > 
 > Pour les heaps, utilise le fait qu'on a à chaque fois un arbre "nearly-completed" (équilibré). Ici, on ne force pas forcément ça, on veut juste que l'enfant droit soit plus grand que le parent, et que l'enfant gauche soit plus petit. Ces deux exemples sont des binary search trees valides :
 > 
-> ![[image-30.png]]
-> ![[image-31.png]]
+> ![[assets/image-30.png]]
+> ![[assets/image-31.png]]
 
 ### Opérations de recherche
 
@@ -317,7 +317,7 @@ same for `tree_maximum`
 > [!question] successor ?
 > 
 > C'est le noeud juste plus grand que le noeud actuel. Ici, le successeur de 5 est 6 :
-> ![[image-32.png|298x133]]
+> ![[assets/image-32.png|298x133]]
 
 **printing orders :**
 - in order : afficher à gauche, puis le root, puis à droite
@@ -353,15 +353,15 @@ def fibonacci(n, memo=None):
 # Example usage:
 print(fibonacci(10))  # Output: 55
 ```
-![[image-54.png]]
+![[assets/image-54.png]]
 
 ### Rod cutting
 
 **Entrées** : une metal rod de taille $n$, une table des prix $p_i$ pour des rod de tailles $i$
 **Sortie** : décider comment couper la rod en pièces et maximiser le prix
 
-![[image-55.png]]
-![[image-56.png]]
+![[assets/image-55.png]]
+![[assets/image-56.png]]
 
 
 Pour n = 1 : r(`X`) = 1
@@ -451,7 +451,7 @@ somme : $75 000$
 
 Sinon on peut faire $A_1(A_2 A_3)$ : $5 dot 100 dot 10 + 50 dot 5 dot 10 = 7500$ multuplications
 
-![[image-63.png]]
+![[assets/image-63.png]]
 
 #### Algorithme
 
@@ -460,17 +460,17 @@ Sinon on peut faire $A_1(A_2 A_3)$ : $5 dot 100 dot 10 + 50 dot 5 dot 10 = 7500$
 
 On pourrait utiliser un algorithme récursif :
 
-![[image-64.png]]
+![[assets/image-64.png]]
 
 puis l'améliorer en passant une map `solutions` :
 
-![[image-65.png]]
+![[assets/image-65.png]]
 #### Algorithme dynamic programming (bottom up)
 
-![[image-66.png]]
+![[assets/image-66.png]]
 
 on remplit une table comme ça. c'est facile de remplir quand on multplie deux matrices ensemble mais qu'est-ce qu'il se passe quand on multiplie 3 ensemble ? on doit prendre le minimum.
 
-![[image-67.png]]
+![[assets/image-67.png]]
 
-![[image-68.png]]
+![[assets/image-68.png]]
