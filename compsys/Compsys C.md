@@ -417,3 +417,31 @@ et donc, ici `argc = 3`
 Exemple de traitement d'arguments :
 
 ![[image-7.png]]
+
+## GDB
+
+
+- `layout src`
+- `run` ou `r`
+
+    help
+
+    break NUMERO_DE_LIGNE ou br NUMERO_DE_LIGNE
+
+    break NOM_DE_FONCTION ou br NOM_DE_FONCTION
+
+    delete
+
+    info br
+
+    where ou bt (ou backtrace)
+
+    print ou p
+
+    display
+
+    cont ou c
+
+    next ou n
+
+    step ou s

@@ -336,4 +336,141 @@ same for `tree_maximum`
 
 Se souvenir de se qu'on a fait pour éviter de le refaire.
 
-**Bottom-up** : remonter en cachant les résultats (fibo)
+**Bottom-up** : on part de $f(0)$ et on remonte en cachant les résultats (fibo). ça ressemble un peu à remplir une table au fur et à mesure.
+**Top-down fibo** : on part toujours de $f(n)$ puis on appelle $f(n-1)$, $f(n-2)$, avec un dictionnaire mémo qu'ils mettent à jour. on part de l'hypothèse qu'on connait les réponses des problèmes précédents.
+
+```python
+def fibonacci(n, memo=None):
+    if memo is None:
+        memo = {}
+    if n in memo:
+        return memo[n]
+    if n <= 1:
+        return n
+    memo[n] = fibonacci(n - 1, memo) + fibonacci(n - 2, memo)
+    return memo[n]
+
+# Example usage:
+print(fibonacci(10))  # Output: 55
+```
+![[image-54.png]]
+
+### Rod cutting
+
+**Entrées** : une metal rod de taille $n$, une table des prix $p_i$ pour des rod de tailles $i$
+**Sortie** : décider comment couper la rod en pièces et maximiser le prix
+
+![[image-55.png]]
+![[image-56.png]]
+
+
+Pour n = 1 : r(`X`) = 1
+Pour n = 2 : r(`X X`) = 2, r (`XX`) = 5
+Pour n = 3 : r(`XX X`) = 6, r( `X X X`) = 3, r(`XXX`) = 8
+
+On sait que si on décide de couper la tige de longueur $n$ à l'indice $i$, on a :
+$$ "Optimal"(n) = p (i) + "Optimal"(n - i) $$
+
+Mais comment savoir si le $i$ est optiomal ?  On teste tout !
+
+$$ r(n) = max_(i = 1, ..., n-1) {p(i) + r(n - i); p(n)} $$
+- $r(n)$, représente le revenu maximal que l'on peut obtenir avec une tige de longueur $n$.
+- $p(i)$ est le prix d'un morceau de longueur $i$ selon la table des prix donnée.
+- $r(n−i)$ correspond au revenu maximal obtenu avec le reste de la tige (de longueur $n -i$)
+
+```python
+def rod_cut(n, prices):
+    if n == 0:
+        return 0
+    max_value = -inf
+    for i in range(1, n + 1):
+        max_value = max(max_value, prices[i] + rod_cut(n - i, prices))
+    return max_value
+
+prices = [0, 1, 5, 8, 9]  # Indexation des prix (0 pour aligner)
+print(rod_cut(4, prices))  # Devrait afficher 10
+```
+bad, it's slow
+
+**top-down memoized**
+
+```python
+def rc_memo(n, prices, memo=None):
+    if memo is None:
+        memo = [-inf] * (n + 1)
+    
+    if n == 0:
+        return 0
+    if memo[n] >= 0:
+        return memo[n]
+
+    q = -inf
+    for i in range(1, n + 1):
+        q = max(q, prices[i] + rc_memo(n - i, prices, memo))
+
+    memo[n] = q
+    return q
+```
+
+**bottom-up memoized**
+
+```python
+def rc_bottom_up(n, prices):
+    dp = [0] * (n + 1)
+    for j in range(1, n + 1):
+        q = -inf
+        for i in range(1, j + 1):
+            q = max(q, prices[i] + dp[j - i])
+        dp[j] = q
+    return dp[n]
+```
+
+### Équivalence de deux algos
+
+$$ r_2(n) = max_(i = 1, ..., n-1) {r(n - i) + p(i); p(n)} $$
+est équivalent à
+$$ r_1(n) = max_(i = 1, ..., n-1) {r(n - i) + r(i); p(n)}  $$
+on voit assez vite que $r_1 (n) >= r_2(n)$ (au lieu de vendre un chunk de taille $i$ on prend la meilleure façon de le vendre)
+
+$$ i = arg max_i {r(n-i), r(i)} $$
+
+### Change coin making
+
+ça ressemble au problème du rod-cutting 
+
+
+## Matrix-chain multiplication
+
+Comment les faire plus rapidement quand ils sont chaînés ?
+
+On veut multplier $A_1 (50 times 5), A_2 (5 times 100), A_3 (100 times 10)$ (ce ne sont pas des matrices carré).
+
+Nombre d'opérations pour $A_1 A_2$ : $50 times 5 times 100$ 
+pour $B A_3$ : $50 times 100 times 10$ 
+somme : $75 000$
+
+Sinon on peut faire $A_1(A_2 A_3)$ : $5 dot 100 dot 10 + 50 dot 5 dot 10 = 7500$ multuplications
+
+![[image-63.png]]
+
+#### Algorithme
+
+**Entrée** : une suite de $n$ matrices où $A_i$ a comme dimensions $p_(i -1) dot p_i$
+**Sortie** : la meilleure façon de mettre les parenthèses pour minimiser les multiplications
+
+On pourrait utiliser un algorithme récursif :
+
+![[image-64.png]]
+
+puis l'améliorer en passant une map `solutions` :
+
+![[image-65.png]]
+#### Algorithme dynamic programming (bottom up)
+
+![[image-66.png]]
+
+on remplit une table comme ça. c'est facile de remplir quand on multplie deux matrices ensemble mais qu'est-ce qu'il se passe quand on multiplie 3 ensemble ? on doit prendre le minimum.
+
+![[image-67.png]]
+
+![[image-68.png]]

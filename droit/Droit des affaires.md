@@ -346,4 +346,18 @@ Le délai de révocation est de 14 jours.
 Il y a vice du consentement lorsque la déclaration d’une partie ne correspond pas à sa volonté.
 
 - **erreur essentielle** : l’auteur par inadvertance ou ignorance exprime incorrectement sa volonté.
-- 
+- **dol** : consiste à induire intentionnellement une personne en erreur, à l'entretenir ou à la confirmer dans l'erreur (par omission, l'auteur s'abstient de déclarer une vérité, par comission, l'auteur affirme sciemment des choses fausses ou inexactes)
+- **crainte fondée** : en cas de menaces, etc. pour faire signer le contrat
+
+**Prescription** : extinction de l'obligation du fait de l'inaction des parties pendant un certain temps. Elle ne supprime pas la créance mais permet au débiteur de refuser l'exécution.
+En matière contractuelle, le délai de prescription est en principe de dix ans.
+
+### Le contrat de vente
+
+- vendeur, s'oblige à livrer la chose vendue à l'acheteur et à lui transférer la propriété
+- acheteur
+
+- la forme mobilière : la forme est libre
+- la forme immobilière : la forme authentique est exigée (passer devant un notaire)
+
+- garantie des défauts : l'absence d'une qualité promise ou à laquelle l'acheteur pouvait s'attendre selon les règles de la bonne foi
