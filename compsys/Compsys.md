@@ -252,7 +252,7 @@ On peut tout faire avec les chemins des fichiers + un inode/device IDs (pour sav
 
 C'est pour ça qu'on stocke le inode final du fichier dans une sorte de cache par process (**file descriptor table**). C'est une table linéaire qui stocke la liste des fichiers ouverts par process. Elle stocke aussi l'offset de lecture dans chaque fichier ("là où on en est").
 
-![[assets/image-26.png|373x313]]
+![[assets/image-26.png|0x0]]
 
 Les trois premières entrées sont réservées au STDIN, STDOUT et STDERR.
 Si on lit 23 bytes de `out.txt`, l'offset du fichier est augmentée.
@@ -555,4 +555,149 @@ $$P_(i -j) = S_i  xor S_(i + 1) xor ... xor s_j $$
 Si un disque meurt, on peut reconstruire les données en xorant les drives restants ! à partir du 2 et du parity 0/2, on peut retrouver le 0. à partir du 0 et du parity 0/2, on peut retrouver le 2, etc.
 problème : les write sont un peu compliqués
 
+## Lundi 24 Février
 
+> [!tip] Rappel polling/interrupts/PIO/DMA
+> 
+> On a vu qu'en faisant du polling, le CPU devait attendre le résultat et qu'on perdait des cycles pour rien. On a ensuite vu les interrupts. Ils ont gérés dans un thread dédié de l'OS.
+> 
+> On a ensuite vu que pour les transferts de données, on pouvait soit utiliser PIO (envoyer les infos au controller), ou alors utiliser DMA (le CPU donne l'endroit où les données sont situées et le transfert se fait ensuite).
+
+#### CPU Scheduling
+
+**Time sharing** : chaque tâche tourne toute seule et on change rapidement de l'une à l'autre.
+**Space sharing** : chaque tâche obtient une portion de l'espace disponible.
+
+L'objectif : donner l'illusion à chaque thread qu'il est tout seul dans le CPU.
+La réalité c'est que le CPU est partagé entre tous les threads.
+
+##### OS Scheduler
+
+- il doit choisir le prochain thread à garder
+- il maintient la liste des processes et des threads
+
+![[image.png|408x261]]
+
+Jusqu'ici, nous n'avons pas vu la policy appliquée pour choisir le prochain thread.
+
+> [!question] Pourquoi introduire le thread scheduling ?
+> 
+> - par exemple, si l'OS est en kernel mode et ne peut plus revenir au thread normal (s'il y a eu une erreur p. ex. une opération invalide), ou un system calls
+>   
+> - le thread a déjà utilisé tout son temps (il faut exécuter les autres)
+
+> [!question] Comment se passe le switch ?
+> 
+> On fait un context switch (on change les registers, le table de translation des adresses, etc). Plus précisément :
+> 
+> - on sauvegarde le state du thread précédent dans la mémoire
+> - on choisit le prochain thread
+> - on restore le state du prochain thread
+> - on passe le contrôle en faisant un return from trap pour lancer le prochain thread
+>   
+>   ![[image-1.png|321x243]]
+>   
+>  il y a un coût à ce context switch, un moment où rien ne tourne
+
+> [!question] Comment gérer les threads qui ne se comportent pas bien ?
+> 
+> On utilise des **timer interrupts**. Quand le timer expire, le CPU est interrompu et passe en kernel mode. L'OS Scheduler est invoqué et le scheduler fait un context switch.
+> 
+> ![[image-2.png|371x281]]
+
+#### Quelle scheduling policy ?
+
+Comment choisir le prochain thread ? 
+
+Deux metrics utiles :
+- **utilization** : quelle fraction du temps le CPU passe à exécuter un thread. Objectif : maximiser ce temps.
+- **turnaround time** : le temps total que les threads mettent à compléter leur tâche. Objectif : minimiser ce temps. $T_"turnaround"= T_"completion" - T_"arrival"$.
+##### FIFO First in, first out
+
+On a trois threads $A, B, C$ qui prennent **chacun** 10 secondes. Ils arrivent à peu près en même temps.
+
+![[image-3.png|371x187]]
+
+ça marche bien quand on sait le temps que va mettre chaque thread, ce qui n'est généralement pas le cas.
+
+$T_"arrival" = 0$
+$T_"completion A" = 10$
+$T_"completion B" = 20$
+$T_"completion C" = 30$
+average turnaround time is $20$.
+
+mais que se passe-t-il si A prend 100 secondes ?
+
+![[image-4.png|385x209]]
+
+average turnaround is $110$ (!)
+
+**Convoy effect** : un certain nombre de clients potentiellement rapides se retrouvent derrière un client très long.
+
+##### Shortest job first (SJF)
+
+On va choisir le thread le plus rapide à exécuter. Le turnaround baisse beaucoup! (approx. 50)
+
+Mais qu'est-ce qu'il se passe si A arrive à t=0 et doit tourner pendant 100 secondes puis B et C arrive à t=10 et tournent pendant 10 secondes ? A est schedulé et on n'a pas prévu de l'arrêter !
+
+Le tournaround est de approx 103.
+
+> [!question] polite vs forced scheduling
+> 
+> - FIFO et SJF sont des **non-preemptive**. Ils ne switch que lorsque le thread en cours a fini son exécution.
+>   
+> - **Preemptive** schedulers arrêtent l'exécution du thread en cours et switch à un autre de façon forcée pour éviter que le CPU soit monopolisé.
+
+##### Shorter time to completion first (STCF)
+
+Il étend le shortest job first. à chaque fois qu'un thread est créé :
+- il détermine lequel des jobs restants (**dont** celui en cours) a le temps restant le plus faible
+- il le schedule
+
+#### New metric : le temps de réponse
+
+C'est le temps avant que le thread soit scheduled. Les utilisateurs veulent des réponses intéractives !
+Ce n'est pas du tout pris en compte dans le STCF
+
+#### Round Robin (RR)
+
+Au lieu de faire tourner les threads jusqu'à ce qu'ils soient complétés, RR schedule un thread pour un intervalle fixe, et switch au prochain thread.
+
+![[image-6.png]]
+
+Le temps de turnaround augmente.
+
+### Gérer les IO requests ?
+
+![[image-7.png]]
+
+On veut schedule B pendant que A fait ses requêtes de IO.
+
+#### Multi-level feedback queue (MLFQ)
+
+**Challenge** : le scheduler doit pouvoir supporter de longues tâches dans le background (batch processing) et donner une réponse rapide pour les process interactifs.
+
+**Batch-based thread** : le temps de réponse n'est pas important (on veut minimiser les context switch)
+**Interactive thread** : le temps de réponse est critique, c'est des bursts courts
+
+Pour cela, MLFQ utilise les past behaviors pour prédire les comportements futurs.
+
+![[image-8.png|153x154]]
+
+- Les threads de haut niveaux ont un temps de run courts, ceux plus bas un temps plus long.
+- Les threads de haut niveaux vont toujours être traités en premier
+
+**Règles** :
+- si priority(A) > priority(B) alors A tourne
+- si les deux sont égales, alors on fait du RR (et on change l'intervalle en fonction du niveau)
+- les threads commencent tous à une haute priorité (on ne sait pas combien de temps ils vont tourner)
+- puis, quand il utilise tout l'intervalle, le scheduler descend sa priorité
+- périodiquement, tous les threads sont déplacés dans la topmost queue (priority boosting) pour éviter que les threads interactifs empêchent les threads du bas de ne jamais tourner (**starvation**)
+
+
+![[image-9.png|533x274]]
+![[image-10.png|551x284]]
+
+![[image-11.png|540x278]]
+
+On voit ici que le boost permet à A de tourner de temps en temps au début de chaque boost (et si A s'appelait B alors on aurait ABC, AC, AC, AC, etc. jusqu'au prochain boost)
