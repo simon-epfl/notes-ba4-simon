@@ -234,7 +234,7 @@ elles sont en $Theta(1)$.
 
 ## 🥈Queue implementation (first-in, first-out)
 
-![[assets/image-22.png]]
+![[assets/image-22.png|481x262]]
 
 - `Q.head` pointe à la position du premier élément
 - `Q.tail` pointe à la position de là où le prochain élément arriverait
@@ -474,3 +474,130 @@ on remplit une table comme ça. c'est facile de remplir quand on multplie deux m
 ![[assets/image-67.png]]
 
 ![[assets/image-68.png]]
+
+## Longest common sub-sequence
+
+**Input** : 2 séquences $X = (x_1, ..., x_m)$ et $Y = (y_1, ..., y_n$.
+**Output** : une sous-séquence commune aux deux sont la longeur est maximale.
+
+La sous-séquence n'a pas besoin d'être consécutive, mais elle doit être dans l'ordre.
+
+Approche naïve : tester toutes les sous-séquences possibles dans $X$ et vérifier si elle existe dans $Y$. On en aurait pour $2^n$ (nb de possibilités) $dot n$ (tester si elle existe dans $Y$).
+
+#### On prend le problème entre deux variables $i, j$
+
+$L C S (X_i, Y_j)$ ?
+avec $X_i = <x_1, ..., x_i>$ et $Y_j = < y_1, ..., y_j >$
+
+On compare la dernière lettre :
+
+- case $x_i = y_j$ , on prend le maximum entre :
+	- $L C S (x_(i - 1) , y_j)$
+	- $L C S (x_i, x_(j - 1))$
+	- $1 + L C S (x_(i - 1), y_(j - 1))$
+
+- case $x_i eq.not y_j$, on prend le maximum entre :
+	- $L C S (x_(i - 1), y_j)$
+	- $L C S (x_i, y_(j - 1))$
+
+- Si $Z = <z_1, ..., x_k>$ est la LCS des deux, alors si $x_i = y_j$ alors $z_k = x_i = y_j$ (sinon on pourrait améliorer la chaîne en rajoutant $x_i$ à la fin et ce serait tjrs une subsequence).
+- Si $x_i eq.not y_j$ alors $z_k eq.not x_i$ et Z est un LCS de $X_(i - 1)$ et $Y_j$.
+- Si $x_i eq.not y_j$ alors $z_k eq.not y_j$ et Z est un LCS de $X_i$ et $Y_(j -1)$.
+
+#### Analyse de la complexité
+
+- compter le nombre de cellules à remplir $m dot n$
+- compter le temps de remplir une cellule $Theta(1)$.
+
+$arrow Theta(m dot n)$
+
+```python
+LCS(X, Y, m, n):
+
+	let b[0, ..., m][0, ..., n] and c [0, ..., m][0, ..., n] be new tables
+
+	for i= 1...m:
+		c [i][0] = 0
+
+	for j=1...n:
+		c [0][j] = 0
+
+	for i =1..m:
+		for j=1..n:
+			if X[i] == Y[j]: # on comp les dernières lettres
+				c[i][j] = c[i - 1][j - 1] + 1
+				b[i][j] = "arrow_diago"
+			else
+				if c[i - i][j] >= c[i, j-1]
+					c[i][j] = c[i - 1][j]
+					b[i][j] = "arrow_up"
+				else
+					c[i][j] = c[i][j-1]
+					b[i][j] = "arrow_left'
+	return (c, b)
+```
+
+## Optimal binary search trees
+
+**Entrée** : un ensemble de clefs triées, et une probabilité $p_i$ que la clef $k_i$ soit cherchée.
+**Sortie** : un BST qui minimise le coût de recherche
+
+## Graphs
+
+$G = (V, E)$ avec un ensemble de vertices (points) $V$ et un ensemble de segments (edges) entre les deux $E$.
+#### Undirected graph
+
+Comment stocker un graph ? On peut les tocker dans une adjancy matrice $V times V$ où chaque élément est un 0 ou un 1 en fonction de si le lien entre les deux noeuds est fait. 
+
+Espace : $Theta(V^2)$
+Temps pour lister tous les noeuds adjacents à u : $Theta(V)$
+Temps pour déterminer si $(u, v) in E$ : $Theta(1)$
+
+$arrow$ pas efficace en termes d'espace
+
+![[image-16.png|499x175]]
+#### Directed graph
+
+![[image-17.png]]
+
+
+#### Adjancy list
+
+![[image-18.png]]
+
+1 est connecté à 2 et est connecté à 4.
+
+Espace : $Theta(V + E)$
+Temps pour lister tous les noeuds adjacents $Theta("degree"(u))$.
+Temps pour déterminer si $(u, v) in E$ : $Theta("degree"(u))$
+
+### Breadth-First search
+
+**Entrée** : un graphe, un point $s$ et un point $v$
+**Sortie** : la distance de $s$ à $v$, pour tous les $v in V$
+
+![[image-19.png]]
+
+**noir** : queued + processed
+**gris** : queued
+
+![[image-20.png]]
+
+Runtime : $O(V + E)$
+
+### Lemma : le nombre de personnes qui ont un nb d'amis impairs est pairs (undirected graph)
+
+$sum_u "deg"(u) = 2 dot |E| => (sum_u "deg"(u))/2 = |E|$
+car chaque arête touche deux sommets
+
+![[image-21.png]]
+
+### Depth-first search
+
+**Idée** : on essaye d'aller le plus loin possible (contrairement au BFS où on découvre tous les sommets autour d'abord).
+
+On part de $b$, on découvre $a$ puis de $a$ on découvre autant que possible, par exemple $h$ (si on garde un ordre alphabétique), puis $g$, puis on a plus rien à découvrir ! on revient à $h$ et on regarde ce qu'on peut découvrir. On ne peut plus rien découvrir, on revient à $a$, etc.
+
+![[image-22.png|481x262]]
+
+Comme pour le BFS, si il nous manque des sommets à explorer quand on a finit, on choisit un autre noeud au hasard et on part de lui.

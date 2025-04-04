@@ -361,3 +361,36 @@ En matière contractuelle, le délai de prescription est en principe de dix ans.
 - la forme immobilière : la forme authentique est exigée (passer devant un notaire)
 
 - garantie des défauts : l'absence d'une qualité promise ou à laquelle l'acheteur pouvait s'attendre selon les règles de la bonne foi
+
+#### Ventes en ligne
+
+**Règle générale** : la publicité pour des biens n'est pas considéré comme une offre mais une invitation à faire des offres.
+
+On doit distinguer deux situations :
+
+- le stock des marchandises est indiqué sur le site et baisse à chaque commande, il est précisé que la marchandise est livrable ou encore la nature des marchandises offertes permet de conclure que le commerçant aura toujours la cpacité de livrer: il s'agit d'une offre et la commande par l'acheteur vaut acceptation de sorte que le contrat est conclu.
+
+- la présentation de la marchandise ne comporte aucune indication sur sa disponibilité : lorsque le consommateur commande la marchandise, il fait une offre de sorte que le contrat n'est conclu qu'au moment où le commerçant accepte l'offre.
+
+### Contrat de travail
+
+- **le travailleur** 
+- **l'employeur** 
+
+rapport de subordination (l'un décide du temps de travail de l'autre, etc).
+
+> [!question] Cas pratique Alex
+> 
+> Alex travaille depuis un an dans une entreprise.
+> Il perçoit un salaire brut de 4’500.- francs.
+> 
+> A la fin de l’année, il se rend compte que son collègue qui effectue le même travail gagne 5'000.- francs brut par mois.
+> Très étonné de cette inégalité de traitement, il se demande s’il peut exiger d’avoir le même traitement que son collègue ?
+> 
+> Non, il fallait mieux négocier. **sauf si** Alex utilise la loi sur le sexisme (si c'est une femme), **ou** qu'elle est la seule à avoir ce salaire.
+
+
+
+
+
+

@@ -109,3 +109,19 @@ Despite working memory limits, we **perform complex tasks** by using structured 
 >- Mistakes happen when cognitive load exceeds capacity.
 >- Understanding memory limitations helps design better **learning strategies, user interfaces, and work environments**.
 
+## Data Visualization
+
+Fonction > Beauté
+
+### Grammaire visuelle
+
+![[image-12.png]]
+
+> [!def] Visualiser
+> 
+> 1. Placer des données sur une image de base de telle sorte que les propriétés visuelles de l’image reflètent les propriétés abstraites des données, en particulier les relations entre données.
+>    
+>  2. Créer une grammaire visuelle qui met en correspondance les variables des données et les composantes graphique
+
+La 3D c'est beau mais pas pratique. On peut couper notre visualisation en treillis pour enlever une dimension et simplifier la viz.
+

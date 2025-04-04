@@ -82,7 +82,7 @@ if (fs == 0) {
 	// code du parent
 }
 ```
-- `wait` --> attend que le process enfant soit terminé
+- `wait` --> attend que le process enfant soit terminé (`wait(NULL)` attend que le premier child meurt)
 
 > [!danger] Subilités du fork
 > Le fork reçoit une **copie** de la mémoire du parent (c'est-à-dire qu'il reprend exactement les mêmes valeurs dans les variables mais s'il modifie les variables ou que le parent modifie les variables, ça ne sera pas visible entre eux)
