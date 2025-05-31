@@ -247,8 +247,8 @@ en résumé, `(int) p+1` est égal à `(int) p + sizeof(Type)` !
 > **Rappel** : un tableau n'a **jamais** connaissance de sa taille ! Voir https://www.geeksforgeeks.org/array-decay-in-c/.
 > 
 > ```c
-> int tab[1000];
-> const int* const end = tab + sizeof(tab);
+> 	int tab[1000];
+> 	const int* const end = tab + sizeof(tab);
 > // erreur ! sizeof(tab) c'est 1000 * sizeof(int) !
 > // on ne veut que 1000!
 > // on peut faire sizeof(tab)/sizeof(int)
@@ -270,7 +270,6 @@ intérêt :
 ### Plusieurs fichiers ?
 
 On sépare la partie **déclaration** de notre API et la partie **implémentation** de notre API.
-
 #### Partie **déclaration**
 
 - fichiers headers, `.h`

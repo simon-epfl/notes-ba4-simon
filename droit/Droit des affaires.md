@@ -390,7 +390,21 @@ rapport de subordination (l'un décide du temps de travail de l'autre, etc).
 > Non, il fallait mieux négocier. **sauf si** Alex utilise la loi sur le sexisme (si c'est une femme), **ou** qu'elle est la seule à avoir ce salaire.
 
 
+### Escroquerie
 
+Consiste à tromper autri et à le pousser de la sorte à commetre des actes préjudiciables à ses propres intérêts pécuniaires ou à ceux d'un tiers.
 
+**Formes de tromperie :**
+* **affirmation fallacieuse** ("je sais que ce tableau est vrai" alors qu'il est faux)
+* **dissimulation de faits vrais** (l'auteur dissimule la vérité)
+* **conforter dans l'erreur** (par exemple un médecin qui ne contredirait pas un patient qui pense avoir telle ou telle maladie)
 
+Pour qu'il y ait escroquerie, il ne suffit pas qu'il y ait tromperie mais il faut qu'elle soit **astucieuse**.
 
+Si je paye au magasin avec des billets de monopoly et que la caissière accepte les billets, ce n'est pas de l'escroquerie.
+
+Exemples d'astuce :
+- mise en scène, échafaudage de mensonges, etc. **(p. ex. faux policiers qui appellent une personne, qui disent que le compte bancaire est en train d'être piraté)**
+- si la victime n'a pas la possibilité de vérifier ou si des vérifications seraient trop difficiles et que l'auteur exploite cette vérification (**par exemple un faux médecin qui n'a pas le titre)**
+- si l'auteur empêche ou dissuade la victime de procéder à la vérification
+- si la victime, en raison de sa situation personnelle, n'est pas en état de procéder à une vérification et que l'auteur exploite cette situation

@@ -15,3 +15,13 @@ interface **novice** : doit avoir une faible charge cognitive quitte à ce que c
 
 $$ "Charge cognitive" = "quantité d'informations"/("niveau d'expertise" dot "qualité du design") $$
 
+### Jeudi 1er mai
+
+Collecticiels : logiciels faits pour du travail en équipe.
+
+**synchrone** : tout le monde en même temps
+**asynchrone** : un modifie, un autre peut modifier plus tard, etc.
+
+**collaboration** : on a une compréhension commune du produit (Sara fait le premier draft, Jean la révision, et Léa les slides).
+**coopération** : on divise le travaille (Sara fait l'intro, Jean le paragraphe 1, Léa la conclusion)
+

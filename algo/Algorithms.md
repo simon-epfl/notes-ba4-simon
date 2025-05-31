@@ -284,8 +284,8 @@ On peut faire quelque chose comme les linked list. Chaque élément stocke :
 > 
 > Pour les heaps, utilise le fait qu'on a à chaque fois un arbre "nearly-completed" (équilibré). Ici, on ne force pas forcément ça, on veut juste que l'enfant droit soit plus grand que le parent, et que l'enfant gauche soit plus petit. Ces deux exemples sont des binary search trees valides :
 > 
-> ![[assets/image-30.png]]
-> ![[assets/image-31.png]]
+> ![[assets/image-30.png|596x372]]
+> ![[assets/image-31.png|477x285]]
 
 ### Opérations de recherche
 
@@ -317,7 +317,7 @@ same for `tree_maximum`
 > [!question] successor ?
 > 
 > C'est le noeud juste plus grand que le noeud actuel. Ici, le successeur de 5 est 6 :
-> ![[assets/image-32.png|298x133]]
+> ![[assets/image-32.png|584x355]]
 
 **printing orders :**
 - in order : afficher à gauche, puis le root, puis à droite
@@ -601,3 +601,203 @@ On part de $b$, on découvre $a$ puis de $a$ on découvre autant que possible, p
 ![[image-22.png|481x262]]
 
 Comme pour le BFS, si il nous manque des sommets à explorer quand on a finit, on choisit un autre noeud au hasard et on part de lui.
+
+![[image-25.png]]
+
+
+## Optimal binary search trees
+
+![[image-23.png]]
+
+![[image-24.png]]
+
+![[image-26.png]]
+
+## Topological sorting
+
+**Entrée :** un graphe acyclique (DAG) $G = (V, E)$
+**Sortie** : un ordre linéaire de noeuds t.q $(u, v) in E$ si $u$ est plus petit que $v$
+
+![[image-27.png|458x295]]
+
+**Graph acylique** : pas de back edge après un DFS
+
+![[image-28.png|447x257]]
+
+### Trouver les SCC
+
+- appeler `DFS` pour calculer les finishing times $u.f$ de tous les notes
+- calculer $G^T$ (inverser tous les segments)
+- appeler $G^T$ mais dans la boucle principale, considérer les noeuds dans un ordre descendant (en fonction des finishing times)
+- afficher les noeuds de chaque tree
+
+(en fait en inversant les flèches, on évite de partir du strongly connected component + à l'intérieur d'un strongly connected component échanger les flèches ne changent rien à la structure)
+
+![[image-32.png|584x355]]
+
+## Flow networks
+
+On veut un graphe sans "parallel" edges (un qui va de `(u, v)`, un `(v, u)`).
+
+![[image-29.png]]
+
+On veut envoyer un flux d'une source à un puits. Le flux est une fonction qui satisfait :
+- une contrainte de capacité (pour tout segment edge, $0 <= f(u, v) <= c(u, v)$)
+- une contrainte de conservation (le flux qui rentre = flux qui sort), $sum_"for all v" f(v, u) = sum_"for all v" f(u, v)$
+
+valeur d'un flux : flow qui sort de la source - flow qui en revient
+
+**Braess Paradox** : 4000 people driving from s to t every day. Pour aller le plus vite, il faut que la moitié prenne la route du haut, et l'autre moitié la route du bas.
+
+![[image-31.png|477x285]]
+
+### Ford-Fulkerson
+
+$Theta(E f)$
+
+Initialiser les edges à 0 flow.
+
+Répéter jusqu'à ce qu'il n'y ait plus de augmenting path:
+1. trouver un augmenting path (avec depth first search), il doit respecter les conditions suivantes :
+	1. être un non-full forward edge (un segment qui va vers le puits non déjà remplis)
+	2. ou être un non-empty backward edge (on doit pouvoir reverse du flux)
+2. calculer la bottleneck capacity (le minimum de capacité d'un edge dans le chemin trouvé)
+3. augmenter le total flow out
+
+> [!question] Qu'est-ce que ça veut dire "reverse le flux" ?
+> 
+> En fait là on voit qu'on a un edge qui va de A vers D avec une capacité de 8. Puis on trouve un chemin qui va dans l'autre sens (et qui pourrait utiliser 4 unités de flux). Le fait qu'on ait 6 qui arrive en bas et plus 2 nous permet d'avoir moins besoin de flux entrant en D, donc on "reverse" on en enlève de A vers D. Et comme on fait ça, on a aussi du flux entrant en A en + qu'on peut réutiliser.
+> 
+> ![[image-35.png]]
+
+> [!question] Min-cut
+> 
+> Si on trouve le "min-cut" d'un flow on trouve aussi le maximum flow!
+> 
+> On compte tous les edges qui vont de avant notre cut jusqu'à après notre cut. On ignore les autres.
+> 
+> ![[image-36.png]]
+
+## Edge-disjoint paths as flow network
+
+- on met toutes les capacités de chaque route à 1
+- on calcule le max flow
+- 
+The maximum flow value 'f' in this context represents the number of edge disjoint paths between the source and the sink because each path can carry exactly 1 unit of flow, given that each edge's capacity is set to 1. With a maximum flow of 'f', it implies that there are indeed 'f' paths from the source to the sink that do not share any edges, thus being edge disjoint.
+## Disjoint-set data structures
+
+On veut un représentant par ensemble pour lui donner un nom.
+On ne peut pas avoir deux éléments dans le même ensemble.
+
+- `make-set(x)` : créer un nouveau set $S_i = {x}$ et ajouter $S_i$ à $S$
+
+- `union(x, y)`: si $x in S_x, y in S_y$ alors $S = S - S_x - S_y union {S_x union S_y}$ 
+	- détruits $S_x$ et $S_y$ comme ils doivent être disjoints
+	- le représentant du nouveau set est n'importe quel membre de $S_x union S_y$, souvent le représentant d'un des deux ensembles
+	
+
+- `find(x)` : renvoie le représentant du set dans lequel il y a `x`
+
+### Stocker les sets dans une linked list :
+
+![[image-50.png]]
+
+make, créer une liste vide en $Theta(1)$
+union:
+	- on append toujours la petite liste à la grande
+	- on a $n_1$, $n_2$ la taille des deux sets. on est en $Theta(n_2)$. (mais on peut opti en append la liste la courte à l'autre).
+find: en $Theta(1)$ comme chaque noeud pointe vers le représentant
+### Stocker les sets dans un forest of trees :
+
+- `find`, on remonte les pointeurs jusqu'à la racine, le coût de find dépend de là où est l'élément dans l'arbre
+
+Le rang est une borne supérieure à la hauteur de l'arbre.
+
+![[image-51.png]]
+
+On peut optimiser `find` en rendant tous les noeuds un enfant direct du représentant. (on remonte dans l'arbre et on connecte tous les éléments à la racine)
+
+- `union by rank` : rendre la racine de l'arbre avec le rang le plus petit un enfant direct de la racine de l'arbre plus grand. l'objectif est de garder les arbres les plus horizontaux possibles pour accélérer find
+
+### Minimum Spanning Trees
+
+**Spanning tree :** un ensemble $T$ de segments qui touchent tous les noeuds et acyclique.
+
+En entrée : un graph non dirigé $G = (V, E)$ avec des poids $w(u, v)$ pour chaque segment $(u, v) in E$.
+En sortie : un spanning tree avec le coût le plus faible.
+
+Un **cut** $(S, V backslash S)$ est une partition des noeuds en deux ensembles non vides disjoints $S$ et $V backslash S$.
+Un **crossing-edge** est un segment qui connecte un noeud dans $S$ à un noeud dans $V backslash S$.
+
+Si on considère un **cut** $(S, V backslash S)$ et :
+- $T$ est un arbre sur $S$ qui est une partie d'un MST
+- $e$ est un crossing-edge de poids minimal
+
+Alors il y a un MST de $G$ qui contient $e$ et $T$.
+
+![[image-52.png|572x293]]
+Si $e$ est déjà dans le MST, on est bon.
+Sinon, on ajoute $e$. Ça peut créer un cycle. Dans ce cas, il y a au moins un autre crossing edge dans le cycle $w(f) >= w(e)$. On remplace $f$ par $e$ dans le MST.
+On en obtient un nouveau qui contient $e$ et $T$.
+### Prim's algorithm
+
+On commence par n'importe quel noeud $v$ et on l'ajoute à $T$. On a donc un cut induit par $T$ (les noeuds inclus dans $T$ et ceux non).
+
+À chaque étape :
+- on ajoute à $T$ un crossing edge de poids minimal par rapport au cut induit par $T$.
+
+![[image-53.png]]
+
+- $pi$ quel est le noeud voisin de $u$ dans $T$ qui est à une distance $u."key"$
+
+Au début on dit que chaque vertices est à une distance infinie de $T$ et qu'il n'a pas de voisin.
+Puis on prend un $r$ au hasard et on dit que sa distance à $T$ est 0. Puis, tant que $Q$ n'est plus vide, on boucle sur tous les vertices, on prend le minimum $m$.
+Pour chaque noeud voisin à ce nouveau minimum, on met à jour sa distance à $T$ (peut-être que le voisin est plus près de $m$, ou pas, que le noeud précédent).
+![[image-54.png]]
+
+### Kruskal's algorithm
+
+![[image-55.png]]
+
+
+## Shortest paths
+
+Entrée : 
+
+On autorise les edges avec des valeurs négatives (par exemple des différences d'altitude).
+
+### Bellman-Ford algorithm
+
+Loop invariant: après `i` itérations de la boucle principale ($0 ≤ i < |V| - 1$), toute distance `dist[v]` correspond à la longueur d’un chemin le plus court composé d’au plus `i` arêtes.
+
+### Dijkstra's algorithm
+
+Si on essaye de lancer Prim's comme d'ha
+
+## Probabilistic analysis and randomized algorithms
+
+* utile pour ne pas toujours tomber dans le pire cas (et éviter les attaques)
+
+
+#### The Hiring problem
+
+On recrute une personne si elle est plus grande que la plus grande personne qu'on a déjà embauché. Le pire cas c'est s'ils arrivent tous en ordre croissant : on va tous les embaucher.
+
+Quel est le nombre d'embauches qu'on va faire parmis toutes les permutations des candidats ?
+
+![[image-91.png|473x278]]
+
+![[image-92.png|421x385]]
+
+
+## k smallest numbers in an array
+
+$O(n log n)$ : on trie le tableau, puis on prend les k premiers.
+
+- sélectionner un pivot aléatoire de la liste
+- calculer $S, L$, les ensembles :
+	- strictements inférieurs au pivot
+	- égaux au pivot
+	- strictement supérieurs au pivot
+- si $|S| < k$, on sait que tous les éléments qu'on cherche sont dans $S$
+- sinon ils sont dans $L$
