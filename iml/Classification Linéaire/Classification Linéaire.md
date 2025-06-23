@@ -1,13 +1,48 @@
-### Données linéairement séparables
+## Données linéairement séparables, Perceptron
 
 Essaye de créer un hyperplane qui sépare les données.
-Résouds un problème d'optimisation convexe pour optimiser le margin (c'est-à-dire la distance entre l'hyperplane et les points de chaque catégorie).
 
-> [!question] En pratique, comment décider ?
+On minimise :
+$$ E(w) = sum_(n = 1)^N L(y(x_n; w), t_n)$$
+Algorithme :
+-  On définit $w_(t = 1)$ à un vecteur de zéro.
+- Itérativement :
+	- si $x_n$ est correctement classifié, on ne fait rien.
+	- sinon, $w_(t = t+1) = w_(t) + t_n x_n$, $b_(t+1) = b_t + t_n$
+
+> [!question] Une fois qu'on a $w$, comment décider ?
 > 
 > Une fois qu'on a l'équation du plan $\vec{w} \cdot \vec{x} + b = 0$ , avec $\vec{w}$ le vecteur perpendiculaire au plan, $\vec{x}$ notre point. Ensuite $f(x) = \text{sign}(\vec{w} \cdot \vec{x} + b)$ soit $\hat{y} = +1$ si $\vec{w} \cdot \vec{x} + b > 0$ sinon $\hat{y} = -1$.
 > 
-> On obtient donc une fonction de décision $f(x) = \vec{w} \cdot \vec{x} + b$ donc on regarde le signe pour classifier.
+> On obtient donc une fonction de décision $f(x) = \vec{w} \cdot \vec{x} + b$ donc on regarde le signe pour classifier. C'est une **step function** (elle passe de 0 à 1 d'un coup).
+
+> [!danger] 1er problème : pas d'optimisation de la marge
+> 
+> ![[image-170.png|494x203]]
+> 
+> Le perceptron n'a aucune idée de qui est le meilleur.
+## Régression Logistique
+
+Un autre problème avec le perceptron est qu'on a aucune façon de dire si on est proche ou pas de la frontière de décision.
+
+- on remplace la step function par une sigmoïde, le modèle produit une probabilité $\hat p\in(0,1)$.
+- maintenant, on minimise la **cross-entropy** (log-loss) sur le jeu de données $\{(x_n,\,t_n)\}$, où $t_n\in\{0,1\}$ :  $$L_{\mathrm{CE}}(w) 
+    = -\,\sum_{n=1}^N \Bigl[t_n\,\log\bigl(\hat p_n\bigr) 
+    \;+\;(1 - t_n)\,\log\bigl(1 - \hat p_n\bigr)\Bigr].$$
+**(plus stable, deux fois différentiable, etc.)**
+
+![[image-171.png|390x223]]
+
+- comme on utilise cette cross-entropy loss, si le plan passe très près de certains points, leur probabilité d'appartenir à une classe ou l'autre va être p. exemple 60/40 du coup le modèle va être loin de la **vraie** prédiction (100/0), ce qui va quand même pénaliser le modèle, alors que le perceptron aurait été content. cela pousse le modèle à augmenter la taille de la marge.
+
+> [!danger] Un autre problème : les outliers
+> 
+> On n'a pas introduit de slack variables, les outliers pénalisent beaucoup la logistic regression sur le test set.
+
+> [!tip] Vers le multi-class
+> 
+> On passe de la sigmoid vers la softmax, la même chose mais généralise l'idée quand on veut que $K$ classes, sommées, donnent 1.
+## Max Margin Classifier
 
 > [!tip] On cherche à maximiser la marge, calcul de la distance d'un point à un hyperplan
 > 
@@ -72,12 +107,20 @@ Résouds un problème d'optimisation convexe pour optimiser le margin (c'est-à-
 > a l'inférence avec les variables slack :
 > $$ f(x) = sum_(i in "support vectors") alpha_i y_i k(x, x_i) + b "avec" 0 <= alpha_i <= C, forall i $$
 
-Classification non linéaire, comment on fait ? parfois les données ne sont pas séparables !
-### Données non linéairement séparables : Kernel trick
+Classification non linéaire, comment on fait ? parfois les données ne sont pas séparables 
+## Données non linéairement séparables
 
 > [!tip] L'idée : augmenter les dimensions
 > 
 > Ce qu'on fait donc, c'est de choisir une fonction non linéaire, de l'appliquer à nos données (en fait au lieu d'avoir juste une série de points $(x, y)$ on va avoir $(x, y, f(x, y))$, et d'espérer qu'elles soient séparables.
+
+> [!tip] Polynomial expansion
+> 
+> On ne donne plus uniquement $x$ mais $x, x^2, x^3, ..$, etc. pour permettre une approximation de notre fonction avec un polynôme.
+
+**Régularisation** : On ajoute souvent un terme $\tfrac{\lambda}{2}\,\|w\|^2$ pour éviter le sur-apprentissage : $$L_{\mathrm{CE+reg}}(w) = L_{\mathrm{CE}}(w) \;+\;\frac{\lambda}{2}\,\|w\|^2.$$
+On peut trouver le $lambda$ idéal avec la cross-validation.
+## SVM / Kernel trick
 
 > [!danger] Le problème sans le Kernel Trick
 > Ça marche bien, mais c'est très long, d'autant plus que dans certains cas on a besoin d'énormément de dimensions pour séparer les données. Et c'est aussi difficile de trouver cette fonction $Phi$ qui fait un bon mapping (il faut en tester plusieurs -- pas de recette magique).
@@ -101,7 +144,7 @@ Classification non linéaire, comment on fait ? parfois les données ne sont pas
 
 > [!danger] Limite des SVMs
 > 
->- **Grande quantité de données** : la complexité d’entraînement est souvent O(n2)O(n^2)O(n2) ou O(n3)O(n^3)O(n3) selon l’algorithme, ce qui peut devenir prohibitif si on a des centaines de milliers d’exemples.
+>- **Grande quantité de données** : la complexité d’entraînement est souvent $O(n^2)$ ou $O(n^3)$ selon l’algorithme, ce qui peut devenir prohibitif si on a des centaines de milliers d’exemples.
 >  
 >  - **Choix de kernel non trivial** : il n’existe pas de recette magique pour savoir quel kernel convient le mieux à un problème donné.
 

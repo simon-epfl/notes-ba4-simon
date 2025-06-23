@@ -46,3 +46,8 @@ p. exemple :
 - on regarde dans les amis des amis d'Alice et on compute leur similarity score.
 - on prend les premiers et on créé un nouveau "voisinage" à partir de ça.
 - et on répète tant que le nombre de changements est $>epsilon$.
+
+> [!question] Dans les espaces très grands, il faut bcp de données pour remplir tout l'espace
+> 
+>→ euclidean distance peu adaptée ? en fait pas vraiment, parce que les données vivent dans un low dimensional manifold (elles sont rassemblées dans un petit endroit du grand espace multi-dimensionnel).
+ 

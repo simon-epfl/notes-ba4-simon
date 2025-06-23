@@ -97,19 +97,25 @@ $$ = \frac{1}{m} \sum_{i=1}^{m} \left( 2 \left( y_\text{pred}^{(i)} - y_\text{tr
 > 
 > On veut trouver le $x$ qui minimise $f(x)$.
 > 
-> On a des contraintes $f_i (x) <= 0$, pour $i = 1,...,M$.
+> On a des contraintes $g_i (x) <= 0$, pour $i = 1,...,M$.
 > Et des contraintes $h_i (x) = 0$, pour $i = 1, ..., P$.
 > 
 > On calcule le lagrangien : 
-> $$ L(x, lambda, nu) = f(x) + sum_(i = 1)^M lambda_i f_i (x) + sum_(i = 1)^P nu_i h_i (x) $$
+> $$ L(x, lambda, nu) = f(x) + sum_(i = 1)^M lambda_i g_i (x) + sum_(i = 1)^P nu_i h_i (x) $$
 > avec $lambda_i >= 0$ et $nu_j in RR$.
 > 
 > On utilise le Lagrangien pour construire les conditions de Karush-Kuhn-Tucker (KKT):
-> - $nabla_x​ L(x^∗,lambda^∗,nu^∗)=0$
-> - $f_i (x^*) <= 0$ (dans tous les cas, c'est notre contrainte de base)
+> - $nabla_x​ L(x^∗,lambda^∗,nu^∗)=0$  car on veut avoir $nabla f (x) = - lambda_1 nabla g_1 + ...$ etc. (comme toujours le gradient de la fonction et de la contrainte doivent être paralleles au min/max -- penser a rejoindre le soleil sous un lac gelé)
+> - $g_i (x^*) <= 0$ (dans tous les cas, c'est notre contrainte de base)
 > - $h_i (x^*) = 0$ (pareil)
-> - $lambda_i^* >= 0$
-> - $lambda_i^* f_i (x^*) = 0$
+> - $lambda_i^* >= 0$ (seulement les $lambda$ pas les $nu$)
+> > [!question] Pourquoi ?
+> > en fait cette contrainte vient du fait qu'on veut que le gradient de $f$ et des $g$ soient non seulement paralleles, mais plus précisément **opposés** (par exemple si le gradient de $f$ est vers le haut, on veut minimiser $f$ et donc aller vers le bas, mais le gradient de $g$ est vers le bas, donc si on descend plus on ne satisfait plus la contrainte $g >= 0$!). Si ce n'était pas le cas, on pourrait trouver un meilleur minimum!
+> - $lambda_i^* g_i (x^*) = 0$
+> > [!question] Pourquoi ?
+> > 
+> > Voir plus haut. Soit on est dans le cas ou effectivement cette contrainte $g$ est active, on la pousse au bout du bout jusqu'a ce que le gradient de $f$ soit égale a quelque chose fois le gradient de $g$ soit la contrainte n'est pas active (car une autre est plus forte par exemple).
+> > ![[telegram-cloud-photo-size-4-5915969657129518304-y.jpg|349x432]]
 >   
 > **Version duale :**
 > 
@@ -118,8 +124,3 @@ $$ = \frac{1}{m} \sum_{i=1}^{m} \left( 2 \left( y_\text{pred}^{(i)} - y_\text{tr
 > > [!tip] En attendant d'avoir + d'intuition
 > > 
 > > Il faut comprendre que si une contrainte est active (nous empêche d'aller plus loin pour faire diminuer $f$, alors son coefficient $lambda$ sera supérieur à 0, sinon il sera égal à $0$ et la contrainte sera inactive).
-
-
-
-	
-

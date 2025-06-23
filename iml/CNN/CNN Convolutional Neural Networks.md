@@ -38,7 +38,7 @@ Formule de la convolution (sur les)
 
 - **Stride** $s$ : nombre de pixels à sauter entre chaque application du filtre
 - **Padding** $p$ : nombre de pixels à ajouter autour de l’image pour gérer les bords
-
+![[image-169.png]]
 ![[image-126.png]]
 
 Les 2p c'est parce qu'on ajoute p pixels en haut, et p pixel en bas. H_in - H_k parce que plus le filtre est grand plus on doit commencer loin du bord pour être dans une plage valide.

@@ -1,3 +1,5 @@
+Le premier **unsupervised algorithm** (il s'entraîne sur un jeu de données non labélisé).
+
 - un cluster est un ensemble de points ${x_(i_1^k), ..., x_(i_(n^k)^k)}$
 - $mu_k$  est le centre de masse du cluster $k$
 
@@ -12,3 +14,4 @@ $$"on veut minimiser : " sum_(k = 1)^K sum_(j = 1)^(n_k) (x_(i_j)^k - mu_k)^2$$
 	- on met à jour chaque $mu_k$ en fonction de la moyenne des points associés
 
 $arrow$ ça ne marche pas toujours! on doit essayer avec plusieurs seeds (plusieurs positions aléatoires au début) et prendre celle qui à le meilleur résultat en termes de distance au carré
+

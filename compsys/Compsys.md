@@ -24,7 +24,6 @@ Le CPU est **virtualisé** : chaque thread pense qu'il est le seul à s'exécute
 
 > [!info] Que partagent les threads d'un même process ?
 > Chaque thread a son propre stack, son propre CPU context (c'est-à-dire, ses propres registres, son propre stack) mais ils partagent le même text segment, data segment, heap..
-
 ## Lundi 24 février
 
 #### Privilege modes, limited direct execution, kernel/loader
@@ -53,7 +52,8 @@ Les **syscall** sont donc utilisés par les threads en low privilege pour exécu
 - **Blocked**: il ne peut pas run tant qu'un évènement arrive comme un message réseau reçu
 
 quand le kernel tourne pour un syscall exécuté pour un thread, on dit que le thread est running
---> attention, un thread **ne passe pas en blocked dès qu'un syscall est fait** ! si un syscall n'est pas bloquant (accès à du stockage ou au réseau par exemple), alors le thread est toujours running (le kernel tourne pour le thread) ! par contre à partir du moment où le kernel fait un appel bloquant (I/O), alors le thread est blocked.
+> [!danger] un thread **ne passe pas en blocked dès qu'un syscall est fait** !
+> si un syscall n'est pas bloquant (accès à du stockage ou au réseau par exemple), alors le thread est toujours running (le kernel tourne pour le thread) ! par contre à partir du moment où le kernel fait un appel bloquant (I/O), alors le thread est blocked.
 
 Limited execution du thread :
 - quand il y a une erreur, une exécution illégale (exception/trap) ou un double-clic par exemple, un interrupt est déclenché et est géré par le **interrupt handler** du **kernel**
@@ -226,10 +226,9 @@ On peut utiliser `strace ./a.out` pour voir tous les calls faits par le programm
 
 - L'OS voit le fichier comme un inode. Un inode ID est assigné à chaque fichier et est unique **au sein du file system**. Il est recyclé après supression du fichier. Le inode contient les permissions, la taille, le nombre d'accès, la position des blocks de données, etc. Chaque fichier a exactement un inode.
 
-	- Le process voit le fichier comme un file descriptor (voir ci-dessous).
+- Le process voit le fichier comme un file descriptor (voir ci-dessous).
 
 > [!info] On peut accéder aux inodes des fichiers/dossiers en utilisant `ls -lih`
-
 #### Comment le file system gère les inodes ?
 
 Il y a une partie du disque réservée au stockage de la inode table (comme une page table linéaire). 
@@ -293,7 +292,6 @@ Tous les systèmes de fichiers ont une racine commune, le `/`! Par exemple `/hom
 > [!question] Qu'est-ce qui est stocké `/b/c` est un nouveau file system, `/b` un autre, qu'est-ce qui est stocké dans la inode table de `b`?
 > 
 > Rien. L'OS va voir qu'il n'existe pas de inode pour `b` donc il va chercher s'il y a un autre file system monté à cet endroit-là.
-
 ### Comment implémenter un file system?
 
 Un **disque** est divisé en plusieurs partitions. Le secteur 0 du disque stocke le MBR (master boot record), qui contient :
@@ -303,7 +301,7 @@ Un **disque** est divisé en plusieurs partitions. Le secteur 0 du disque stocke
 Le premier bloc de chaque partition a un bloc de boot, qui est chargé.
 #### Qu'y a-t-il dans une partition ?
 
-64 blocks, chacun de 4 kb. Certains blocks stockent des données, d'autres des metadonnées.
+64 blocks, chacun de 4 kb. Certains blocks stockent des données, d'autres des métadonnées.
 On peut avoir 5 blocks **i** pour les inodes, un block **d** et **i** pour stocker les blocks libres pour les données et les inodes, et un block **b** pour le boot block et le super block.
 
 > [!info] C'est quoi un superblock ?
@@ -518,15 +516,13 @@ on peut aussi utiliser du delay and batch pour éviter beaucoup de contexts swit
 
 ### DMA/PIO
 
-
 Il y a deux moyens d'envoyer des données au controlleur de l'appareil :
 - **PIO (programmed IO)** : le CPU envoie les **données** à l'appareil (prend un temps de CPU proportionnel à la taille des données, efficace pour les petits transferts)
 - **DMA (direct memory access)** : le CPU dit à l'appareil **où sont les données** (efficace pour les gros transferts, on doit donner l'accès au bus à l'appareil)
-
 #### Fonctionnement du DMA
 
 - le driver de l'appareil (du disque) reçoit une requête pour tranférer des données à l'adresse **X** (via le memory bus)
-- le driver dit au disk controller de transférer **C** bytes du disque vers le buffer à l'adresse **X**
+- le driver du disque dit au disk controller (interne) de transférer **C** bytes du disque vers le buffer à l'adresse **X**
 - le disk controller commence un DMA transfer
 - le disk controller envoie chaque byte au DMA
 - le DMA controller transfère chaque byte à l'adresse X augmente l'adresse mémoire, et diminue C jusqu'à ce que C = 0
@@ -538,7 +534,7 @@ Il y a deux moyens d'envoyer des données au controlleur de l'appareil :
 
 Challenge : trop d'appareils ont des protocoles différents
 
-Le drive implémente une API. Les appareils similaires (de la même class) utilisent la même API. Le kernel supporte donc quelques APIs, une par classe.
+Le driver implémente une API. Les appareils similaires (de la même class) utilisent la même API. Le kernel supporte donc quelques APIs, une par classe.
 Comment bien designer cette API ?
 
 ### Abstraction stack
@@ -586,7 +582,6 @@ problème : les write sont un peu compliqués
 
 L'objectif : donner l'illusion à chaque thread qu'il est tout seul dans le CPU.
 La réalité c'est que le CPU est partagé entre tous les threads.
-
 ##### OS Scheduler
 
 - il doit choisir le prochain thread à garder
@@ -620,7 +615,6 @@ Jusqu'ici, nous n'avons pas vu la policy appliquée pour choisir le prochain thr
 > On utilise des **timer interrupts**. Quand le timer expire, le CPU est interrompu et passe en kernel mode. L'OS Scheduler est invoqué et le scheduler fait un context switch.
 > 
 > ![[image-2.png|371x281]]
-
 #### Quelle scheduling policy ?
 
 Comment choisir le prochain thread ? 
@@ -663,18 +657,16 @@ Le tournaround est de approx 103.
 > - FIFO et SJF sont des **non-preemptive**. Ils ne switch que lorsque le thread en cours a fini son exécution.
 >   
 > - **Preemptive** schedulers arrêtent l'exécution du thread en cours et switch à un autre de façon forcée pour éviter que le CPU soit monopolisé.
-
 ##### Shorter time to completion first (STCF)
 
-Il étend le shortest job first. à chaque fois qu'un thread est créé :
+Il étend le shortest job first.
+à chaque fois qu'un thread est créé :
 - il détermine lequel des jobs restants (**dont** celui en cours) a le temps restant le plus faible
 - il le schedule
-
 #### New metric : le temps de réponse
 
 C'est le temps avant que le thread soit scheduled. Les utilisateurs veulent des réponses intéractives !
 Ce n'est pas du tout pris en compte dans le STCF
-
 #### Round Robin (RR)
 
 Au lieu de faire tourner les threads jusqu'à ce qu'ils soient complétés, RR schedule un thread pour un intervalle fixe, et switch au prochain thread.
@@ -724,7 +716,6 @@ distributed application :
 - plusieurs process
 - plusieurs ordis possibles
 - échanges des messages entre eux 
-
 #### Architecture client/serveur
 
 Le client **fait des appels**, le serveur **y répond**.
@@ -850,11 +841,17 @@ Tout le monde se connecte à ce central office.
 ![[image-38.png]]
 
 swisscom est un tier-1 ISP, il a définitivement des connexions peering entre d'autres majors ISPs.
-mais c'est aussi un access ISP ! 
+mais c'est aussi un access ISP !
+
+Le **peering** est un **accord entre deux réseaux** (souvent des fournisseurs d’accès à Internet ou des opérateurs de backbone) pour **échanger directement du trafic Internet**, sans passer par un fournisseur tiers.
+- Il peut être :
+	- **Public** (via un point d’échange Internet, ou IXP) 
+    - **Privé** (liaison directe entre deux réseaux)
+- Ce n’est **pas une relation client-fournisseur** : chacun gère ses coûts.
 
 ![[image-39.png]]
 
-On construit un IXP (Internet Exchange Point) pour que si un access ISP veut changer de regional ISP,  il peut changer facilement ! ("please disconnect me from Swisscom and connect me to Sunrise")
+On construit un IXP (Internet Exchange Point) pour que si un access ISP veut changer de regional ISP,  il puisse changer facilement ! ("please disconnect me from Swisscom and connect me to Sunrise")
 
 Les **off-net caches** ou **edge caches** sont des serveurs de cache placés au plus près des utilisateurs, souvent dans les réseaux des fournisseurs d'accès à Internet (ISP). Leur but est de stocker localement des contenus populaires (comme des vidéos YouTube, des séries Netflix, etc.) pour accélérer l'accès et réduire la bande passante utilisée entre les serveurs d'origine et les utilisateurs finaux.
 
@@ -917,7 +914,6 @@ androz2091.fr.		3491	IN	A	54.39.102.76
 ```
 
 on peut voir qu'il y a le flag `aa` (authoritative answer) quand on contacte directement les serveurs d'OVH ! 
-
 ## Lundi 28 Avril
 
 On appelle le total (toutes les couches) un **paquet**. Un packet switch peut implémenter un network layer, et toujours un link et physical layer. Le packet switch peut donc modifier les headers de ces trois couches.
@@ -1036,41 +1032,45 @@ UDP ne corrige pas cette corruption, ne redemande pas les paquets perdus ou corr
 
 DNS utilise UDP (on veut une latence tres faible, si on reçoit pas on renvoit la requête). Fortnite, etc. pareil si la position d'un joueur n'arrive pas, la suivante arrive tres vite.
 
-### TCP
+## TCP
 
-Bob utilise listen, Alice connect.
-Alice va envoyer un TCP segment SYN (Synchronization) pour setup la connexion, et Bob renvoie SYN ACK (Synchronization Acknowledge).
-Alice va envoyer un autre TCP segment ACK. (acknowledge l'acknowledgment).
+### Établissement de la connexion (Three-way handshake)
 
-Bob va donc créer une nouvelle socket, dédiée aux communications avec Alice.
-Et a ce moment la Alice va appeler send et Bob recv.
+1. **SYN**
+	1. Alice envoie un segment **SYN** (Synchronization), avec un numéro de séquence initial **ISN_A** (p. ex. 0).
+	2. Ce SYN « consomme » 1 dans la numérotation TCP.
+2. **SYN + ACK**
+	1. Bob répond par **SYN + ACK**, avec son propre **ISN_B** et `ACK = ISN_A + 1`, `SEQ = ISN_B`.
+	2. Ce SYN consomme aussi 1 dans la numérotation.
+3. **ACK (et données éventuelles)**
+	1. Alice renvoie **ACK**.
+	2. `ACK = ISN_B + 1`
+	3. `SEQ = ISN_A + 1` 
 
-![[image-66.png]]
-
-TCP n'attend pas pour les données, il attend de recevoir des demandes de connexion.
-
-Parfois, Alice envoie directement l'acknowledgment et le message.
+Bob crée **une nouvelle socket,** dédiée aux communications avec Alice. La socket utilisée pour TCP n'attend donc pas les données, uniquement des **demandes** de connexion.
 
 ![[image-67.png]]
 
-#### TCP multiplexing et demultiplexing
+On a un **Maximum Segment Size**, la taille maximale d'un paquet TCP. On créé plusieurs paquets pour envoyer un message.
+### TCP multiplexing et demultiplexing
 
-- Un serveur créer une listening socket (socket, bind, listen)
-- Le client créer une connection socket (socket, connect)
-- Le serveur créer une connection socket (accept)
-- Le client et le serveur échangent des messages via des connection sockets (recv et send)
+- Un serveur créé une **listening** socket (socket, bind, listen)
+- Le client créé une **connection** socket (socket, connect)
+- Le serveur créé une **connection** socket (accept)
+- Le client et le serveur échangent des messages via des **connection** sockets (recv et send)
 
-On va donc avoir plein de sockets, une par client. Et au moins une listening socket.
+On va donc avoir plein de sockets, une par client et **au moins une listening socket**.
 
 C'est donc un handshake client-server-client.
 Les deux premiers segments TCP contiennent un SYN flag dans les headers.
-Le troisieme segment peut contenir des données.
+Le troisième segment peut contenir des données.
+### Fiabilité, gestion de la corruption et des pertes
 
-#### Gestion de la corruption
+1. Chaque segment TCP porte un **checksum**.
+2. Quand un paquet est reçu via TCP et qu'il est corrompu, Bob va renvoyer un NACK.
+3. Alice va renvoyer le paquet jusqu'a recevoir un ACK.
 
-Quand un paquet est reçu via TCP et qu'il est corrompu, Bob va renvoyer un NACK. Et Alice va renvoyer le paquet jusqu'a recevoir un ACK.
-
-L'application n'a jamais connaissance de tout ça, c'est TCP qui gere le reste!
+L'application n'a jamais connaissance de tout ça, c'est TCP qui gère le reste!
 
 ![[image-68.png]]
 
@@ -1081,16 +1081,11 @@ L'application n'a jamais connaissance de tout ça, c'est TCP qui gere le reste!
 > 
 > Si l'application est Telegram, ça ne doit pas envoyer deux messages !
 > 
-> **Solution** : ajouter un SEQ (un ID) dans le header. on appelle ça un sequence number. 
-
-![[image-69.png|396x273]]
-
-![[image-70.png|406x279]]
-
-ACK 2 signifie, "je n'ai pas encore reçu SEQ 2 correctement".
+> **Solution** : ajouter un SEQ (un ID) dans le header. on appelle ça un sequence number. **ACK cumulatifs** : l’ACK numéro _n_ signifie que tous les segments jusqu’à _n – 1_ ont été reçus correctement.
 #### Gestion du timeout
 
-Quand l'ACK n'arrive pas a temps, un segment a été perdu ou retardé. L'envoyeur l'utilise pour retransmettre le message. 
+Quand l'ACK n'arrive pas à temps, un segment a été perdu ou retardé.
+L'envoyeur l'utilise pour **retransmettre** le message. 
 
 > [!tip] Comment calculer le timeout ?
 > 
@@ -1108,55 +1103,46 @@ Quand l'ACK n'arrive pas a temps, un segment a été perdu ou retardé. L'envoye
 |**Sample RTT**|Le **temps mesuré réellement** pour un aller-retour d’un segment donné. C’est une **valeur instantanée**.|
 | **Estimated RTT** | Une **moyenne mobile** qui représente une estimation "lissée" de la RTT, basée sur plusieurs mesures précédentes. C’est une **valeur stable et prédictive**. |
 
-Jusqu'ici, on a vu que le serveur ne renvoyait que des ACK. Mais en réalité, le serveur envoie aussi des données.
-
-Alice envoie donc SEQ1/ACK1/DATA_A_1
-Bob envoie SEQ1/ACK2/DATA_B_1
-
-Donc les acknowledgement count est en fonction des packets reçus et Seq count est en fonction des paquets envoyés.
-
-![[image-71.png|476x239]]
-
 ![[image-72.png]]
 
 ACK 6 parce que hello a été envoyé (5 bytes).
+#### Contrôle de flux (Flow Control)
 
-#### MSS
+- Le récepteur annonce dans chaque ACK un **rwnd** (receiver window), la taille de sa fenêtre de réception libre pour éviter d'être submergé.
+- L’émetteur ne peut pas envoyer plus de `min(cwnd, rwnd)` octets non acquittés.
+#### Contrôle de congestion (Congestion Control)
 
-On a un Maximum Segment Size, la taille maximale d'un paquet TCP. On créé plusieurs paquets pour envoyer un message.
+- **cwnd** = congestion window (contrôle du réseau, non de l’application).
+- On compare `cwnd` à un **seuil ssthresh** pour passer du state **slow start** à **congestion avoidance**.
 
-**Sender window** : le nombre de bytes unacknlowledged que le client peut envoyer (car attendre pour les ACKs c'est long). Change dynamiquement pendant la connexion en fonction du receiver et du réseau.
-#### Congestion control
+**Objectif** : ne pas submerger le réseau.
+- le sender l'estime lui-même (**self-clocking**) 
+	- new ACK : pas de perte, on peut envoyer plus vite !
+	- no new ACK (ou ack dupliqué) : perte, envoyer plus lentement
+#### Tahoe vs Reno (timeout)
 
-Ne pas submerger le réseau.
-- envoyer a une rate que le receiver peut gérer
-- le sender l'estime lui-même
-
-Self-clocking : le sender ajuste sa congestion window en se basant sur les pertes (qu'il détecte avec les ACK). 
-- new ACK : pas de perte, on peut envoyer plus vite !
-- no new ACK : perte, envoyer plus lentement
-- ... beaucoup d'autres algorithmes possibles.
-#### Flow control
-
-Ne pas submerger le receiver.
-- max sender window défini par le receiver dans un header TCP
-
-Exemple d'algorithmes :
-![[image-73.png|387x165]]
-![[image-74.png|393x224]]
-![[image-75.png|400x276]]
-
-timeout! on revient a une window de 100 bytes
+| Événement        | **Tahoe**                                               | **Reno**                                                                                                                                                                                                                                                                                                                                                                                                             |
+| ---------------- | ------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Timeout          | cwnd → 1 MSS<br>ssthresh → cwnd/2<br>state → slow start | même que Tahoe                                                                                                                                                                                                                                                                                                                                                                                                       |
+| 3 duplicate ACKs | cwnd → 1 MSS<br>ssthresh → cwnd/2<br>state → slow start | dès que les 3 acks dupliqués sont reçus:<br>- sshtresh = cwnd/2<br>- cwnd = sstresh  (+ 3 MSS)<br>- on retransmet le paquet manque et on passe en **fast recovery**<br>- on reste en **fast recovery** jusqu'à ce qu'on reçoive un nouvel ACK<br>- pour tout ACK dupliqués reçus entre temps (en **fast recovery**), on augmente la window de 1 MSS<br>- dès qu'on reçoit un nouvel ACK on reset la window à sstresh |
 sstresh : slow start threshold
-a partir du moment ou elle atteint sstresh, elle passe en "congestion avoidance".
-elle va augmenter plus lentement le sender window --> elle augmente de $("MSS" dot "MSS")/"cwnd = congestion window size"$
 
-#### Tahoe states
+Quand on a un timeout, on fait donc:
+- sstresh = $"cwnd"/2$  puis `cwnd`  = 1
+- on reste en slow start
+- quand on atteindra `sstresh` , on passera automatiquement en congestion avoidance
+#### States
 
-- slow start : augmenter la window de maniere agressive
-- congestion avoidance : augmenter la window précautionneusement 
+- **slow start** : augmenter la window de maniere agressive
+	- aumente de 1 MSS par ACK. à chaque ACK :$$"cwnd" = "cwnd"_(t -1) + "MSS"$$ 
+- **congestion avoidance** : augmenter la `cwnd` précautionneusement
+	-  augmente de 1 MSS par RTT. à chaque ACK :$$"cwnd" = ("MSS"^2)/"cwnd"_(t -1)$$
+	- parce que :
+		- on envoie $"cwnd"$ bytes par RTT, soit $"cwnd"/"MSS"$ segments par RTT
+		- on va donc augmenter, par RTT $$"cwnd"/"MSS" dot "MSS"^2/("cwnd"_(t -1)) approx "MSS"$$
+		- on fait l'approximation $"cwnd" approx "cwnd"_(t -1)$.
 
-> [!tip] Fast retransmit
+> [!tip] Fast retransmit (TCP Reno)
 > 
 > Si un paquet est perdu, normalement on attend le timeout. Or ici, avec fast retransmit, si on reçoit 3 fois un ACK dupliqué, on se doute que le paquet est manquant et on le revoit directement.
 > 
@@ -1164,15 +1150,6 @@ elle va augmenter plus lentement le sender window --> elle augmente de $("MSS" d
 > 
 > ![[image-79.png|383x266]]
 > ![[image-80.png|380x264]]
-
-#### TCP Reno
-
-si un paquet est perdu, avec Tahoe c'est un timeout, et on doit repasser la taille de la window a 100 bytes. Avec Reno, elle divise par deux la taille de sa window.
-
-![[image-78.png]]
-
-TODO: clarifier la dif entre Reno et Tahoe
-
 ## Mercredi 7 mai
 
 > [!info] Rappel sur les headers
@@ -1180,7 +1157,7 @@ TODO: clarifier la dif entre Reno et Tahoe
 > TCP: SYN flag, checksum, SEQ, ACK, receiver window, src port, dst port.
 > IP: src IP address, dst IP address
 
-> [!tip] Routeurs, le nouveau nom des network-layer packet switches
+> [!tip] Routeurs, des network-layer packet switches spécifiques
 > 
 > Ils font d'abord du **forwarding** : regarder le paquet qui arrive et décider où il va (dans quel link). Dans chaque routeur, il y a une forwarding table. Elle est utilisée par le routeur pour faire une décision de routage. Un routeur assigne un numéro à chacun de ses links. Pour chaque dst IP address, le routeur a dans sa table vers quel link l'envoyer.
 > 
@@ -1196,11 +1173,10 @@ TODO: clarifier la dif entre Reno et Tahoe
 > 
 > $arrow$ on créé des ranges d'IP adresses.
 > ![[image-83.png|388x190]]
-> ![[image-84.png|383x226]]
 > 
 > le routeur utilise des étoiles pour représenter les ranges.
 > 
-> ![[image-85.png]]
+> ![[image-85.png|246x186]]
 > 
 > On fait du **longest prefix matching** : $1000$ va être choisi en priorité sur 1***.
 
@@ -1223,7 +1199,9 @@ TODO: clarifier la dif entre Reno et Tahoe
 > 
 > Le routeur a l'IP 223.1.1.4, 223.1.9.1, 223.1.7.0, une IP par subnet. Un routeur a donc autant de network interfaces que de subnet auxquels il se connecte.
 > 
-> Un subnet est donc une zone de réseau continue qui ne contient pas de routeur. Tous les end-systems et routeurs ont une IP avec le même préfixe. Un routeur a une IP par subnet qu'il touche.
+> Un subnet est donc une zone de réseau continue **qui ne contient pas de routeur**! Tous les end-systems et routeurs ont une IP avec le même préfixe. Un routeur a une IP par subnet qu'il touche.
+> 
+> On verra plus tard qu'on regroupe des subnets ensemble pour former un autonomous system.
 
 > [!tip] Comment obtenir l'IP du routeur?
 > `ip route | grep default`
@@ -1279,8 +1257,6 @@ IP packet-switched network : no network-layer connections.
 > Il ajoute un port pour savoir vers quel end-system rediriger le traffic. On ajoute donc du state ! mais ça va parce que c'est dans les routeurs de bordure (ceux qui sont situés juste devant l'entrée d'un subnet).
 > 
 > Cela signifie donc que les end-systems ne sont pas atteignables par l'extérieur. Ils peuvent faire une requête **vers** l'extérieur mais personne ne peut contacter un end-system directement de l'extérieur (a moins que le routeur ne soit configuré pour).
-
-
 # Lundi 12 mai
 
 > [!tip] forwarding $eq.not$ routing
@@ -1304,8 +1280,6 @@ le coût d'un link est par exemple la performance du link (propagation delay, et
 > On veut aussi faire en sorte que si un link est congested, il ait un coût plus haut. Mais les ISPs, pour éviter les coûts dynamiques qui peuvent créer des oscillations, préferent hardcoder ces coûts puis s'ils remarquent qu'un link est surchargé, ils l'upgradent.
 
 **Least-cost path routing** : trouver le chemin le moins cher d'un routeur à l'autre.
-
-**Link-state routing** : 
 
 > [!question] Link-state routing algorithm
 > 
@@ -1387,7 +1361,6 @@ Chaque routeur partage aussi à tous l'IP prefix qu'il own.
 > - **Le transfert de paquets** vers des destinations situées **hors de l’AS**.
 > - **Le filtrage** du trafic entrant et sortant pour des raisons de sécurité ou de politique réseau.
 
-
 > [!question] DDOS, SYN flooding
 > 
 > ![[image-107.png|469x242]]
@@ -1406,24 +1379,19 @@ Chaque routeur partage aussi à tous l'IP prefix qu'il own.
 
 > [!question] link vs network layer
 > 
-> Link : prend chaque paquet et l'envoie d'un link à un autre
-> Network : prend chaque paquet et l'envoie d'un endroit à l'autre du réseau.
-
-Du point de vue de l'IP subnet:
-![[image-109.png|449x253]]
-Du point de vue de l'Internet
-![[image-110.png|478x269]]
-
-Link layer: prend des packets d'un endroit de l'IP subnet à un autre
-Networ layer: 
-
-> [!question] Que fait le link layer ?
+> Link layer (couche **2**) :
+> - Prend chaque frame (en fait c'est une unité pour la couche L2 qui contient des en-têtes en + comparé à un packet) et l’envoie d’un lien physique à un autre, **à l’intérieur d’un même sous-réseau IP**.
+> - Assure la **détection d’erreurs** (checksum), la **fiabilité** (ACKs, retransmissions…).
+>   > [!question] Pourquoi le faire dans cette couche si le transport le fait aussi ?
+>   > simplement parce que si un petit link est très peu reliable (typiquement *wireless*), à chaque fois on va perdre le packet et Alice va devoir renvoyer peut-être 3-4x ses packets.
 > 
-> De la détection d'erreur (il détecte les packets corrompus avec les checksums), gère la data delivery directement (avec des ACKs, retransmissions, etc. mais c'est **pas** TCP).
-> 
-> mais pourquoi le faire au link layer alors que le transport layer le fait ? simplement parce que si un petit link est très peu reliable (typiquement *wireless*), à chaque fois on va perdre le paquet et Alice va devoir renvoyer peut-être 3-4x ses packets.
-
-link layer address, or MAC address, or internet adress --> même chose
+> ![[image-109.png|277x156]]
+>
+> Network (couche **3**) :
+> - Prend chaque paquet et l’achemine **d’un sous-réseau IP vers un autre**, sur l’ensemble de l’Internet.
+>- Utilise des adresses IP et le protocole de routage BGP pour construire des tables de forwarding globales.
+>
+>![[image-110.png|273x154]]
 
 ![[image-111.png|511x288]]
 destination MAC address : l'adresse locale de l'appareil dans le subnet
@@ -1432,26 +1400,31 @@ destination MAC address : l'adresse locale de l'appareil dans le subnet
 > 
 > 48-bit number
 > 
-> Flat : elles n'ont pas de hiérarchie comme des adresses IP, ne sont pas location-dependent
+> Flat : elles n'ont pas de hiérarchie comme des adresses IP, ne sont pas location-dependent.
+> Chaque interface réseau possède une MAC unique.
 
-> [!tip] L2 (layer 2 --> link layer) Forwarding
+### Forwarding et remplissage des tables
+
+> [!tip] L2 Forwarding
 > 
 > ![[image-112.png|455x256]]
 > 
-> La switch locale détermine l'output link de chaque packet. Il se passe sur les MAC addresses. comme avant mais... on ne peut pas grouper les adresses MAC.
-> 
-> alors que L3 (layer 3 --> network layer) se base sur des adresses hiérarchiques.
+> La switch détermine l'output link de chaque packet. Il se base sur les MAC addresses. 
+> Il y a donc des grandes tables.
 
 > [!question] Qui remplit les forwarding tables du L2 ?
 > 
 > Pour le L3, c'était le routing protocol.
-> Pour le L2, quand il voit un packet arriver, il note l'adresse MAC de l'envoyeur et sait qu'il doit envoyer les packets de cette adresse MAC dans ce link.
+> Pour le L2 :
+> - chaque switch apprend dynamiquement les MAC : quand il reçoit une frame, il enregistre l’adresse source et le link d’arrivée.
+> - Pour acheminer, il consulte sa table MAC → link de sortie.
+> - Si destination inconnue → inondation (broadcast) sur tous les links.
 > 
 > ![[image-113.png|471x249]]
-> 
-> Si un packet arrive et que l'adresse MAC n'a pas encore été discovered, le routeur va juste l'envoyer à l'adresse IP de broadcast (à tous les autres routeurs).
 
 > [!danger] loops
+> 
+> Les boucles Ethernet (cycles de liens) entraînent des inondations infinies et des problèmes de congestion.
 > 
 > ![[image-114.png|445x205]]
 > Comment gérer ça ?
@@ -1459,8 +1432,15 @@ destination MAC address : l'adresse locale de l'appareil dans le subnet
 > - avec du state ? on pourrait noter qu'on a déjà vu le packet (problème : l'espace n'est pas infini et c'est un vecteur d'attaque)
 >  - on créé un minimum spanning tree pour éviter les cycles
 
-
 > [!question] Address resolution
+> 
+> Il y a deux cas.
+> 
+> **CAS 1 : IP cible dans le même subnet**
+> - Le client sait, d’après son masque, que l’adresse est “locale”.
+> - Il émet une frame Ethernet **ARP Request** (“Qui a l’IP X.X.X.X ?”) en broadcast.
+> - L’hôte correspondant répond par un **ARP Reply** contenant sa MAC.
+> - Le client peut alors envoyer la frame Ethernet directement à la MAC cible.
 > 
 > ![[image-115.png|396x286]]
 > 
@@ -1470,13 +1450,13 @@ destination MAC address : l'adresse locale de l'appareil dans le subnet
 > 
 > ![[image-117.png|393x284]]
 > 
-> **Pour parler à quelqu'un en dehors du IP subnet**
-> 
+> **CAS 2 : IP cible en dehors du sous-réseau**
+> - Le client constate que l’adresse n’est **pas** dans son subnet.
+> - Il encapsule son paquet IP dans une frame Ethernet destinée à la **MAC de la passerelle** (default gateway).
+> - Pour cela, il émet une **ARP Request** pour l’IP de la gateway, reçoit la MAC, et envoie la trame à cette MAC.
+> - C’est ensuite le routeur (la gateway) qui, lui, a une table de routage pour transférer le paquet vers le réseau de destination.
+>
 > ![[image-119.png|405x292]]
-
-Pourquoi on a besoin d'une adresse MAC ?
-
-Le link ne parle pas "IP", il parle "MAC address". mais pourquoi ?
 
 > [!tip] Adress Resolution Protocol (ARP)
 > 
@@ -1491,12 +1471,9 @@ Le link ne parle pas "IP", il parle "MAC address". mais pourquoi ?
 > 
 > Problème de scalabilité : location-dependent c'est utile. le fait qu'on puisse avoir des petites forwarding tables. + le broadcasting ne scale pas.
 
-so indeed i'll go to coiffeur today 
-but i'll be back around 6h25-6h30 so we can think about CTF or go play somewhere 
-
 > [!danger] Get rid of MAC addresses and L2 forwarding?
 > 
-> **Le lien physique (L2)** ne comprend que des **MAC addresses**.
+> **Le lien physique (L2)** ne comprend que des **MAC addresses**.Les L2 sont conçus pour relier efficacement des hôtes proches (même sous-réseau), tandis que la couche 3 organise la communication globale via des adresses hiérarchiques.
 
 Il faut vraiment voir l'IP comme un moyen global de connecter les end-systems entre eux mais à l'intérieur d'un subnet on peut se connecter comme on veut, avec le protocole qu'on veut (comme Ethernet avec les adresses MAC).
 
@@ -1510,33 +1487,36 @@ Si un end-system dans un subnet veut faire une requête à un end-system dans un
 > [!danger] les switches ne répondent PAS au requête ARP ! si switch 1 connaît la MAC de B demandé par A, il va juste broadcast la requête ARP 
 ## Lundi 19 Mai
 
-**Sequentiel**  : 35 min, les tâches les unes apres les autres.
+**Sequentiel**  : 35 min, les tâches les unes après les autres.
 
-**Concurrent** : c'est comme les pipelines en comparch, quand on lance les pâtes ça devient de l'IO et pendant ce temps on fait une autre tâche.
-
-![[image-127.png|381x218]]
-
-**Parallele** : s'il y a plus d'un chef pour cuisiner, on peut paralléliser les tâches (yellow cook et blue cook).
-
-![[image-128.png|372x196]]
+> [!question] Concurrency vs Parallelism
+> 
+> **Concurrent** : lorsqu'une tâche attend une opération d'I/O (par exemple, attendre que l'eau des pâtes se mette à bouillir), le processeur peut s'occuper d'une autre tâche en attendant. Cela donne l'**illusion** que plusieurs tâches s'exécutent en même temps.
+> 
+> ![[image-127.png|297x170]]
+> 
+> **Parallèle** : Si l'on dispose de plusieurs unités de calcul (plusieurs "chefs"), on peut **réellement** exécuter plusieurs tâches simultanément. Les tâches sont alors parallélisées.
+> 
+> ![[image-128.png|372x196]]
+> 
 
 > [!question] Pourquoi parallélisme et concurrency ?
 > 
 > D'un point de vue utilisateur :
-> - augmenter le throughput
-> - réduire la latency
+> - **Augmenter le débit (throughput)** : traiter plus de tâches en un temps donné.
+> - **Réduire la latence (latency)** : obtenir une réponse plus rapidement.
 > 
-> D'un point de vue system : 
-> - utiliser tous les coeurs
-> - cacher le coûts des opérations IO
+> D'un point de vue système : 
+>- **Utiliser efficacement tous les coeurs** du processeur.
+>- **Masquer la latence** des opérations d'I/O (disque, réseau, etc.).
 
 > [!example] Bash
 > 
-> `&` a la fin de la commande, permet de lancer un process avec un fork et de lancer une autre commande pendant ce temps.
+> `&` à la fin de la commande, permet de lancer un process avec un fork et de lancer une autre commande pendant ce temps.
 > 
-> Probleme : on copie aussi le programme ! Les process ne partagent pas la mémoire!
+> Problème : on copie aussi le programme ! Les process ne partagent pas la mémoire!
 > 
-> Solution : les threads !
+> **Solution** : les threads !
 
 > [!tldr] Rappel sur les threads
 > 
@@ -1554,22 +1534,25 @@ Si un end-system dans un subnet veut faire une requête à un end-system dans un
 
 ![[image-132.png]]
 
-race condition (et plus précisément data race), quand deux threads veulent accéder a une variable mutable partagée
+race condition (et plus précisément data race), quand deux threads veulent accéder à une variable mutable partagée
 (comme les threads s'exécutent en parallele)
 
 > [!tip] Atomicity et locks
 > 
+> L'incrémentation d'une variable (`count++`) n'est pas une opération unique pour le processeur. Elle se décompose en trois instructions : chargement, incrémentation, et écriture (load, increment, store).
+> 
 > ![[image-133.png]]
 > 
-> On veut que ces trois instructions s'exécutent de façon atomique, que rien ne s'exéute entre eux.
+> On veut que ces trois instructions s'exécutent de façon atomique, que rien ne s'exécute entre eux.
 > 
-> Critical section : quand deux threads essayent d'accéder a une zone mémoire partagée.
 > 
-> Mutual exclusion : un seul thread peut exécuter une section critique a la fois.
+> Critical section : quand deux threads essayent d'accéder à une zone mémoire partagée.
+> 
+> Mutual exclusion : un seul thread peut exécuter une section critique à la fois.
 > 
 > ![[image-134.png]]
 > 
-> Le lock protege cette zone critique.
+> Le lock protège cette zone critique.
 > Un seul thread peut obtenir un lock a la fois : lock holder
 > Les autres threads doivent attendre que le lock soit released : lock waiter
 
@@ -1598,7 +1581,7 @@ race condition (et plus précisément data race), quand deux threads veulent acc
 > [!tip] test-and-set
 > 
 > En une instruction, on set le lock et on le get en même temps (son ancienne valeur).
-> ![[image-139.png]]
+> ![[image-139.png|604x137]]
 > 
 > hardware lock, en une seule instruction --> atomicité !
 > 
@@ -1626,7 +1609,6 @@ race condition (et plus précisément data race), quand deux threads veulent acc
 > ![[image-143.png|423x207]]
 > 
 > deadlock! Ils prennent tous la fourchette a sa gauche et ils attendent tous que quelqu'un release l'autre fourchette (mais personne ne va le faire !)
-
 
 ## Mercredi 21 mai
 
@@ -1683,5 +1665,3 @@ race condition (et plus précisément data race), quand deux threads veulent acc
 ![[image-150.png]]
 
 on a quatre niveaux de protection user, kernel (et on a mis deux niveaux entre les deux, protected librairies par exemple, mais pas vraiment utilisé)
-
-si on run le kernel en de-privileged 

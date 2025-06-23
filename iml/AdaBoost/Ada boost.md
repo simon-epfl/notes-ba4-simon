@@ -4,8 +4,6 @@
 
 L'algorithme :
 - on initialise un poids uniforme sur chacun des $N$ samples d'entraînement
-
-
 - à chaque itération:
 	- on **entraîne un nouveau weak classifier** $h_t (x)$ en se basant sur ces poids (pour les séparer le mieux possible)
 	- on calcule l'erreur pondérée du classifier :

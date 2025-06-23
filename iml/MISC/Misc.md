@@ -24,7 +24,7 @@ On définit toujours un ensemble de test pour juger les performances du modèle,
 On veut toujours choisir le bon degré de "conformisation aux données d'entraînement". On ne veut pas que le modèle ne puisse que reconnaisse que les données d'entraînement mais qu'il se rapproche de la courbe réelle.
 
 ![[overfitting.png|291x259]]
-## Cross validation
+## Cross-validation
 
 1. On divise le dataset en **k sous-ensembles** (appelés _folds_).
 2. Pour chaque itération :

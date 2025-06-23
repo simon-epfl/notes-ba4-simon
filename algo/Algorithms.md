@@ -1,17 +1,3 @@
-### Algorithmes de tri
-
-entrée : a seq. of $n$ numbers
-sortie : a permutation (reordering) of the input seq.
-#### Tri par insertion
-
-- au début on a rien
-- on prend les cartes une par une et on les insère au bon endroit
-- pour connaître le bon endroit, on compare la nouvelle carte avec les cartes existantes de droite à gauche
-#### Tri par fusion
-
-- on sépare notre liste en deux jusqu'à avoir des listes de taille 1
-- ensuite on fusionne les paires de listes triées pour produire une liste triée
-
 ## Divide and conquer
 
 On a la relation de récurrence suivante :
@@ -22,8 +8,7 @@ $a$ est le nombre de sous-problèmes créés à chaque récurrence, et $n/b$ est
 
 > [!tldr] Exemple
 > On peut imaginer un algo qui prend une liste de taille $n$ et sépare cette liste en 3 sous-listes de taille $n/2$.
-> --> $a = 3$ et $b = 2$.
-
+> $arrow a = 3$ et $b = 2$.
 ### Master theorem
 
 - On est dans le cas **bottom-heavy** quand le coût du divide and combine est plus petit que $n^(log_b (a - epsilon))$ pour un $epsilon > 0$, c-a-d que le nombre total de feuilles. Car (avec de l'analyse), on a $n^(log_b a) = a^(log_b n)$, qui est le nombre de feuilles, étant donné qu'on a $a$ enfants par noeud et que la taille de l'arbre est $log_b (n)$. La majorité du calcul est situé dans le nombre de divisions à faire pour calculer toutes les feuilles (diviser un par deux et combiner deux en un ne coûte pas très cher). Formellement, quand $D(n) + C(n) = O(n^(log_b (a - epsilon)))$. Et donc :
@@ -56,31 +41,6 @@ on veut montrer que $exists a in RR "s.t." a > 0 "and" T(n) <= a dot n log n$.
 - récurrence : $2 T(n/2) + c n <= 2 dot (a n)/2 log(n / 2) + c dot n = a dot n log(n/2) + c n = a dot n log (n) - a n + c n$ (on utilise l'hypothèse d'induction) $<= a dot n log(n)$ (on prend $a >= c$ comme ça $-a n + c n <= 0$).
 - donc on peut trouver un $a$ tel quel le cas de base et la récurrence soient satisfaits donc $T(n) = O(n log n)$.
 On doit prouver la même chose pour la lower bound ($exists b > 0 "s.t." T(n) >= b dot n log n forall n>= 0$).
-### Loop invariant
-
-Similar to induction but up to a certain $n$.
-
-* Initialization
-* Maintenance
-* Termination
-
-### Maximum sub-arrays problem
-
-On a une entrée $[0, 2, -4, 3, -1, 4, 5, 7, -9]$ et on veut trouver le sous-intervalle avec la plus grande somme $[3, -1, 4, 5, 7]$.
-
-On peut tout bruteforce, tester toutes les combinaisons : $O(n^2)$.
-
-On peut faire mieux en $n log n$ avec du divide et conquer :
-- on peut séparer le problème en deux (c'est facile on coupe au milieu)
-- mais comment combiner les deux, une fois qu'on a les solutions de l'un et de l'autre ? (en reprenant l'exemple plus haut, $[3], [5,7]$).
-	- on connaît la solution à gauche
-	- on connaît la solution à droite
-	- mais on doit vérifier qu'en se chevauchant on a pas une meilleure solution $O(n)$:
-		- pour ça on doit trouver la plus grande somme à gauche qui commence au milieu (ici $3 - 1 = 2$)
-		- trouver la plus grande somme à droite qui commence au milieu (ici $4 + 5 + 7 = 16$)
-		- les sommer ($2 + 16 = 18$)
-	- comparer ces trois solutions prendre la meilleure
-
 ### Matrix multiplication
 
 On a comme entrées deux matrices carrées, $n times n$ :
@@ -147,7 +107,6 @@ En fait, on a donc en fait que 3 multiplications de taille $n/2$ à calculer ! $
 
 On arrive à :
 $$ T(n) = 3T(n/2) + Theta(n) = Theta(n^(log_2(3))) $$
-
 ## Heaps
 
 **(min/max)-heap property** : on veut que chaque noeud ait une valeur plus grande (ou plus petite pour le min-heap) que chacun de ses enfants directs.
@@ -217,7 +176,7 @@ heap_sort(A, n):
 - `increase_key_value(A, key, n)`: $Theta(log n)$, on met à jour l'élément puis on regarde tous ses parents. S'il est plus grand, on inverse les deux.
 - `insert_into_heap(A, key, n)`: $Theta(log n)$, on insert l'élément tout au bout avec une valeur de $- infinity$ puis on appelle `increase_key_value` dessus
 
-## 🥇Stack implementation (last-in, first-out)
+## Stack implementation (last-in, first-out)
 
 Utiles pour les allocations mémoires. 
 
@@ -231,10 +190,9 @@ Utiles pour les allocations mémoires.
 - `pop`: `S.top <- S.top - 1` et `return S[S.top + 1]`
 
 elles sont en $Theta(1)$.
+## Queue implementation (first-in, first-out)
 
-## 🥈Queue implementation (first-in, first-out)
-
-![[assets/image-22.png|481x262]]
+![[assets/image-22.png|0x0]]
 
 - `Q.head` pointe à la position du premier élément
 - `Q.tail` pointe à la position de là où le prochain élément arriverait
@@ -270,8 +228,7 @@ et comme la head est `7` (soit après), on sait qu'on aura `8`, `9`, etc. défin
 
 ## Binary search trees
 
-à gauche, on met tous les nombres plus petits que la racine, et à droite tous les nombres plus grands (et on préfère avoir un arbre équilibré). créer un binary search trees c'est comme encoder dans un arbre la stratégie pour trouver le nombre avec un jeu de "tu dis plus grand ou plus petit".
-
+à gauche, on met tous les nombres plus petits que la racine, et à droite tous les nombres plus grands (et on préfère avoir un arbre équilibré). créer un binary search trees c'est comme encoder dans un arbre la stratégie pour trouver le nombre avec un jeu de "tu dis plus grand ou plus petit"
 ### Comment stocker un binary search tree ?
 
 On peut faire quelque chose comme les linked list. Chaque élément stocke : 
@@ -483,7 +440,6 @@ on remplit une table comme ça. c'est facile de remplir quand on multplie deux m
 La sous-séquence n'a pas besoin d'être consécutive, mais elle doit être dans l'ordre.
 
 Approche naïve : tester toutes les sous-séquences possibles dans $X$ et vérifier si elle existe dans $Y$. On en aurait pour $2^n$ (nb de possibilités) $dot n$ (tester si elle existe dans $Y$).
-
 #### On prend le problème entre deux variables $i, j$
 
 $L C S (X_i, Y_j)$ ?
@@ -561,7 +517,7 @@ $arrow$ pas efficace en termes d'espace
 ![[image-17.png]]
 
 
-#### Adjancy list
+#### Adjacency list
 
 ![[image-18.png]]
 
@@ -598,7 +554,7 @@ car chaque arête touche deux sommets
 
 On part de $b$, on découvre $a$ puis de $a$ on découvre autant que possible, par exemple $h$ (si on garde un ordre alphabétique), puis $g$, puis on a plus rien à découvrir ! on revient à $h$ et on regarde ce qu'on peut découvrir. On ne peut plus rien découvrir, on revient à $a$, etc.
 
-![[image-22.png|481x262]]
+![[image-22.png|0x0]]
 
 Comme pour le BFS, si il nous manque des sommets à explorer quand on a finit, on choisit un autre noeud au hasard et on part de lui.
 
@@ -801,3 +757,5 @@ $O(n log n)$ : on trie le tableau, puis on prend les k premiers.
 	- strictement supérieurs au pivot
 - si $|S| < k$, on sait que tous les éléments qu'on cherche sont dans $S$
 - sinon ils sont dans $L$
+
+![[image-168.png]]
