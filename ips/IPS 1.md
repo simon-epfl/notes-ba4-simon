@@ -115,7 +115,7 @@ Fonction > Beauté
 
 ### Grammaire visuelle
 
-![[image-12.png]]
+![[assets/image-12.png]]
 
 > [!def] Visualiser
 > 

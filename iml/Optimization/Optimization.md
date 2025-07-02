@@ -6,9 +6,9 @@
 
 Comme ça, on fait des "baby step" quand on est proche de la solution, puis de grosses steps quand la dérivée est élevée. On s'arrête quand la step size est très proche de zéro.
 
-![[image-56.png|379x182]]
+![[assets/image-56.png|379x182]]
 
-![[image-95.png|527x277]]
+![[assets/image-95.png|527x277]]
 
 exemple d'une cost function avec 2 weights, on essaye de trouver le minimum
 la cost function est donc une fonction qui prend les weights en entrées, la run sur le modele et donne un nombre (l'erreur) pour chaque paire.
@@ -17,19 +17,19 @@ la cost function est donc une fonction qui prend les weights en entrées, la run
 > 
 > si trop petit, ça va prendre trop de temps, si trop grand, ça va diverger
 > 
-> ![[image-57.png|340x153]]
-> ![[image-58.png|347x179]]
+> ![[assets/image-57.png|340x153]]
+> ![[assets/image-58.png|347x179]]
 > 
 > Pour trouver la bonne learning rate, on utilise Grid search.
 
 > [!danger] La descente de gradient ne donne pas toujours la bonne solution!
 > 
-> ![[image-58.png|347x179]]
+> ![[assets/image-58.png|347x179]]
 > 
 > Dans certains cas, on ne va jamais converger vers la bonne solution! Heureusement, la fonction de loss pour une linear regression est convexe (comme $x^2$)! donc on trouvera la bonne solution.
 
 > [!tip] Normaliser les features pour gagner du temps!
-> ![[image-60.png]]
+> ![[assets/image-60.png]]
 > 
 > En fonction du scaling des features, on peut arriver plus ou moins vite au résultat (voir l'image).
 
@@ -38,7 +38,7 @@ La fonction n'a pas besoin d'être différentiable partout, juste la ou on veut 
 
 > [!question] Comment l'implémenter ?
 > 
-> ![[image-61.png]]
+> ![[assets/image-61.png]]
 > 
 > $$ y_\text{pred}^{(i)} = a_0 + \sum_{j=1}^{d} a_j x_{ij} $$
 $$ \text{MSE} = \frac{1}{m} \sum_{i=1}^{m} \left( y_\text{pred}^{(i)} - y_\text{true}^{(i)} \right)^2 $$
@@ -52,7 +52,7 @@ $$ = \frac{1}{m} \sum_{i=1}^{m} \left( 2 \left( y_\text{pred}^{(i)} - y_\text{tr
 > On calcule la dérivée partielle par rapport a chaque parametre $theta$. (la formule vient de la dérivée de MSE).
 > 
 > C'est lent ! on doit multiplier une matrice de la taille des samples de training
-> ![[image-62.png]]
+> ![[assets/image-62.png]]
 
 #### Conjugate Gradient Method
 
@@ -87,9 +87,9 @@ $$ = \frac{1}{m} \sum_{i=1}^{m} \left( 2 \left( y_\text{pred}^{(i)} - y_\text{tr
 >$$
 >
 >Preuve:
->![[image-167.png|445x448]]
+>![[assets/image-167.png|445x448]]
 
-![[image-166.png|232x335]]
+![[assets/image-166.png|232x335]]
 
 #### Lagrangian optimization
 
@@ -115,7 +115,7 @@ $$ = \frac{1}{m} \sum_{i=1}^{m} \left( 2 \left( y_\text{pred}^{(i)} - y_\text{tr
 > > [!question] Pourquoi ?
 > > 
 > > Voir plus haut. Soit on est dans le cas ou effectivement cette contrainte $g$ est active, on la pousse au bout du bout jusqu'a ce que le gradient de $f$ soit égale a quelque chose fois le gradient de $g$ soit la contrainte n'est pas active (car une autre est plus forte par exemple).
-> > ![[telegram-cloud-photo-size-4-5915969657129518304-y.jpg|349x432]]
+> > ![[assets/telegram-cloud-photo-size-4-5915969657129518304-y.jpg|349x432]]
 >   
 > **Version duale :**
 > 
@@ -129,6 +129,6 @@ $$ = \frac{1}{m} \sum_{i=1}^{m} \left( 2 \left( y_\text{pred}^{(i)} - y_\text{tr
 > 
 > On a donc $min_x max_(u >= 0) E(x) = f(x) + u dot (g(x))$. mais on peut très bien échanger l'ordre des deux contraintes !
 > 
-> ![[image-173.png|515x252]]
+> ![[assets/image-173.png|515x252]]
 
 

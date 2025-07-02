@@ -1,6 +1,6 @@
 # Transformers
 
-![[image-151.png]]
+![[assets/image-151.png]]
 
 ### Étape 1 : séparer en chunks "flattening" et transformer ces chunks (tokens) en embeddings
 
@@ -15,7 +15,7 @@ Cette matrice contient donc $n_"dimensions" * n_"mots"$ paramètres.
 
 Context size : le nombre de tokens, chunks, que peut prendre le transformer.
 
-![[image-152.png|618x342]]
+![[assets/image-152.png|618x342]]
 
 Une **direction** dans l'espace correspond à un genre, à la pluralité du mot, la taille par exemple, etc.  On parle bien de **direction** et non pas de **dimension**, il n'y a pas une dimension liée à chaque critère !
 
@@ -48,14 +48,14 @@ On veut une façon d'ajuster l'embedding des mots en fonction des autres mots à
 
 le nombre de dimensions de $W_K$ et $W_Q$ est bien plus petit que celui le nombre de dimensions des embeddings.
 
-![[image-153.png|589x345]]
+![[assets/image-153.png|589x345]]
 
 On va faire le dot product entre la query de chaque embedding et les keys des autres mots, et si on a un grand nombre alors ces mots sont sans doute intéressant.
 
 On va donc mapper tous ces dot-products alors entre 0 et infinity entre 0 et 1 avec une fonction de softmax (qui s'applique sur chaque colonne parce que la somme de chaque **colonne** doit faire 1), puis les mutiplier par leur $V$ pour obtenir une weighted sums des réponses les plus intéressantes.
 Ensuite, on ajoute ce vecteur $"softmax"(K^T Q) V$ à notre embedding original.
 
-![[image-154.png|671x394]]
+![[assets/image-154.png|671x394]]
 
 > [!tip] masking
 > 
@@ -78,11 +78,11 @@ Dans cette étape, les vecteurs ne se parlent pas entre eux. On peut donc faire 
 - le problème c'est que c'est linéaire pour le moment, nous on veut une réponse "oui" ou "non". on applique donc la fonction ReLU (Rectified Linear Unit).
 - ensuite, on reconstruit l'embedding en ajoutant ou non des informations en fonction de si le neurone est actif
 
-![[image-156.png]]
+![[assets/image-156.png]]
 
 par exemple ici, si le neurone $n_0$ est 1 (c'est celui qui a demandé "est-ce que l'embedding parle de Michael Jordan"), alors on ajoute à notre embedding $C_0$ qui contient les informations à propos de basketball, des chicago bulls, du numéro de maillot de Michael Jordan, etc.
 
-![[image-157.png|635x266]]
+![[assets/image-157.png|635x266]]
 ### Étape y : on récupère une liste de probabilités pour chaque mot
 
 On prend le dernier vecteur et on utilise un unembedding matrix + softmax pour générer les probabilités pour les mots. 

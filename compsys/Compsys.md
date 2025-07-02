@@ -587,7 +587,7 @@ La réalité c'est que le CPU est partagé entre tous les threads.
 - il doit choisir le prochain thread à garder
 - il maintient la liste des processes et des threads
 
-![[image.png|408x261]]
+![[assets/image.png|408x261]]
 
 Jusqu'ici, nous n'avons pas vu la policy appliquée pour choisir le prochain thread.
 
@@ -606,7 +606,7 @@ Jusqu'ici, nous n'avons pas vu la policy appliquée pour choisir le prochain thr
 > - on restore le state du prochain thread
 > - on passe le contrôle en faisant un return from trap pour lancer le prochain thread
 >   
->   ![[image-1.png|321x243]]
+>   ![[assets/image-1.png|321x243]]
 >   
 >  il y a un coût à ce context switch, un moment où rien ne tourne
 
@@ -614,7 +614,7 @@ Jusqu'ici, nous n'avons pas vu la policy appliquée pour choisir le prochain thr
 > 
 > On utilise des **timer interrupts**. Quand le timer expire, le CPU est interrompu et passe en kernel mode. L'OS Scheduler est invoqué et le scheduler fait un context switch.
 > 
-> ![[image-2.png|371x281]]
+> ![[assets/image-2.png|371x281]]
 #### Quelle scheduling policy ?
 
 Comment choisir le prochain thread ? 
@@ -626,7 +626,7 @@ Deux metrics utiles :
 
 On a trois threads $A, B, C$ qui prennent **chacun** 10 secondes. Ils arrivent à peu près en même temps.
 
-![[image-3.png|371x187]]
+![[assets/image-3.png|371x187]]
 
 ça marche bien quand on sait le temps que va mettre chaque thread, ce qui n'est généralement pas le cas.
 
@@ -638,7 +638,7 @@ average turnaround time is $20$.
 
 mais que se passe-t-il si A prend 100 secondes ?
 
-![[image-4.png|385x209]]
+![[assets/image-4.png|385x209]]
 
 average turnaround is $110$ (!)
 
@@ -671,13 +671,13 @@ Ce n'est pas du tout pris en compte dans le STCF
 
 Au lieu de faire tourner les threads jusqu'à ce qu'ils soient complétés, RR schedule un thread pour un intervalle fixe, et switch au prochain thread.
 
-![[image-6.png]]
+![[assets/image-6.png]]
 
 Le temps de turnaround augmente.
 
 ### Gérer les IO requests ?
 
-![[image-7.png]]
+![[assets/image-7.png]]
 
 On veut schedule B pendant que A fait ses requêtes de IO.
 
@@ -690,7 +690,7 @@ On veut schedule B pendant que A fait ses requêtes de IO.
 
 Pour cela, MLFQ utilise les past behaviors pour prédire les comportements futurs.
 
-![[image-8.png|153x154]]
+![[assets/image-8.png|153x154]]
 
 - Les threads de haut niveaux ont un temps de run courts, ceux plus bas un temps plus long.
 - Les threads de haut niveaux vont toujours être traités en premier
@@ -703,10 +703,10 @@ Pour cela, MLFQ utilise les past behaviors pour prédire les comportements futur
 - périodiquement, tous les threads sont déplacés dans la topmost queue (priority boosting) pour éviter que les threads interactifs empêchent les threads du bas de ne jamais tourner (**starvation**)
 
 
-![[image-9.png|533x274]]
-![[image-10.png|551x284]]
+![[assets/image-9.png|533x274]]
+![[assets/image-10.png|551x284]]
 
-![[image-11.png|540x278]]
+![[assets/image-11.png|540x278]]
 
 On voit ici que le boost permet à A de tourner de temps en temps au début de chaque boost (et si A s'appelait B alors on aurait ABC, AC, AC, AC, etc. jusqu'au prochain boost)
 
@@ -745,7 +745,7 @@ HyperText Transfer Protocol (HTTP)
 
 On a des serveurs proxy qui permettent de stocker les données entre les deux. EPFL origin ne va envoyer que les metadata (taille du fichier, etc) **ou/et**  les données si elles ont changées.
 
-![[Pasted image 20250414092224.png]]
+![[assets/Pasted image 20250414092224.png]]
 
 ```
 if-modified-since <date, time>
@@ -773,9 +773,9 @@ Il y a des serveurs DNS locaux hébergés à l'EPFL pour que ça aille vite.
 
 Chaque machine a besoin d'au moins une IP de DNS serveur pour que ça marche.
 
-![[Pasted image 20250414103524.png|517x269]]
+![[assets/Pasted image 20250414103524.png|517x269]]
 
-![[Pasted image 20250414103554.png|519x285]]
+![[assets/Pasted image 20250414103554.png|519x285]]
 
 Les authoritative DNS servers gèrent les domaines de second niveau (comme `epfl.ch`). Leur travail est de donner les adresses IPs des DNS servers des domaines qui finissent par `epfl.ch`.
 
@@ -809,7 +809,7 @@ TLDs: top level domains ont des DNS servers dont le travail est de connaître le
 
 TTL : time-to-live
 
-![[image-34.png|483x267]]
+![[assets/image-34.png|483x267]]
 
 (c'est le serveur authoritative qui décide le TTL et renvoie l'information)
 
@@ -836,9 +836,9 @@ Tout le monde se connecte à ce central office.
 
 (ou on se connecte à un cable model à travers une ligne cable TV, cable head end, 100+ Mbps, DOCSIS. Sauf que cette infrastructure est **partagée**, contrairement aux lignes téléphoniques ! donc on ne peut pas comparer uniquement la vitesse, on doit aussi regarder si l'entreprise partage ou pas notre câble. Et on fait aussi du **broadcast**, parce qu'avant ces câbles étaient utilisés pour la TV! donc quand une réponse arrive, on broadcast et on envoie la réponse à tout le monde ! c'est très adapté.)
 
-![[image-37.png]]
+![[assets/image-37.png]]
 
-![[image-38.png]]
+![[assets/image-38.png]]
 
 swisscom est un tier-1 ISP, il a définitivement des connexions peering entre d'autres majors ISPs.
 mais c'est aussi un access ISP !
@@ -849,7 +849,7 @@ Le **peering** est un **accord entre deux réseaux** (souvent des fournisseurs d
     - **Privé** (liaison directe entre deux réseaux)
 - Ce n’est **pas une relation client-fournisseur** : chacun gère ses coûts.
 
-![[image-39.png]]
+![[assets/image-39.png]]
 
 On construit un IXP (Internet Exchange Point) pour que si un access ISP veut changer de regional ISP,  il puisse changer facilement ! ("please disconnect me from Swisscom and connect me to Sunrise")
 
@@ -857,7 +857,7 @@ Les **off-net caches** ou **edge caches** sont des serveurs de cache placés au 
 
 Dans certaines parties du monde, certaines entreprises riches viennent et créent un ISP gratuit, bien mieux que le ISP original. Mais ils ajoutent des conditions... : vous ne pouvez qu'utiliser Facebook. pas de concurrence.
 
-![[image-40.png]]
+![[assets/image-40.png]]
 
 Chaque couche, layer, ajoute un header aux données (encapsulation) et enlève les couches au retour (decapsulation).
 
@@ -945,7 +945,7 @@ Caractéristiques importantes pour évaluer les performances d'un réseau :
 - **packet delay**, le temps qu'on met d'aller à la source à la destination (p. ex. 10ms)
 - **average throughput** (différence du transmission rate ! le dernier peut être supérieur au avg throughput) : la rate à laquelle la destination reçoit les données (bits per sec)
 
-![[image-41.png]]
+![[assets/image-41.png]]
 
 C'est intéressant d'avoir des chemins parallèles (how long somebody has to wait in order to get on the path vs how long somebody takes to cross).
 delay (ne change pas) vs throughput (change avec les chemins parallèles)\
@@ -953,7 +953,7 @@ delay (ne change pas) vs throughput (change avec les chemins parallèles)\
 delay : pour les messages rapides
 throughput : pour les transferts bulk
 
-![[image-42.png]]
+![[assets/image-42.png]]
 
 $$"transmission delay" : "packet size" / "link transmission rate" = "3 bits" / "1 Gpbs" = "3 ns"$$
 
@@ -972,26 +972,26 @@ $$"total packet delay" : "transmission delay 1" + "propagation delay 1" \ + "pro
 > 
 > il dépend du traffic (arrival rate mais aussi s'il est en pic ou non), caractéristé par des mesures statistiques (average queuing delay, variance du queuing delay, la probabilité qu'il dépasse une certaine valeur, etc).
 
-![[image-43.png]]
+![[assets/image-43.png]]
 
 On suppose une queue infinie. 
 Si $L A > R$, on a un delay qui va vers l'infini.
 Si $L A <= R$, on peut quand même avoir un delay ! Si par exemple 4 paquets arrivent en même temps. ça dépend du burst size. et comme on est dans le cas d'un modèle aléatoire, même si on a une moyenne LA, rien ne dit qu'il ne peut pas y avoir un petit pic à un moment, comme chaque paquet est indépendant de l'autre.
 
-![[image-44.png]]
+![[assets/image-44.png]]
 
 donc c'est pas parce que $L A <= R$ qu'on a un delay nul.
 
 upper bound delay:
 $N$ (taille de la queue) $dot L/R$ (transmission delay pour push chaque paquet sur le link)
 
-![[image-45.png]]
+![[assets/image-45.png]]
 
 Si le premier link est plus rapide que le deuxième, il y a un goulot d'étranglement.
 
-![[image-46.png]]
+![[assets/image-46.png]]
 
-![[image-47.png]]
+![[assets/image-47.png]]
 
 > [!info] Packet switching
 > 
@@ -1003,12 +1003,12 @@ Si le premier link est plus rapide que le deuxième, il y a un goulot d'étrangl
 > 
 > On peut réserver une ligne physique, ou réserver une partie d'une ligne physique (virtualisation). On peut même réserver du temps sur une ligne, ou une fréquence. Tout ça dans l'objectif que le client pense être le "seul" sur une ligne sans délai imprévisible.
 
-![[image-48.png]]
+![[assets/image-48.png]]
 ## Lundi 5 mai
 
 Deux protocoles de communication, TCP et UDP.
 
-![[image-63.png|389x219]]
+![[assets/image-63.png|389x219]]
 
 ### UDP
 
@@ -1017,7 +1017,7 @@ Dans cet exemple, on utilise des **blocking** sockets (la fonction ne return que
 
 Alice envoie sendTo, puis son OS va appeler toNet. Bob OS va utiliser fromNet, et recvFrom va return.
 
-![[image-65.png|392x223]]
+![[assets/image-65.png|392x223]]
 
 La même socket UDP peut être utilisée pour communiquer avec plusieurs processes distants.
 - il n’y a pas de lien établi entre la socket locale et une seule destination.
@@ -1049,7 +1049,7 @@ DNS utilise UDP (on veut une latence tres faible, si on reçoit pas on renvoit l
 
 Bob crée **une nouvelle socket,** dédiée aux communications avec Alice. La socket utilisée pour TCP n'attend donc pas les données, uniquement des **demandes** de connexion.
 
-![[image-67.png]]
+![[assets/image-67.png]]
 
 On a un **Maximum Segment Size**, la taille maximale d'un paquet TCP. On créé plusieurs paquets pour envoyer un message.
 ### TCP multiplexing et demultiplexing
@@ -1072,7 +1072,7 @@ Le troisième segment peut contenir des données.
 
 L'application n'a jamais connaissance de tout ça, c'est TCP qui gère le reste!
 
-![[image-68.png]]
+![[assets/image-68.png]]
 
 > [!danger] Que se passe-t-il si l'acknowledgment envoyé par BOB est lui-même corrompu?
 > 
@@ -1103,7 +1103,7 @@ L'envoyeur l'utilise pour **retransmettre** le message.
 |**Sample RTT**|Le **temps mesuré réellement** pour un aller-retour d’un segment donné. C’est une **valeur instantanée**.|
 | **Estimated RTT** | Une **moyenne mobile** qui représente une estimation "lissée" de la RTT, basée sur plusieurs mesures précédentes. C’est une **valeur stable et prédictive**. |
 
-![[image-72.png]]
+![[assets/image-72.png]]
 
 ACK 6 parce que hello a été envoyé (5 bytes).
 #### Contrôle de flux (Flow Control)
@@ -1148,8 +1148,8 @@ Quand on a un timeout, on fait donc:
 > 
 > Ensuite, on set sstresh (le threshold avant de passer en congestion avoidance, donc avant de passer en augmentation précautionneuse a window/2).
 > 
-> ![[image-79.png|383x266]]
-> ![[image-80.png|380x264]]
+> ![[assets/image-79.png|383x266]]
+> ![[assets/image-80.png|380x264]]
 ## Mercredi 7 mai
 
 > [!info] Rappel sur les headers
@@ -1161,22 +1161,22 @@ Quand on a un timeout, on fait donc:
 > 
 > Ils font d'abord du **forwarding** : regarder le paquet qui arrive et décider où il va (dans quel link). Dans chaque routeur, il y a une forwarding table. Elle est utilisée par le routeur pour faire une décision de routage. Un routeur assigne un numéro à chacun de ses links. Pour chaque dst IP address, le routeur a dans sa table vers quel link l'envoyer.
 > 
-> ![[image-81.png|393x189]]
+> ![[assets/image-81.png|393x189]]
 
 > [!question]  Comment gérer ces règles de forwarding ?
 > On pourrait connecter tous les routeurs à un unique network controller, qui a connaissance toute la forme du réseau complet et décide où envoyer quoi. 
 > C'est principalement utilisé en datacenter.
 > 
-> ![[image-82.png|366x140]]
+> ![[assets/image-82.png|366x140]]
 > 
 > Sinon, on peut imaginer la même chose mais en décentralisé (où l'algorithme tourne en local sur les routeurs). Comment faire ça ?
 > 
 > $arrow$ on créé des ranges d'IP adresses.
-> ![[image-83.png|388x190]]
+> ![[assets/image-83.png|388x190]]
 > 
 > le routeur utilise des étoiles pour représenter les ranges.
 > 
-> ![[image-85.png|246x186]]
+> ![[assets/image-85.png|246x186]]
 > 
 > On fait du **longest prefix matching** : $1000$ va être choisi en priorité sur 1***.
 
@@ -1195,7 +1195,7 @@ Quand on a un timeout, on fait donc:
 > 
 > On appelle ça un subnet.
 > 
-> ![[image-86.png|350x242]]
+> ![[assets/image-86.png|350x242]]
 > 
 > Le routeur a l'IP 223.1.1.4, 223.1.9.1, 223.1.7.0, une IP par subnet. Un routeur a donc autant de network interfaces que de subnet auxquels il se connecte.
 > 
@@ -1212,7 +1212,7 @@ Quand on a un timeout, on fait donc:
 > 
 > Par exemple si un IP subnet a pour IP prefix 223.1.1.0/24, l'IP broadcast est 223.1.1.255.
 > 
-> ![[image-87.png]]
+> ![[assets/image-87.png]]
 > 
 
 > [!question] Network address?
@@ -1231,7 +1231,7 @@ Routing (remplir la table de forwarding) $eq.not$ fowarding (détermine quel lie
 
 > [!question] Virtual circuits ?
 > 
-> ![[image-88.png]]
+> ![[assets/image-88.png]]
 > 
 > Si on voulait créer un virtual circuit entre Alice et Bob, on devrait passer par tous les routeurs, et leur faire écrire dans leur forwarding table qu'il existe un virtual circuit entre les deux.
 > 
@@ -1252,7 +1252,7 @@ IP packet-switched network : no network-layer connections.
 > 
 > En fait seul le routeur a une IP publique. Mais comment le routeur sait à quel end-system le packet est destiné ?
 > 
-> ![[image-89.png|380x252]]
+> ![[assets/image-89.png|380x252]]
 > 
 > Il ajoute un port pour savoir vers quel end-system rediriger le traffic. On ajoute donc du state ! mais ça va parce que c'est dans les routeurs de bordure (ceux qui sont situés juste devant l'entrée d'un subnet).
 > 
@@ -1269,10 +1269,10 @@ Toutes les adresses IPs doivent être dans la forwarding table (soit hardcodée 
 
 **first-hop routeur** : le premier routeur qui observe les paquets avant qu'ils partent du subnet vers Internet.
 
-![[image-96.png]]
+![[assets/image-96.png]]
 
 Le fait que les IPs locales arrivent vers le link 3 (of course), c'est setup manuellement par l'administrateur réseau.
-![[image-97.png|579x275]]
+![[assets/image-97.png|579x275]]
 
 le coût d'un link est par exemple la performance du link (propagation delay, etc), ou le prix que doit payer l'ISP pour l'utiliser. 
 
@@ -1287,14 +1287,14 @@ le coût d'un link est par exemple la performance du link (propagation delay, et
 > **Sortie** : le chemin le moins coûteux du routeur $u$ vers le reste du réseau
 > 
 > **Étape 1** : le routeur considère uniquement ses voisins directs, et note le coût.
-> ![[image-98.png]]
+> ![[assets/image-98.png]]
 > **Étape 2** : le routeur considère les voisins directs de ses voisins.
-> ![[image-99.png]]
+> ![[assets/image-99.png]]
 > à la prochaine étape, le routeur va considérer les voisins des voisins de ses voisins.
 > 
 > Cet algorithme run périodiquement. Si on ajoute un routeur, il sera identifié.
 > 
-> ![[image-100.png]]
+> ![[assets/image-100.png]]
 
 
 > [!question] Distance-vector routing algorithm
@@ -1303,11 +1303,11 @@ le coût d'un link est par exemple la performance du link (propagation delay, et
 > **Sortie** : le chemin le moins coûteux
 > 
 > À chaque étape, les routeurs se partagent leurs tables.
-> ![[image-101.png]]
+> ![[assets/image-101.png]]
 > 
 > Au bout d'un moment, ils convergent vers la meilleure solution.
 > 
-> ![[image-102.png]]
+> ![[assets/image-102.png]]
 > 
 > Purely distributed.
 
@@ -1337,18 +1337,18 @@ Chaque routeur partage aussi à tous l'IP prefix qu'il own.
 > Un système autonome est typiquement composé de plusieurs subnets.
 > 
 > Intra-domain routing protocols.
-> ![[image-103.png]]
+> ![[assets/image-103.png]]
 > 
-> ![[image-104.png|416x226]]
+> ![[assets/image-104.png|416x226]]
 > 
 > Les routeurs n'ont pas besoin d'une entrée par sous-subnet dans chaque AS! il peut simplement stocker le plus gros préfixe du AS!
 > 
 > 
-> ![[image-105.png]]
+> ![[assets/image-105.png]]
 > 
 > L'origin AS 5.0.0.0/8 advertises, et dit à ses voisins directs que s'ils voient un paquet arriver pour lui il peut lui envoyer.
 > 
-> ![[image-106.png|458x249]]
+> ![[assets/image-106.png|458x249]]
 > 
 > Certains AS agissent comme des AS de transit, c-a-d qu'ils advertisent à leur voisin pour un autre AS.
 
@@ -1363,8 +1363,8 @@ Chaque routeur partage aussi à tous l'IP prefix qu'il own.
 
 > [!question] DDOS, SYN flooding
 > 
-> ![[image-107.png|469x242]]
-> ![[image-108.png|472x244]]
+> ![[assets/image-107.png|469x242]]
+> ![[assets/image-108.png|472x244]]
 > 
 > Une attaque était d'envoyer plein de SYN à Bob. Et quand Alice envoie $"SEQ" x + 1$, la requête n'a pas de succès. Ainsi, c'est vraiment facile de DDOS Bob.
 > 
@@ -1385,15 +1385,15 @@ Chaque routeur partage aussi à tous l'IP prefix qu'il own.
 >   > [!question] Pourquoi le faire dans cette couche si le transport le fait aussi ?
 >   > simplement parce que si un petit link est très peu reliable (typiquement *wireless*), à chaque fois on va perdre le packet et Alice va devoir renvoyer peut-être 3-4x ses packets.
 > 
-> ![[image-109.png|277x156]]
+> ![[assets/image-109.png|277x156]]
 >
 > Network (couche **3**) :
 > - Prend chaque paquet et l’achemine **d’un sous-réseau IP vers un autre**, sur l’ensemble de l’Internet.
 >- Utilise des adresses IP et le protocole de routage BGP pour construire des tables de forwarding globales.
 >
->![[image-110.png|273x154]]
+>![[assets/image-110.png|273x154]]
 
-![[image-111.png|511x288]]
+![[assets/image-111.png|511x288]]
 destination MAC address : l'adresse locale de l'appareil dans le subnet
 
 > [!tip] MAC address
@@ -1407,7 +1407,7 @@ destination MAC address : l'adresse locale de l'appareil dans le subnet
 
 > [!tip] L2 Forwarding
 > 
-> ![[image-112.png|455x256]]
+> ![[assets/image-112.png|455x256]]
 > 
 > La switch détermine l'output link de chaque packet. Il se base sur les MAC addresses. 
 > Il y a donc des grandes tables.
@@ -1420,13 +1420,13 @@ destination MAC address : l'adresse locale de l'appareil dans le subnet
 > - Pour acheminer, il consulte sa table MAC → link de sortie.
 > - Si destination inconnue → inondation (broadcast) sur tous les links.
 > 
-> ![[image-113.png|471x249]]
+> ![[assets/image-113.png|471x249]]
 
 > [!danger] loops
 > 
 > Les boucles Ethernet (cycles de liens) entraînent des inondations infinies et des problèmes de congestion.
 > 
-> ![[image-114.png|445x205]]
+> ![[assets/image-114.png|445x205]]
 > Comment gérer ça ?
 > 
 > - avec du state ? on pourrait noter qu'on a déjà vu le packet (problème : l'espace n'est pas infini et c'est un vecteur d'attaque)
@@ -1442,13 +1442,13 @@ destination MAC address : l'adresse locale de l'appareil dans le subnet
 > - L’hôte correspondant répond par un **ARP Reply** contenant sa MAC.
 > - Le client peut alors envoyer la frame Ethernet directement à la MAC cible.
 > 
-> ![[image-115.png|396x286]]
+> ![[assets/image-115.png|396x286]]
 > 
 > Solution : on broascast!
 > 
-> ![[image-116.png|392x283]]
+> ![[assets/image-116.png|392x283]]
 > 
-> ![[image-117.png|393x284]]
+> ![[assets/image-117.png|393x284]]
 > 
 > **CAS 2 : IP cible en dehors du sous-réseau**
 > - Le client constate que l’adresse n’est **pas** dans son subnet.
@@ -1456,7 +1456,7 @@ destination MAC address : l'adresse locale de l'appareil dans le subnet
 > - Pour cela, il émet une **ARP Request** pour l’IP de la gateway, reçoit la MAC, et envoie la trame à cette MAC.
 > - C’est ensuite le routeur (la gateway) qui, lui, a une table de routage pour transférer le paquet vers le réseau de destination.
 >
-> ![[image-119.png|405x292]]
+> ![[assets/image-119.png|405x292]]
 
 > [!tip] Adress Resolution Protocol (ARP)
 > 
@@ -1464,7 +1464,7 @@ destination MAC address : l'adresse locale de l'appareil dans le subnet
 > 
 > Comment ? broadcasting + caching
 > 
-> ![[image-120.png|411x270]]
+> ![[assets/image-120.png|411x270]]
 > 
 
 > [!danger] Get rid of IP addresses and IP forwarding?
@@ -1477,8 +1477,8 @@ destination MAC address : l'adresse locale de l'appareil dans le subnet
 
 Il faut vraiment voir l'IP comme un moyen global de connecter les end-systems entre eux mais à l'intérieur d'un subnet on peut se connecter comme on veut, avec le protocole qu'on veut (comme Ethernet avec les adresses MAC).
 
-![[image-144.png|614x409]]
-![[image-145.png]]
+![[assets/image-144.png|614x409]]
+![[assets/image-145.png]]
 
 la MAC correspondante c'est celle correspondante au prochain routeur
 
@@ -1493,11 +1493,11 @@ Si un end-system dans un subnet veut faire une requête à un end-system dans un
 > 
 > **Concurrent** : lorsqu'une tâche attend une opération d'I/O (par exemple, attendre que l'eau des pâtes se mette à bouillir), le processeur peut s'occuper d'une autre tâche en attendant. Cela donne l'**illusion** que plusieurs tâches s'exécutent en même temps.
 > 
-> ![[image-127.png|297x170]]
+> ![[assets/image-127.png|297x170]]
 > 
 > **Parallèle** : Si l'on dispose de plusieurs unités de calcul (plusieurs "chefs"), on peut **réellement** exécuter plusieurs tâches simultanément. Les tâches sont alors parallélisées.
 > 
-> ![[image-128.png|372x196]]
+> ![[assets/image-128.png|372x196]]
 > 
 
 > [!question] Pourquoi parallélisme et concurrency ?
@@ -1523,16 +1523,16 @@ Si un end-system dans un subnet veut faire une requête à un end-system dans un
 > Ils partagent l'adress space (heap, data, text), les file descriptors.
 > mais... chaque thread a son propre stack, est scheduled indépendamment par son OS. Ils ne partagent pas les system calls.
 > 
-> ![[image-129.png|425x219]]
+> ![[assets/image-129.png|425x219]]
 > 
 > Gérer les threads:
 > `pthread_create`, `pthread_join` : wrappers autour de syscalls. ça évite de faire tous les if == 0, gérer les return values, etc. 
 > 
-> ![[image-130.png|370x164]]
+> ![[assets/image-130.png|370x164]]
 
 `objdump -S race` permet de voir les instructions assembly d'un programme
 
-![[image-132.png]]
+![[assets/image-132.png]]
 
 race condition (et plus précisément data race), quand deux threads veulent accéder à une variable mutable partagée
 (comme les threads s'exécutent en parallele)
@@ -1541,7 +1541,7 @@ race condition (et plus précisément data race), quand deux threads veulent acc
 > 
 > L'incrémentation d'une variable (`count++`) n'est pas une opération unique pour le processeur. Elle se décompose en trois instructions : chargement, incrémentation, et écriture (load, increment, store).
 > 
-> ![[image-133.png]]
+> ![[assets/image-133.png]]
 > 
 > On veut que ces trois instructions s'exécutent de façon atomique, que rien ne s'exécute entre eux.
 > 
@@ -1550,7 +1550,7 @@ race condition (et plus précisément data race), quand deux threads veulent acc
 > 
 > Mutual exclusion : un seul thread peut exécuter une section critique à la fois.
 > 
-> ![[image-134.png]]
+> ![[assets/image-134.png]]
 > 
 > Le lock protège cette zone critique.
 > Un seul thread peut obtenir un lock a la fois : lock holder
@@ -1558,7 +1558,7 @@ race condition (et plus précisément data race), quand deux threads veulent acc
 
 > [!tip] Interrupt lock
 > 
-> ![[image-135.png]]
+> ![[assets/image-135.png]]
 > 
 > le pb c'est qu'on avait un context switch au milieu de l'instruction --> maintenant le CPU ne va plus interrompre le thread.
 > 
@@ -1569,19 +1569,19 @@ race condition (et plus précisément data race), quand deux threads veulent acc
 > [!question] Software lock ?
 > 
 > Utiliser une variable partagée pour synchroniser l'acces a une section critique :
-> ![[image-137.png]]
+> ![[assets/image-137.png]]
 > 
 > 
 > Probleme : c'est pas atomique!
 > 
-> ![[image-138.png]]
+> ![[assets/image-138.png]]
 > 
 > Il check le lock, le second prend le lock et quand le premier revient il prend aussi le lock.
 
 > [!tip] test-and-set
 > 
 > En une instruction, on set le lock et on le get en même temps (son ancienne valeur).
-> ![[image-139.png|604x137]]
+> ![[assets/image-139.png|604x137]]
 > 
 > hardware lock, en une seule instruction --> atomicité !
 > 
@@ -1595,7 +1595,7 @@ race condition (et plus précisément data race), quand deux threads veulent acc
 > 
 > mutex : waiters go to sleep et le lock holder les réveille quand le lock est released.
 > 
-> ![[image-140.png|567x266]]
+> ![[assets/image-140.png|567x266]]
 
 
 > [!example] Dining philosophers problem -- deadlocks!
@@ -1604,9 +1604,9 @@ race condition (et plus précisément data race), quand deux threads veulent acc
 > Need both forks to eat (a gauche et a droite)
 > ils ne peuvent pas la grab en même temps
 > 
-> ![[image-141.png|230x190]]
+> ![[assets/image-141.png|230x190]]
 > 
-> ![[image-143.png|423x207]]
+> ![[assets/image-143.png|423x207]]
 > 
 > deadlock! Ils prennent tous la fourchette a sa gauche et ils attendent tous que quelqu'un release l'autre fourchette (mais personne ne va le faire !)
 
@@ -1635,7 +1635,7 @@ race condition (et plus précisément data race), quand deux threads veulent acc
 > Par exemple faire apparaître une clef à travers SSH.
 > ou par exemple faire apparaître un CPU comme ARM alors qu'on a un x86...
 
-![[image-146.png]]
+![[assets/image-146.png]]
 
 > [!question] pourquoi utiliser des VMs ?
 > 
@@ -1653,7 +1653,7 @@ race condition (et plus précisément data race), quand deux threads veulent acc
 > Guest physical memory : ce que l'OS guest pense avoir comme mémoire virtuelle
 > Host physical memory : la vraie mémoire physique complète
 
-![[image-147.png]]
+![[assets/image-147.png]]
 > [!tldr] Une VM utilise le multiplexing et l'émulation
 > 
 > Chaque VM a son propre CPU virtuel (virtual core).
@@ -1662,6 +1662,6 @@ race condition (et plus précisément data race), quand deux threads veulent acc
 > 
 > On émule les I/O devices (disque virtuel, clavier virtuel, écran virtuel, NIC virtuel, Ethernet switch virtuelle, etc.).
 
-![[image-150.png]]
+![[assets/image-150.png]]
 
 on a quatre niveaux de protection user, kernel (et on a mis deux niveaux entre les deux, protected librairies par exemple, mais pas vraiment utilisé)

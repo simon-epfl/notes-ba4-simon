@@ -511,15 +511,15 @@ Temps pour déterminer si $(u, v) in E$ : $Theta(1)$
 
 $arrow$ pas efficace en termes d'espace
 
-![[image-16.png|499x175]]
+![[assets/image-16.png|499x175]]
 #### Directed graph
 
-![[image-17.png]]
+![[assets/image-17.png]]
 
 
 #### Adjacency list
 
-![[image-18.png]]
+![[assets/image-18.png]]
 
 1 est connecté à 2 et est connecté à 4.
 
@@ -532,12 +532,12 @@ Temps pour déterminer si $(u, v) in E$ : $Theta("degree"(u))$
 **Entrée** : un graphe, un point $s$ et un point $v$
 **Sortie** : la distance de $s$ à $v$, pour tous les $v in V$
 
-![[image-19.png]]
+![[assets/image-19.png]]
 
 **noir** : queued + processed
 **gris** : queued
 
-![[image-20.png]]
+![[assets/image-20.png]]
 
 Runtime : $O(V + E)$
 
@@ -546,7 +546,7 @@ Runtime : $O(V + E)$
 $sum_u "deg"(u) = 2 dot |E| => (sum_u "deg"(u))/2 = |E|$
 car chaque arête touche deux sommets
 
-![[image-21.png]]
+![[assets/image-21.png]]
 
 ### Depth-first search
 
@@ -554,31 +554,31 @@ car chaque arête touche deux sommets
 
 On part de $b$, on découvre $a$ puis de $a$ on découvre autant que possible, par exemple $h$ (si on garde un ordre alphabétique), puis $g$, puis on a plus rien à découvrir ! on revient à $h$ et on regarde ce qu'on peut découvrir. On ne peut plus rien découvrir, on revient à $a$, etc.
 
-![[image-22.png|0x0]]
+![[assets/image-22.png|0x0]]
 
 Comme pour le BFS, si il nous manque des sommets à explorer quand on a finit, on choisit un autre noeud au hasard et on part de lui.
 
-![[image-25.png]]
+![[assets/image-25.png]]
 
 
 ## Optimal binary search trees
 
-![[image-23.png]]
+![[assets/image-23.png]]
 
-![[image-24.png]]
+![[assets/image-24.png]]
 
-![[image-26.png]]
+![[assets/image-26.png]]
 
 ## Topological sorting
 
 **Entrée :** un graphe acyclique (DAG) $G = (V, E)$
 **Sortie** : un ordre linéaire de noeuds t.q $(u, v) in E$ si $u$ est plus petit que $v$
 
-![[image-27.png|458x295]]
+![[assets/image-27.png|458x295]]
 
 **Graph acylique** : pas de back edge après un DFS
 
-![[image-28.png|447x257]]
+![[assets/image-28.png|447x257]]
 
 ### Trouver les SCC
 
@@ -589,13 +589,13 @@ Comme pour le BFS, si il nous manque des sommets à explorer quand on a finit, o
 
 (en fait en inversant les flèches, on évite de partir du strongly connected component + à l'intérieur d'un strongly connected component échanger les flèches ne changent rien à la structure)
 
-![[image-32.png|584x355]]
+![[assets/image-32.png|584x355]]
 
 ## Flow networks
 
 On veut un graphe sans "parallel" edges (un qui va de `(u, v)`, un `(v, u)`).
 
-![[image-29.png]]
+![[assets/image-29.png]]
 
 On veut envoyer un flux d'une source à un puits. Le flux est une fonction qui satisfait :
 - une contrainte de capacité (pour tout segment edge, $0 <= f(u, v) <= c(u, v)$)
@@ -605,7 +605,7 @@ valeur d'un flux : flow qui sort de la source - flow qui en revient
 
 **Braess Paradox** : 4000 people driving from s to t every day. Pour aller le plus vite, il faut que la moitié prenne la route du haut, et l'autre moitié la route du bas.
 
-![[image-31.png|477x285]]
+![[assets/image-31.png|477x285]]
 
 ### Ford-Fulkerson
 
@@ -624,7 +624,7 @@ Répéter jusqu'à ce qu'il n'y ait plus de augmenting path:
 > 
 > En fait là on voit qu'on a un edge qui va de A vers D avec une capacité de 8. Puis on trouve un chemin qui va dans l'autre sens (et qui pourrait utiliser 4 unités de flux). Le fait qu'on ait 6 qui arrive en bas et plus 2 nous permet d'avoir moins besoin de flux entrant en D, donc on "reverse" on en enlève de A vers D. Et comme on fait ça, on a aussi du flux entrant en A en + qu'on peut réutiliser.
 > 
-> ![[image-35.png]]
+> ![[assets/image-35.png]]
 
 > [!question] Min-cut
 > 
@@ -632,7 +632,7 @@ Répéter jusqu'à ce qu'il n'y ait plus de augmenting path:
 > 
 > On compte tous les edges qui vont de avant notre cut jusqu'à après notre cut. On ignore les autres.
 > 
-> ![[image-36.png]]
+> ![[assets/image-36.png]]
 
 ## Edge-disjoint paths as flow network
 
@@ -656,7 +656,7 @@ On ne peut pas avoir deux éléments dans le même ensemble.
 
 ### Stocker les sets dans une linked list :
 
-![[image-50.png]]
+![[assets/image-50.png]]
 
 make, créer une liste vide en $Theta(1)$
 union:
@@ -669,7 +669,7 @@ find: en $Theta(1)$ comme chaque noeud pointe vers le représentant
 
 Le rang est une borne supérieure à la hauteur de l'arbre.
 
-![[image-51.png]]
+![[assets/image-51.png]]
 
 On peut optimiser `find` en rendant tous les noeuds un enfant direct du représentant. (on remonte dans l'arbre et on connecte tous les éléments à la racine)
 
@@ -691,7 +691,7 @@ Si on considère un **cut** $(S, V backslash S)$ et :
 
 Alors il y a un MST de $G$ qui contient $e$ et $T$.
 
-![[image-52.png|572x293]]
+![[assets/image-52.png|572x293]]
 Si $e$ est déjà dans le MST, on est bon.
 Sinon, on ajoute $e$. Ça peut créer un cycle. Dans ce cas, il y a au moins un autre crossing edge dans le cycle $w(f) >= w(e)$. On remplace $f$ par $e$ dans le MST.
 On en obtient un nouveau qui contient $e$ et $T$.
@@ -702,18 +702,18 @@ On commence par n'importe quel noeud $v$ et on l'ajoute à $T$. On a donc un cut
 À chaque étape :
 - on ajoute à $T$ un crossing edge de poids minimal par rapport au cut induit par $T$.
 
-![[image-53.png]]
+![[assets/image-53.png]]
 
 - $pi$ quel est le noeud voisin de $u$ dans $T$ qui est à une distance $u."key"$
 
 Au début on dit que chaque vertices est à une distance infinie de $T$ et qu'il n'a pas de voisin.
 Puis on prend un $r$ au hasard et on dit que sa distance à $T$ est 0. Puis, tant que $Q$ n'est plus vide, on boucle sur tous les vertices, on prend le minimum $m$.
 Pour chaque noeud voisin à ce nouveau minimum, on met à jour sa distance à $T$ (peut-être que le voisin est plus près de $m$, ou pas, que le noeud précédent).
-![[image-54.png]]
+![[assets/image-54.png]]
 
 ### Kruskal's algorithm
 
-![[image-55.png]]
+![[assets/image-55.png]]
 
 
 ## Shortest paths

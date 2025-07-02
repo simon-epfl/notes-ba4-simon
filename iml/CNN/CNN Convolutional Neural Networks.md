@@ -4,7 +4,7 @@ On utilise les CNN pour des tâches difficiles comme reconnaître une photo de m
 > 
 > On aurait besoin de trop de poids, c'est juste limite pour le MNIST.
 
-![[image-121.png|518x240]]
+![[assets/image-121.png|518x240]]
 
 > [!tip] L'idée du CNN
 >  
@@ -29,17 +29,17 @@ Pas besoin de programmer manuellement ces filtres :
 - Pendant **l’entraînement**, le réseau apprend **tout seul** quels filtres sont les plus utiles pour la tâche (comme la reconnaissance d’image).
 - Les couches supérieures du réseau vont alors combiner ces filtres simples (lignes, bords...) pour reconnaître des motifs plus complexes (formes, objets...).
 
-![[image-122.png]]
+![[assets/image-122.png]]
 
 Formule de la convolution (sur les)
-![[image-123.png]]
+![[assets/image-123.png]]
 
-![[image-125.png|546x299]]
+![[assets/image-125.png|546x299]]
 
 - **Stride** $s$ : nombre de pixels à sauter entre chaque application du filtre
 - **Padding** $p$ : nombre de pixels à ajouter autour de l’image pour gérer les bords
-![[image-169.png]]
-![[image-126.png]]
+![[assets/image-169.png]]
+![[assets/image-126.png]]
 
 Les 2p c'est parce qu'on ajoute p pixels en haut, et p pixel en bas. H_in - H_k parce que plus le filtre est grand plus on doit commencer loin du bord pour être dans une plage valide.
 

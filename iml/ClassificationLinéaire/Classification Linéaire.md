@@ -19,7 +19,7 @@ Algorithme :
 
 > [!danger] 1er problème : pas d'optimisation de la marge
 > 
-> ![[image-170.png|494x203]]
+> ![[assets/image-170.png|494x203]]
 > 
 > Le perceptron n'a aucune idée de qui est le meilleur.
 ## Régression Logistique
@@ -32,7 +32,7 @@ Un autre problème avec le perceptron est qu'on a aucune façon de dire si on es
     \;+\;(1 - t_n)\,\log\bigl(1 - \hat p_n\bigr)\Bigr].$$
 **(plus stable, deux fois différentiable, etc.)**
 
-![[image-171.png|390x223]]
+![[assets/image-171.png|390x223]]
 
 - comme on utilise cette cross-entropy loss, si le plan passe très près de certains points, leur probabilité d'appartenir à une classe ou l'autre va être p. exemple 60/40 du coup le modèle va être loin de la **vraie** prédiction (100/0), ce qui va quand même pénaliser le modèle, alors que le perceptron aurait été content. cela pousse le modèle à augmenter la taille de la marge.
 
@@ -55,7 +55,7 @@ Un autre problème avec le perceptron est qu'on a aucune façon de dire si on es
 > 
 > $$ d(x, "plan") = | ((w dot x + b)/(norm(w))) | $$
 > 
-> ![[image-161.png]]
+> ![[assets/image-161.png]]
 > 
 > Pour trouver $b$, si on sait que notre plan passe par le point $(3, 3, 3)$, on fait $w^T (3, 3, 3) + b = 0$, comme le point vérifie l'équation, et ainsi on trouve $b$.
 > 
@@ -72,17 +72,17 @@ Un autre problème avec le perceptron est qu'on a aucune façon de dire si on es
 > 
 > Lorsque l'on fixe la marge fonctionnelle a 1 par la contrainte, alors la marge géométrique minimale vaut $1/norm(w)$ (et la totale, des deux côtés $2/norm(w)$. D'ou l'idée de maximiser $1/norm(w)$, ou de minimiser $1/2 ||w||^2$ (plus simple pour les calculs).
 > 
-> ![[image-160.png|208x155]]
+> ![[assets/image-160.png|208x155]]
 > 
 > Le problème, c'est qu'on veut toujours que certains points puissent violer la marge (le problème ne doit pas être parfait). Pour ça, on ne dit plus que $y_i (w^⊤ x_i ​ + b ) >= 1$ mais que $y_i (w^⊤ x_i ​ + b ) >= 1 - xi_i$ et veut minimiser :
 > 
 > $"Loss" = 1/2 ||w||^2 + C sum_i xi_i$
 > 
-> ![[image-159.png|492x245]]
+> ![[assets/image-159.png|492x245]]
 > 
 > Pour que le modèle prenne à la fois en compte le fait qu'on ne doit pas missclassifier des points, mais qu'on doit aussi ​que ceux bien classifiés doivent être le plus possibles.
 > 
-> ![[image-162.png]]
+> ![[assets/image-162.png]]
 > 
 > - Si $xi_i = 0$, le point est bien classifié et en dehors de la marge.
 > - Si $0 <= xi_i <= 1$, le sample est classifié et dans la marge
@@ -113,7 +113,7 @@ Un autre problème avec le perceptron est qu'on a aucune façon de dire si on es
 > > [!danger] Kernel Matrix
 > > 
 > > Pour trouver les $alpha$, on utilise la Kernel Matrix.
-> > ![[image-172.png|493x355]]
+> > ![[assets/image-172.png|493x355]]
 > > 
 > > On a donc les $alpha = (K + lambda I)^(-1) T$. $lambda$ est un hyperparamètre.
 

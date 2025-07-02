@@ -117,7 +117,7 @@ C'est un tableau qui compare les prédictions par rapport aux valeurs réelles.
 Répond à la question : **"Parmi les prédictions positives du modèle, combien sont correctes ?"**
 
 $$ "Précision = " = "# vrais positifs"/("# vrais positifs" + "# faux négatifs") $$
-![[image-164.png|254x447]]
+![[assets/image-164.png|254x447]]
 ### Accuracy
 
 Le **recall** (ou **sensibilité**) est une métrique qui mesure la capacité d’un modèle à identifier correctement les **cas positifs**.
@@ -161,7 +161,7 @@ On a souvent de l'over fitting : on définit souvent un max depth.
 
 Un **ensemble d’arbres de décision** construits sur des **sous-échantillons aléatoires** des données (avec remplacement, c’est le **bagging**).
 
-![[image-33.png]]
+![[assets/image-33.png]]
 
 Arrention à bien sélectionner **avec replacement**, sinon tous les arbres se ressembleraient et on ne gagnerait pas beaucoup.
 
