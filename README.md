@@ -34,6 +34,9 @@ J'ai implémenté la quasi-totalité des algorithmes vus en cours et en exercice
 * Résumé sur les méthodes de validation : [PDF](./intro-to-machine-learning/Validation/Validation.pdf)
 * Résumé sur Python/Numpy : [PDF](./intro-to-machine-learning/Intro%20to%20ML%20Python.pdf)
 
+* Cheat Sheet (recto) : [PDF](./intro-to-machine-learning/iml_cheatsheet_side1.pdf)
+* Cheat Sheet (verso) : [PDF](./intro-to-machine-learning/iml_cheatsheet_side2.pdf)
+
 ## Human Computer Interaction
 
 * Notre projet de semestre Figma : [PDF](./human-computer-interaction/IPS_Exsight.fig)
