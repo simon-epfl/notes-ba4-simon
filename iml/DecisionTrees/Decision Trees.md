@@ -7,7 +7,7 @@
 
 > [!tip] Pre/Post Pruning
 > 
-> Une fois l’arbre entièrement construit, on peut constater qu’il est trop “profond” et qu'il overfitt. 
+> Une fois l’arbre entièrement construit, on peut constater qu’il est trop “profond” et qu'il overfit. 
 > 
 > On veut retirer certains noeuds (des decision nodes très bas dans l’arbre) pour simplifier l’arbre et améliorer sa capacité de généralisation.
 > 
@@ -76,7 +76,7 @@ On ajoute **des arbres faibles (très peu profonds, par exemple 3-4 de profondeu
 
 **Pour de la régression** :
 
-- On dit que le premier arbre $T_1$​ va renvoyer au débutla valeur moyenne des données et on obtient des "prédictions" bêtes $\hat{y}_1$.
+- On dit que le premier arbre $T_1$​ va renvoyer au début la valeur moyenne des données et on obtient des "prédictions" bêtes $\hat{y}_1$.
 - On calcule des résidus (pour chaque point, de combien se trompe l'arbre précédent, $r = y_"true" - y_"pred")$.
 - et ensuite, on entraîne un autre arbre pour prédire ces résidus, et $y_"étape 2" = y_1 + eta dot T_2 (x)$, où $eta$ est le learning rate, ou shrinkage.
 - etc. on répète et à la fin on a : $$ \hat{y} (x) = \sum_{m =1}^M \eta \cdot  T_m (x)$$

@@ -741,9 +741,9 @@ On recrute une personne si elle est plus grande que la plus grande personne qu'o
 
 Quel est le nombre d'embauches qu'on va faire parmis toutes les permutations des candidats ?
 
-![[image-91.png|473x278]]
+![[assets/image-91.png|473x278]]
 
-![[image-92.png|421x385]]
+![[assets/image-92.png|421x385]]
 
 
 ## k smallest numbers in an array
@@ -758,4 +758,4 @@ $O(n log n)$ : on trie le tableau, puis on prend les k premiers.
 - si $|S| < k$, on sait que tous les éléments qu'on cherche sont dans $S$
 - sinon ils sont dans $L$
 
-![[image-168.png]]
+![[assets/image-168.png]]

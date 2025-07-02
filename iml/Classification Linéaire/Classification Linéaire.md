@@ -1,3 +1,4 @@
+Cette vidéo résume super bien les SVM en 1h : https://www.youtube.com/watch?v=_PwhiWxHK8o
 ## Données linéairement séparables, Perceptron
 
 Essaye de créer un hyperplane qui sépare les données.
@@ -58,7 +59,7 @@ Un autre problème avec le perceptron est qu'on a aucune façon de dire si on es
 > 
 > Pour trouver $b$, si on sait que notre plan passe par le point $(3, 3, 3)$, on fait $w^T (3, 3, 3) + b = 0$, comme le point vérifie l'équation, et ainsi on trouve $b$.
 > 
-> On veut donc : $$\max (\text{"marge"}) = \max_{w, b} \left( \min_i \frac{y_i(w^\top x_i + b)}{\|w\|} \right)$$
+> On veut donc : $$\max (\text{"marge"}) = \max_{w, b} \left( \min_i \frac{y_i(w \cdot x_i + b)}{\|w\|} \right)$$
 > 
 > Pour simplifier ce problème d'optimisation avec min-max :
 > On introduit la marge **fonctionnelle** : 
@@ -102,10 +103,19 @@ Un autre problème avec le perceptron est qu'on a aucune façon de dire si on es
 > 
 > $$ f(x) = w^T x + b = sum_(i in "support vectors") alpha_i y_i x_i x + b$$
 > 
-> (maintenant toute l'optimisation que font les libs python c'est de trouver les coefficients alpha)
+> (voir la kernel matrix pour savoir comment trouver les alpha)
 > 
 > a l'inférence avec les variables slack :
 > $$ f(x) = sum_(i in "support vectors") alpha_i y_i k(x, x_i) + b "avec" 0 <= alpha_i <= C, forall i $$
+> 
+> En fait les support vectors c'est les vecteurs qui déterminent la marge. Pour déterminer le label du nouveau point, on va calculer $k("nouveau point", "support vector"_i)$, sa similarité au support vector. S'il est très près, alors il a probablement le même label.
+> 
+> > [!danger] Kernel Matrix
+> > 
+> > Pour trouver les $alpha$, on utilise la Kernel Matrix.
+> > ![[image-172.png|493x355]]
+> > 
+> > On a donc les $alpha = (K + lambda I)^(-1) T$. $lambda$ est un hyperparamètre.
 
 Classification non linéaire, comment on fait ? parfois les données ne sont pas séparables 
 ## Données non linéairement séparables
@@ -116,10 +126,12 @@ Classification non linéaire, comment on fait ? parfois les données ne sont pas
 
 > [!tip] Polynomial expansion
 > 
-> On ne donne plus uniquement $x$ mais $x, x^2, x^3, ..$, etc. pour permettre une approximation de notre fonction avec un polynôme.
+> On ne donne plus uniquement $x$ mais $x_1, x_1^2, ..$, etc. pour permettre une approximation de notre fonction avec un polynôme.
+> 
+> mais du coup on doit faire le produit scalaire entre $Phi(x)$ et $Phi(y)$, c'est très long. (rien que de calculer $Phi(x)$ c'est long).
 
 **Régularisation** : On ajoute souvent un terme $\tfrac{\lambda}{2}\,\|w\|^2$ pour éviter le sur-apprentissage : $$L_{\mathrm{CE+reg}}(w) = L_{\mathrm{CE}}(w) \;+\;\frac{\lambda}{2}\,\|w\|^2.$$
-On peut trouver le $lambda$ idéal avec la cross-validation.
+On peut trouver le $lambda$ idéal avec la cross-validation. En fait avoir un grand $w$ c'est un problème, parce que ça veut dire que certaines features ont une importance p. exemple énorme, et si on donne un nouveau point de test $x$ qui a cette coordonnée un tout petit peu différente alors le résultat va être aussi différent.
 ## SVM / Kernel trick
 
 > [!danger] Le problème sans le Kernel Trick
@@ -144,7 +156,7 @@ On peut trouver le $lambda$ idéal avec la cross-validation.
 
 > [!danger] Limite des SVMs
 > 
->- **Grande quantité de données** : la complexité d’entraînement est souvent $O(n^2)$ ou $O(n^3)$ selon l’algorithme, ce qui peut devenir prohibitif si on a des centaines de milliers d’exemples.
+>- **Grande quantité de données** : la complexité d’entraînement est souvent quand même $O(n^2)$ ou $O(n^3)$ selon l’algorithme, ce qui peut devenir prohibitif si on a des centaines de milliers d’exemples.
 >  
 >  - **Choix de kernel non trivial** : il n’existe pas de recette magique pour savoir quel kernel convient le mieux à un problème donné.
 

@@ -1,4 +1,4 @@
-### Définition
+### Gradient descent
 
 - on a une fonction de loss, mais on ne peut pas trouver son minimum directement
 - on dérive, puis on calcule $"step_size" = "dérivée" * "learning rate"$
@@ -119,8 +119,16 @@ $$ = \frac{1}{m} \sum_{i=1}^{m} \left( 2 \left( y_\text{pred}^{(i)} - y_\text{tr
 >   
 > **Version duale :**
 > 
-> On résout $max_(lambda >=0) min_w L(w, lambda)$
+> Elle est plus simple à résoudre.
 > 
-> > [!tip] En attendant d'avoir + d'intuition
-> > 
-> > Il faut comprendre que si une contrainte est active (nous empêche d'aller plus loin pour faire diminuer $f$, alors son coefficient $lambda$ sera supérieur à 0, sinon il sera égal à $0$ et la contrainte sera inactive).
+> En fait notre objectif c'est de pénaliser notre fonction $f(x)$ convexe quand une contrainte est violée. 
+> 
+> On pourrait faire quelque chose comme $P(y) = 0 "si pas violée", infinity "sinon"$. Le problème c'est que c'est difficile à résoudre.
+> 
+> Sinon on peut faire $P(y) = max_(u >= 0) u dot y$. Du coup si $y = 0$ ou $y <= 0$, ce sera zéro, et sinon ce sera l'infini ! (on va toujours prendre le meilleur $u$).
+> 
+> On a donc $min_x max_(u >= 0) E(x) = f(x) + u dot (g(x))$. mais on peut très bien échanger l'ordre des deux contraintes !
+> 
+> ![[image-173.png|515x252]]
+
+
