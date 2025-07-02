@@ -1,8 +1,0 @@
-pytorch::pytorch
-pytorch::torchvision
-conda-forge::torchinfo
-numpy
-jupyter
-matplotlib
-Pillow
-scikit-learn
